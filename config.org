@@ -728,6 +728,30 @@ Come manipolare l'HTML, però, è qualcosa che noi dobbiamo spiegare ad =org-cap
 ))
 #+end_src
 
+Al fine di usare [[https://github.com/sprig/org-capture-extension][Org capture extension (Firefox)]], dobbiamo anche impostare l'org-protocol.
+
+#+begin_quote
+The gist of it is to make your system recognize emacsclient as the handler of org-protocol:// links. In addition, one needs to set up emacs to load org-protocol and to set up capture templates.
+#+end_quote
+
+Su linux, bisogna prima registrare questo handler:
+
+#+begin_src txt :tangle tangled/.local/share/applications/org-protocol.desktop
+[Desktop Entry]
+Name=org-protocol
+Exec=emacsclient %u
+Type=Application
+Terminal=false
+Categories=System;
+MimeType=x-scheme-handler/org-protocol;
+#+end_src
+
+A questo punto, su Gnome ed altri GTK-based Desktop Environments, è sufficiente lanciare questo comando:
+
+#+begin_src bash
+$ update-desktop-database ~/.local/share/applications/
+#+end_src
+
 *** Rust goodies
 #+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
 ;; rustic quick fix
@@ -803,6 +827,26 @@ Ho da poco cominciato a mantenere il mio CV in org-mode; poiché l'esportazione 
 (setq org-journal-file-format "%Y-%m.org")
 (setq org-journal-file-type 'monthly)
 #+end_src
+
+** Systemd
+*** Emacs daemon
+
+#+begin_src txt :tangle tangled/.config/systemd/user/emacs.service
+[Unit]
+Description=Emacs text editor
+Documentation=info:emacs man:emacs(1) https://gnu.org/software/emacs/
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/emacs --daemon
+ExecStop=/usr/bin/emacsclient --eval "(kill-emacs)"
+Environment=SSH_AUTH_SOCK=%t/keyring/ssh
+Restart=on-failure
+
+[Install]
+WantedBy=default.target
+#+end_src
+
 ** In conclusione
 
 - [ ] Riportare sotto org tutte le funzioni relative (per ora mantenuto quanto più vicino possibile all'originale per evitare casini)
