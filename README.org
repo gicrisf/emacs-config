@@ -1,0 +1,6 @@
+#+title: Doom Emacs Configuration
+#+author: Giovanni Crisalfi
+
+The configuration lives inside a single file, the =config.org= file.
+
+By now, the config file is written in italian only, but I'm counting on translate everything in english too.

@@ -1,0 +1,816 @@
+#+title: Doom Emacs Config
+#+author: Giovanni Crisalfi
+#+hugo_base_dir: ~/zwitterio-it/
+#+hugo_section: doom-emacs-config
+#+STARTUP: show2levels
+#+MACRO: more @@html:<!-- more -->@@
+# Temporary macros for prism support:
+#+MACRO: prismcss @@html:<link href="/assets/prism/prism.css" rel="stylesheet" />@@
+#+MACRO: prismjs @@html:<script src="/assets/prism/prism.js"></script>@@
+
+* DONE Configurare Emacs in Org-mode :emacs:org:@posts:
+CLOSED: [2022-08-03 mer 21:43]
+:PROPERTIES:
+:EXPORT_HUGO_SECTION: 2022/configurare-emacs-in-org-mode
+:EXPORT_FILE_NAME: index
+:END:
+
+Questo file mostra come gestire la configurazione di Emacs direttamente all'interno di org-mode.
+Questo stesso file è anche la mia personale configurazione per Doom Emacs.
+
+{{{more}}}
+
+** Emacs?
+Innanzitutto, cos'è Emacs?
+
+Se, tradizionalmente, ci si riferisce ad Emacs come ad un editor di testo (principalmente noto per l'utilizzo in programmazione, quindi per la scrittura e manipolazione di codice), Emacs in verità è molto più di questo: è un interpreter di lisp, cioè una piattaforma a tutto tondo, capace di eseguire programmi anche molto complessi all'interno di un sistema integrato.
+Detta così, però, sembra tutto troppo vago per essere comprensibile: la verità, è che le potenzialità di questo software iniziano ad essere colte solo con un utilizzo assiduo, a seguito del superamento di una barriera d'apprendimento non indifferente, ma che vale la pena affrontare se si lavora molto con il testo.
+
+Io, ad esempio, uso spesso Emacs per:
+- Scrivere codice
+- Scrivere prosa
+- Git (grazie a Magit, Emacs è anche il miglior git client in circolazione)
+- RSS (grazie ad Elfeed)
+
+** Distribuzioni Emacs
+La barriera di ingresso, in verità, può essere parzialmente abbattuta per mezzo di distribuzioni di Emacs pre-configurate, tra cui ne cito un paio (molto famose):
+- Spacemacs, che è stata la mia prima distribuzione, ed è particolarmente indicata per i neofiti, grazie a tante magie come le funzioni d'aiuto richiamate attraverso un uso spasmodico della barra spaziatrice ed i cosiddetti layer.
+- **Doom Emacs**, che è la mia distribuzione attuale, e quindi quella con cui sto scrivendo questo documento; l'impiego di svariate strategie di lazy-loading e, in generale, una meditata selezione dei pacchetti rendono questa distribuzione estremamente scattante. Per questo, per l'ottima integrazione con Evil (emulazione vim) ed altri motivi, sto su Doom Emacs fin dalle prime giornate di prova.
+
+La configurazione riportata in questo file può, potenzialmente, essere adattata anche ad altre distribuzioni Emacs, ma presa com'è funziona solo su Doom Emacs.
+
+** Lisp
+Come dicevo, Emacs è un interpreter di lisp, ma per essere più corretti dovremmo fare riferimento ad Emacs Lisp, un dialetto specifico della famiglia di linguaggi di programmazione che rientra sotto la denominazione "Lisp".
+
+Come già detto altrove [fn::da init file di Doom Emacs], "visto un dialetto di lisp, visti tutti":
+
+#+begin_quote
+if you've seen one lisp, you've seen them all
+#+end_quote
+
+Questo accade perché il peculiare monomorfismo di lisp determina necessariamente l'impiego di una sintassi ridotta all'osso, che è facile intimorisca chiunque arrivi da linguaggi C-like. Al di là delle prime impressioni, Lisp porta con sé una delle sintassi più semplici possibili, leggibile a patto che il codice sia scritto da mani capaci. Questo è certamente vero con qualunque linguaggio di programmazione, ma con i lisp in maniera particolare, perché di suo la sintassi non costringe lo sviluppatore a tipizzare le variabili o a gerarchizzare i dati in maniere specifiche: sono i nomi dati alle funzioni ed alle liste a dovere essere eloquenti.
+
+Come Emacs è tra i più antichi editor di testo ancora in circolazione, così lisp è tra i più antichi linguaggi, eppure anche lisp è tuttora vivo e vegeto ed è "parlato" quotidianamente da migliaia di sviluppatori.
+
+[[https://www.zwitterio.it/coding/2022/elisp-intro/][Ho scritto altrove un'introduzione ad Emacs Lisp]], ma è intesa come riassunto di funzioni utili, semplici appunti personali. Avendo iniziato da relativamente poco tempo a navigare nell'oceano di meraviglie e parentesi lispiane, non sono certo la fonte più autorevole per scendere nel dettaglio.
+
+*** TODO Riportare fonti d'apprendimento Lisp
+
+** Org-mode
+#+begin_quote
+Your life in plain text
+#+end_quote
+
+[[https://orgmode.org/][Org-mode]] è una delle più amate major mode esistenti per Emacs ed è anche uno dei migliori pezzi di software che io abbia conosciuto in vita mia.
+A prima vista sembra "solo l'ennesimo linguaggio di markup", come [[https://en.wikipedia.org/wiki/Markdown][Markdown]] o [[https://en.wikipedia.org/wiki/ReStructuredText][reStructuredText]], ma in realtà è molto, molto di più [fn::anche se, bisogna dirlo, se pure fosse un semplice linguaggio di markup ci sarebbe da tenerne in conto, vista la piacevole sintassi].
+
+Proprio come l'abissale versatilità di Emacs riesce a farsi conoscere solo grazie ad ore ed ore di utilizzo, anche Org-mode ha bisogno di tempo per essere addomesticato; in questo caso, in compenso, è più facile annoverare gli utilizzi più comuni:
+- applicazioni di /literate programming/ (un paradigma di programmazione ideato da Donald Knuth alla base di anche di questo file),
+- scrittura di agende
+- scrittura di zettelkasten
+- stesura di documenti scientifici
+- mantenere blog
+
+Org-mode, o più semplicemente "Org", può anche essere impiegato per scrivere e gestire nel tempo la propria configurazione di Emacs, cioè un mucchio di codice lisp che con il tempo tende a crescere per adeguarsi quanto più possibile alle necessità dell'utente.
+
+** Intessere
+Tradizionalmente, la configurazione di Doom Emacs è raccolta in 3 file fondamentali, a loro volta contenuti in una apposita directory nella home, =.doom.d=.
+Questi file sono:
+- =config.el=;
+- =init.el=;
+- =packages.el=.
+
+Altre distribuzioni hanno gerarchie più semplici (Vanilla Emacs prevede sia tutto in =.emacs=) o più caotiche o più stratificate (es. layer in Spacemacs).
+
+# TODO: eltweet import as org shortcode
+# @@html:<blockquote class="twitter-tweet"><p lang="en" dir="ltr">OH: I now officially work with people younger than my .emacs file</p>&mdash; â¨ Phil CalÃ§ado (@pcalcado) <a href="https://twitter.com/pcalcado/status/871810979180556292?ref_src=twsrc%5Etfw">June 5, 2017</a></blockquote>@@
+
+Doom, di suo, mantiene secondo me una piacevole via di mezzo.
+
+#+begin_quote
+Let us change our traditional attitude to the construction of programs: Instead of imagining that our main task is to instruct a computer what to do, let us concentrate rather on explaining to human beings what we want a computer to do. — Donald Knuth
+#+end_quote
+
+Anziché intervenire su questi file direttamente, possiamo scrivere la nostra configurazione su un file =.org=, da cui generare in seconda battuta i 3 file di configurazione principali.
+Questa prassi si rifa' ai principi della programmazione letteraria (/literate programming/), un paradigma proposto per la prima volta da Donald Knuth, che ne dimostrò le potenzialità scrivendo così il compilatore di TeX.
+
+# [[https://blog.thomasheartman.com/posts/configuring-emacs-with-org-mode-and-literate-programming][Come scrive Thomas Heartman sul suo blog]], nelle versioni più recenti di Emacs bastano poche righe di codice per incorporare in org-mode la propria configurazione, grazie ad una funzione speciale di org-babel che supporta proprio questo scopo (sempre più diffuso nella comunità di utenti).
+
+Diego Zamboni, nella propria configurazione scrive:
+ #+BEGIN_QUOTE
+Emacs config is an art, and I have learned a lot by reading through other people’s config files, and from many other resources.
+#+END_QUOTE
+
+Insomma, l'arte di configurare Emacs (come tante altre) si affina studiando i trucchetti altrui.
+Tra le configurazioni org più illuminanti, segnalo:
+- [[https://git.tecosaur.net/tec/emacs-config][la configurazione di tecosaur]]
+- [[https://gitlab.com/zzamboni/dot-doom][la configurazione di Diego Zamboni]]
+
+Per entrambe trovate anche i mirrors su Github (che renderizza molto piacevolmente i file org).
+
+Ci sono vari modi per consentire ad Emacs di leggere la configurazione attraverso un org file; come tanti altri, io qui mi limito a generare i file di configurazione a partire dal file org, per mezzo di una pratica che il già citato Donald Knuth ha chiamato "tangling" (aggrovigliare, intessere).
+
+** Frontespizi
+
+Cominciamo dalla testa dei nostri file di configurazione, cioè da tutti i commenti che troviamo di norma nelle prime 10-20 righe. C'è solo una modifica che è il caso di fare in questo punto: aggiungere un piccolo commento che ricordi all'eventuale lettore che il file in uscita è un file generato e che non va modificato direttamente.
+
+# Aggiungere questo pezzo con una macro:
+
+#+begin_src emacs-lisp
+;; DO NOT EDIT THIS FILE DIRECTLY
+;; This is a file generated from a literate programing source file located at
+;; TODO INSERT LOCATION GITHUB HERE
+;; You should make any changes there and regenerate it from Emacs org-mode
+;; using org-babel-tangle (C-c C-v t)
+#+end_src
+
+
+Frontespizio di =init.el=.
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/init.el
+;;; init.el -*- lexical-binding: t; -*-
+
+;; This file controls what Doom modules are enabled and what order they load
+;; in. Remember to run 'doom sync' after modifying it!
+
+;; NOTE Press 'SPC h d h' (or 'C-h d h' for non-vim users) to access Doom's
+;;      documentation. There you'll find a "Module Index" link where you'll find
+;;      a comprehensive list of Doom's modules and what flags they support.
+
+;; NOTE Move your cursor over a module's name (or its flags) and press 'K' (or
+;;      'C-c c k' for non-vim users) to view its documentation. This works on
+;;      flags as well (those symbols that start with a plus).
+;;
+;;      Alternatively, press 'gd' (or 'C-c c d') on a module to browse its
+;;      directory (for easy access to its source code).
+#+end_src
+
+Frontespizio di =packages.el=.
+#+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el
+;; -*- no-byte-compile: t; -*-
+;;; $DOOMDIR/packages.el
+
+;; To install a package with Doom you must declare them here and run 'doom sync'
+;; on the command line, then restart Emacs for the changes to take effect -- or
+;; use 'M-x doom/reload'.
+
+
+;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
+;(package! some-package)
+#+end_src
+
+Frontespizio di =config.el=.
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
+
+;; Place your private configuration here! Remember, you do not need to run 'doom
+;; sync' after modifying this file!
+
+
+;; Some functionality uses this to identify you, e.g. GPG configuration, email
+;; clients, file templates and snippets.
+#+end_src
+
+** Moduli
+Il codice seguente è impiegato da Doom Emacs per capire quali moduli installare e lanciare tutte le volte che viene avviato.
+# Ogni modifica a questo livello richiede =doom/sync=.
+
+Si tratta di uno dei tratti più leggibili in assoluto, visto che, appunto, è una lista di moduli.
+Lo riporto qui senza modifiche particolari.
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/init.el
+(doom! :input
+       ;;chinese
+       ;;japanese
+       ;;layout            ; auie,ctsrnm is the superior home row
+
+       :completion
+       company           ; the ultimate code completion backend
+       ;;helm              ; the *other* search engine for love and life
+       ;;ido               ; the other *other* search engine...
+       ivy               ; a search engine for love and life
+
+       :ui
+       ;;deft              ; notational velocity for Emacs
+       doom              ; what makes DOOM look the way it does
+       doom-dashboard    ; a nifty splash screen for Emacs
+       doom-quit         ; DOOM quit-message prompts when you quit Emacs
+       (emoji +unicode)  ; 🙂
+       hl-todo           ; highlight TODO/FIXME/NOTE/DEPRECATED/HACK/REVIEW
+       ;;hydra
+       ;;indent-guides     ; highlighted indent columns
+       ;;ligatures         ; ligatures and symbols to make your code pretty again
+       ;;minimap           ; show a map of the code on the side
+       modeline          ; snazzy, Atom-inspired modeline, plus API
+       ;;nav-flash         ; blink cursor line after big motions
+       neotree           ; a project drawer, like NERDTree for vim
+       ophints           ; highlight the region an operation acts on
+       (popup +defaults)   ; tame sudden yet inevitable temporary windows
+       ;;tabs              ; a tab bar for Emacs
+       ;;treemacs          ; a project drawer, like neotree but cooler
+       ;;unicode           ; extended unicode support for various languages
+       vc-gutter         ; vcs diff in the fringe
+       vi-tilde-fringe   ; fringe tildes to mark beyond EOB
+       ;;window-select     ; visually switch windows
+       workspaces        ; tab emulation, persistence & separate workspaces
+       zen               ; distraction-free coding or writing
+
+       :editor
+       (evil +everywhere); come to the dark side, we have cookies
+       file-templates    ; auto-snippets for empty files
+       fold              ; (nigh) universal code folding
+       ;;(format +onsave)  ; automated prettiness
+       ;;god               ; run Emacs commands without modifier keys
+       ;;lispy             ; vim for lisp, for people who don't like vim
+       multiple-cursors  ; editing in many places at once
+       ;;objed             ; text object editing for the innocent
+       ;;parinfer          ; turn lisp into python, sort of
+       ;;rotate-text       ; cycle region at point between text candidates
+       snippets          ; my elves. They type so I don't have to
+       ;;word-wrap         ; soft wrapping with language-aware indent
+
+       :emacs
+       dired             ; making dired pretty [functional]
+       electric          ; smarter, keyword-based electric-indent
+       ;;ibuffer         ; interactive buffer management
+       undo              ; persistent, smarter undo for your inevitable mistakes
+       vc                ; version-control and Emacs, sitting in a tree
+
+       :term
+       ;;eshell            ; the elisp shell that works everywhere
+       ;;shell             ; simple shell REPL for Emacs
+       ;;term              ; basic terminal emulator for Emacs
+       vterm               ; the best terminal emulation in Emacs
+
+       :checkers
+       syntax              ; tasing you for every semicolon you forget
+       ;;(spell +flyspell) ; tasing you for misspelling mispelling
+       ;;grammar           ; tasing grammar mistake every you make
+
+       :tools
+       ;;ansible
+       ;;debugger          ; FIXME stepping through code, to help you add bugs
+       ;;direnv
+       ;;docker
+       ;;editorconfig      ; let someone else argue about tabs vs spaces
+       ;;ein               ; tame Jupyter notebooks with emacs
+       (eval +overlay)     ; run code, run (also, repls)
+       ;;gist              ; interacting with github gists
+       lookup              ; navigate your code and its documentation
+       lsp               ; M-x vscode
+       magit             ; a git porcelain for Emacs
+       ;;make              ; run make tasks from Emacs
+       ;;pass              ; password manager for nerds
+       ;;pdf               ; pdf enhancements
+       ;;prodigy           ; FIXME managing external services & code builders
+       ;;rgb               ; creating color strings
+       ;;taskrunner        ; taskrunner for all your projects
+       ;;terraform         ; infrastructure as code
+       ;;tmux              ; an API for interacting with tmux
+       ;;upload            ; map local to remote projects via ssh/ftp
+
+       :os
+       (:if IS-MAC macos)  ; improve compatibility with macOS
+       ;;tty               ; improve the terminal Emacs experience
+
+       :lang
+       ;;agda              ; types of types of types of types...
+       ;;beancount         ; mind the GAAP
+       ;;cc                ; C > C++ == 1
+       ;;clojure           ; java with a lisp
+       ;;common-lisp       ; if you've seen one lisp, you've seen them all
+       ;;coq               ; proofs-as-programs
+       ;;crystal           ; ruby at the speed of c
+       ;;csharp            ; unity, .NET, and mono shenanigans
+       ;;data              ; config/data formats
+       ;;(dart +flutter)   ; paint ui and not much else
+       ;;elixir            ; erlang done right
+       ;;elm               ; care for a cup of TEA?
+       emacs-lisp        ; drown in parentheses
+       ;;erlang            ; an elegant language for a more civilized age
+       ;;ess               ; emacs speaks statistics
+       ;;factor
+       ;;faust             ; dsp, but you get to keep your soul
+       ;;fsharp            ; ML stands for Microsoft's Language
+       ;;fstar             ; (dependent) types and (monadic) effects and Z3
+       ;;gdscript          ; the language you waited for
+       ;;(go +lsp)         ; the hipster dialect
+       ;;(haskell +dante)  ; a language that's lazier than I am
+       ;;hy                ; readability of scheme w/ speed of python
+       ;;idris             ; a language you can depend on
+       ;;json              ; At least it ain't XML
+       ;;(java +meghanada) ; the poster child for carpal tunnel syndrome
+       javascript        ; all(hope(abandon(ye(who(enter(here))))))
+       ;;julia             ; a better, faster MATLAB
+       ;;kotlin            ; a better, slicker Java(Script)
+       latex             ; writing papers in Emacs has never been so fun
+       ;;lean              ; for folks with too much to prove
+       ;;ledger            ; be audit you can be
+       ;;lua               ; one-based indices? one-based indices
+       markdown          ; writing docs for people to ignore
+       ;;nim               ; python + lisp at the speed of c
+       ;;nix               ; I hereby declare "nix geht mehr!"
+       ;;ocaml             ; an objective camel
+       org               ; organize your plain life in plain text
+       ;;php               ; perl's insecure younger brother
+       ;;plantuml          ; diagrams for confusing people more
+       ;;purescript        ; javascript, but functional
+       ;;python            ; beautiful is better than ugly
+       ;;qt                ; the 'cutest' gui framework ever
+       ;;racket            ; a DSL for DSLs
+       ;;raku              ; the artist formerly known as perl6
+       ;;rest              ; Emacs as a REST client
+       ;;rst               ; ReST in peace
+       ;;(ruby +rails)     ; 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
+       rust              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
+       ;;scala             ; java, but good
+       ;;(scheme +guile)   ; a fully conniving family of lisps
+       sh                  ; she sells {ba,z,fi}sh shells on the C xor
+       ;;sml
+       ;;solidity          ; do you need a blockchain? No.
+       ;;swift             ; who asked for emoji variables?
+       ;;terra             ; Earth and Moon in alignment for performance.
+       web               ; the tubes
+       yaml              ; JSON, but readable
+       ;;zig               ; C, but simpler
+
+       :email
+       ;;(mu4e +gmail)
+       ;;notmuch
+       ;;(wanderlust +gmail)
+
+       :app
+       ;;calendar
+       ;;emms
+       ;;everywhere        ; *leave* Emacs!? You must be joking
+       ;;irc               ; how neckbeards socialize
+       (rss +org)        ; emacs as an RSS reader
+       ;;twitter           ; twitter client https://twitter.com/vnought
+
+       :config
+       ;;literate
+       (default +bindings +smartparens))
+#+end_src
+
+** Pacchetti aggiuntivi
+Chiaramente, non tutti i pacchetti disponibili per emacs sono stati integrati in moduli di Doom, quindi alcuni andranno installati per altre vie, ad esempio MELPA o delle git repo.
+
+Questo pezzo di codice nasce per dare spazio a tutti questi pacchetti.
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el
+(package! spacemacs-theme)
+
+;; (package! vala-mode)
+
+(package! org-download)
+
+(package! org-drill)
+
+(package! org-journal)
+
+(package! helm-org-rifle)
+
+(package! org-web-tools)
+
+;; (package! ox-hugo)
+
+;; `package!` handles downloading. We don't need it here, because I wanna test the local thing
+;; BUT
+;; https://github.com/doomemacs/doomemacs/issues/3842#issuecomment-680906603
+;; This guy say that `package!` has been adapted for this use case too
+;; hlissner suggests the use of package macro too, so I will go for it
+;; https://github.com/doomemacs/doomemacs/issues/3842#issuecomment-681039894
+;; As hlissner said,
+;; "Note: with :no-byte-compile t,
+;; you don't have to run doom sync every time you make a change to the package."
+;; Runtime error:
+;; Details: ((:private . packages) "/home/cromo/.doom.d/packages.el" (wrong-type-argument listp (doom-package-error "ox-hugo" . "Keyword argument :no-byte-compile not one of (:local-repo :files :flavor :build :pre-build :post-build :includes :type :repo :host :branch :protocol :remote :nonrecursive :fork :depth :source :inherit)")))
+;; Maybe this is the problem? => https://github.com/doomemacs/doomemacs/issues/4142#issuecomment-715532212
+;; It doesn't seems like that
+
+;; (package! ox-hugo :recipe (:local-repo "lisp/ox-zola"))
+
+(package! ox-hugo :recipe (:host github :repo "gicrisf/ox-zola"))
+
+(package! eltweet :recipe (:host github :repo "gicrisf/eltweet"))
+
+;; To install a package directly from a remote git repo, you must specify a
+;; `:recipe'. You'll find documentation on what `:recipe' accepts here:
+;; https://github.com/raxod502/straight.el#the-recipe-format
+;(package! another-package
+;  :recipe (:host github :repo "username/repo"))
+
+;; If the package you are trying to install does not contain a PACKAGENAME.el
+;; file, or is located in a subdirectory of the repo, you'll need to specify
+;; `:files' in the `:recipe':
+;(package! this-package
+;  :recipe (:host github :repo "username/repo"
+;           :files ("some-file.el" "src/lisp/*.el")))
+
+;; If you'd like to disable a package included with Doom, you can do so here
+;; with the `:disable' property:
+;(package! builtin-package :disable t)
+
+;; You can override the recipe of a built in package without having to specify
+;; all the properties for `:recipe'. These will inherit the rest of its recipe
+;; from Doom or MELPA/ELPA/Emacsmirror:
+;(package! builtin-package :recipe (:nonrecursive t))
+;(package! builtin-package-2 :recipe (:repo "myfork/package"))
+
+;; Specify a `:branch' to install a package from a particular branch or tag.
+;; This is required for some packages whose default branch isn't 'master' (which
+;; our package manager can't deal with; see raxod502/straight.el#279)
+;(package! builtin-package :recipe (:branch "develop"))
+
+;; Use `:pin' to specify a particular commit to install.
+;(package! builtin-package :pin "1a2b3c4d5e")
+
+
+;; Doom's packages are pinned to a specific commit and updated from release to
+;; release. The `unpin!' macro allows you to unpin single packages...
+;(unpin! pinned-package)
+;; ...or multiple packages
+;(unpin! pinned-package another-pinned-package)
+;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
+;(unpin! t)
+#+end_src
+
+** Configurazione generale
+Infine, veniamo alla configurazione generale.
+
+*** Chi sono?
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+;; Some functionality uses this to identify you, e.g. GPG configuration, email
+;; clients, file templates and snippets.
+(setq user-full-name "gicrisf"
+      user-mail-address "giovanni.crisalfi@protonmail.com")
+#+end_src
+
+*** Font
+
+TODO: differenziare tra font laptop e desktop e variare la configurazione esportata in base alla situazione.
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
+;; are the three important ones:
+;;
+;; + `doom-font'
+;; + `doom-variable-pitch-font'
+;; + `doom-big-font' -- used for `doom-big-font-mode'; use this for
+;;   presentations or streaming.
+;;
+;; They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
+;; font string. You generally only need these two:
+(setq doom-font (font-spec :family "Noto Sans Mono" :size 16 :weight 'semi-light)
+      doom-variable-pitch-font (font-spec :family "sans" :size 16))
+#+end_src
+
+*** Temi
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+;; There are two ways to load a theme. Both assume the theme is installed and
+;; available. You can either set `doom-theme' or manually load a theme with the
+;; `load-theme' function. This is the default:
+(setq doom-theme 'doom-one)
+
+;; Here are some additional functions/macros that could help you configure Doom:
+;;
+;; - `load!' for loading external *.el files relative to this one
+;; - `use-package!' for configuring packages
+;; - `after!' for running code after a package has loaded
+;; - `add-load-path!' for adding directories to the `load-path', relative to
+;;   this file. Emacs searches the `load-path' when you load packages with
+;;   `require' or `use-package'.
+;; - `map!' for binding new keys
+;;
+;; To get information about any of these functions/macros, move the cursor over
+;; the highlighted symbol at press 'K' (non-evil users must press 'C-c c k').
+;; This will open documentation for it, including demos of how they are used.
+;;
+;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
+;; they are implemented.
+
+;; Theme switcher functions
+(defvar quick-switch-themes
+  (let ((themes-list (list 'doom-one
+                           'spacemacs-dark
+                           'spacemacs-light
+                           'doom-one-light)))
+    (nconc themes-list themes-list))
+  "A circular list of themes to keep switching between.
+Make sure that the currently enabled theme is at the head of this
+list always.
+
+A nil value implies no custom theme should be enabled.")
+
+;; Thanks to narendraj9, user of emacs.stackexchange.com
+;; https://emacs.stackexchange.com/questions/24088/make-a-function-to-toggle-themes
+;; I just tweaked his code.
+(defun toggle-theme ()
+  (interactive)
+  (if-let* ((next-theme (cadr quick-switch-themes)))
+      (progn (when-let* ((current-theme (car quick-switch-themes)))
+               (disable-theme (car quick-switch-themes)))
+             (load-theme next-theme t)
+             (message "Loaded theme: %s" next-theme))
+    ;; Always have the dark mode-line theme
+    (mapc #'disable-theme (delq 'smart-mode-line-dark custom-enabled-themes)))
+  (setq quick-switch-themes (cdr quick-switch-themes)))
+
+(map! :leader
+      :desc "Quick toggle theme" "t t" #'toggle-theme)
+#+end_src
+
+*** Org
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+;; If you use `org' and don't want your org files in the default location below,
+;; change `org-directory'. It must be set before org loads!
+(setq org-directory "~/org/")
+
+;; org-mode paste images
+(require 'org-download)
+#+end_src
+
+*** UI
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+;; This determines the style of line numbers in effect. If set to `nil', line
+;; numbers are disabled. For relative line numbers, set this to `relative'.
+(setq display-line-numbers-type t)
+
+;; Maximize the window upon startup
+;; TODO testing this one
+(setq initial-frame-alist '((top . 1) (left . 1) (width . 114) (height . 32)))
+
+;; Transparency
+(set-frame-parameter (selected-frame)'alpha '(99 . 100))
+(add-to-list 'default-frame-alist'(alpha . (99 . 100)))
+#+end_src
+
+*** Backtab
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+;; Source: [[https://stackoverflow.com/questions/23692879/emacs24-backtab-is-undefined-how-to-define-this-shortcut-key]]
+(global-set-key (kbd "<backtab>") 'un-indent-by-removing-4-spaces)
+(defun un-indent-by-removing-4-spaces ()
+  "remove 4 spaces from beginning of of line"
+  (interactive)
+  (save-excursion
+    (save-match-data
+      (beginning-of-line)
+      ;; get rid of tabs at beginning of line
+      (when (looking-s "^\\at-+")
+        (untabify (match-beginning 0) (match-end 0)))
+      (when (looking-at "^    ")
+        (replace-match "")))))
+#+end_src
+
+*** Elfeed
+TODO usa file org separato
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+(setq elfeed-feeds (quote
+                    (("https://www.zwitterio.it/rss.xml" zwitterio)
+                     ("https://materiaimpersonale.wordpress.com/comments/feed/" kulesko))))
+#+end_src
+
+*** Typescript/React
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+;; Support for Typescript/React
+(add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode))
+#+end_src
+
+*** Dired
+Drag and drop:
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+;; Drag-and-drop to `dired`
+(add-hook 'dired-mode-hook 'org-download-enable)
+#+end_src
+
+*** Zola
+**** Markdown/Zola
+Funzioni ausiliarie che ho scritto per facilitarmi il lavoro quando scrivevo in Markdown. Ora esporto da org-mode, quindi l'utilità di queste funzioni è venuta meno, ma occasionalmente mi capita di impiegarle, quindi le lascio comunque.
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+;; Generate TOML frontmatter
+(defun new-toml-frontmatter ()
+  "Insert a TOML frontmatter for Markdown files"
+  (interactive)
+  (insert "+++\n"
+          "title=\"\"\n"
+          "date=\n"
+          "\n"
+          "[taxonomies]\n"
+          "categories=[\"\"]\n"
+          "tags=[\"\"]\n"
+          "\n"
+          "[extra]\n"
+          "+++"))
+#+end_src
+
+Questo hook mi permette di inserire il frontmatter ogni volta che apro un file Markdown vuoto:
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+(add-hook 'markdown-mode-hook
+          (lambda ()
+            (if (= (buffer-size) 0)
+            (new-toml-frontmatter))
+            (message "markdown hook")))
+#+end_src
+
+Shortcode:
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+;; Generate Zola Shortcodes
+(defun new-social-shortcode ()
+  "Generate new twitter shortcode"
+  (interactive)
+  (insert "{% social\(\n"
+          "social=\"tw\",\n"
+          "url=\"\",\n"
+          "author=\"\",\n"
+          "date=\"\"\n"
+          "\) %}"
+          "\n"
+          "{% end %}"))
+#+end_src
+
+**** Org/Zola
+Ho esportato l'abitudine precedente anche ai metadati in org-mode.
+Sì, sono pigro: figurati se sto a riscrivere "PROPERTIES" tutte le volte.
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+;; Generate ORG/Zola frontmatter
+;; TODO Section management
+;; MAYBE Add hook to org file IF hugo_base_dir or hugo_section is present at top
+(defun org-zola-frontmatter (slug)
+  "Insert org-mode properties under a paragraph to setup ox-hugo/zola exports"
+  (interactive "sEnter slug: ")
+  (insert ":PROPERTIES:\n"
+          (concat ":EXPORT_HUGO_SECTION: 2022/" slug "\n")
+          ":EXPORT_FILE_NAME: index\n"
+          ":END:\n"))
+#+end_src
+
+Sempre al fine di automatizzare la produzione dei metadati, meglio automatizzare l'inserimento del timestamp con questa funzione org-mode:
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+;; add "CLOSED" when an item is set with DONE state
+(setq org-log-done 'time)
+#+end_src
+
+*** Musica
+Di questa parte ho già parlato in [[https://www.zwitterio.it/coding/2022/how-do-i-play-my-lofi-music/][un post dedicato]].
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+;; Play Lo-Fi
+;; Implementation of the knuth shuffle
+;; TODO Start amberol or other music player
+(defun nshuffle (sequence)
+  (cl-loop for i from (length sequence) downto 2
+        do (cl-rotatef (elt sequence (random i))
+                    (elt sequence (1- i))))
+  sequence)
+
+(setq lofi-links '("https://www.youtube.com/watch?v=8nXqcugV2Y4" ;; 3:30 music session
+                   "https://www.youtube.com/watch?v=FVue6P2VoTc"
+                   "https://www.youtube.com/watch?v=NrJiXKwUjPI" ;; Music to put you in a better mood
+                   "https://www.youtube.com/watch?v=kgx4WGK0oNU"
+                   "https://www.youtube.com/watch?v=5qap5aO4i9A"))
+
+(setq vaporwave-links '("https://www.youtube.com/watch?v=nVCs83gSYD0"  ;; architecture in tokyo - Summer Paradise
+                        ))
+
+(defun play-lofi ()
+  "Play random lofi music on your browser"
+  (interactive)
+  (shell-command (concat "python -mwebbrowser " (car (nshuffle lofi-links)))))
+
+(defun play-vaporwave ()
+  "Play random lofi music on your browser"
+  (interactive)
+  (shell-command (concat "python -mwebbrowser " (car (nshuffle vaporwave-links)))))
+#+end_src
+
+*** Coltellino svizzero
+Funzioni che tornano utili in varie situazioni.
+
+Questa è per la uso per il pretty-printing di HTML, di solito, ma va bene per un qualunque chunk XML:
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+(defun bf-pretty-print-xml-region (begin end)
+  "Pretty format XML markup in region. You need to have nxml-mode
+http://www.emacswiki.org/cgi-bin/wiki/NxmlMode installed to do
+this.  The function inserts linebreaks to separate tags that have
+nothing but whitespace between them.  It then indents the markup
+by using nxml's indentation rules."
+  (interactive "r")
+  (save-excursion
+    (nxml-mode)
+    (goto-char begin)
+    (while (search-forward-regexp "\>[ \\t]*\<" nil t)
+      (backward-char) (insert "\n") (setq end (1+ end)))
+    (indent-region begin end)
+    (normal-mode))
+  (message "Ah, much better!"))
+#+end_src
+
+*** Org Capture
+Org capture torna comodo per appuntarsi in org-mode frammenti di pagine web.
+
+Come manipolare l'HTML, però, è qualcosa che noi dobbiamo spiegare ad =org-capture=, fornendo uno o più template.
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+;; org-capture
+(setq org-capture-templates `(
+	("p" "Protocol" entry (file+headline ,(concat org-directory "notes.org") "Inbox")
+        "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
+	("L" "Protocol Link" entry (file+headline ,(concat org-directory "notes.org") "Inbox")
+        "* %? [[%:link][%:description]] \nCaptured On: %U")
+))
+#+end_src
+
+*** Rust goodies
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+;; rustic quick fix
+(setq racer-rust-src-path
+  "/home/cromo/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library")
+#+end_src
+
+*** Curriculum Vitae
+Ho da poco cominciato a mantenere il mio CV in org-mode; poiché l'esportazione avviene attraverso LaTeX, torna comoda qualche funzione che tenga in ordine la directory di output ad ogni modifica.
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+(after! org
+  ;; Import ox-latex to get org-latex-classes and other funcitonality
+  ;; for exporting to LaTeX from org
+  (use-package! ox-latex
+    :init
+    ;; code here will run immediately
+    :config
+    ;; code here will run after the package is loaded
+    (setq org-latex-pdf-process
+          '("pdflatex -interaction nonstopmode -output-directory %o %f"
+            "bibtex %b"
+            "pdflatex -interaction nonstopmode -output-directory %o %f"
+            "pdflatex -interaction nonstopmode -output-directory %o %f"))
+    (setq org-latex-with-hyperref nil) ;; stop org adding hypersetup{author..} to latex export
+    ;; (setq org-latex-prefer-user-labels t)
+
+    ;; deleted unwanted file extensions after latexMK
+    ;; (setq org-latex-logfiles-extensions
+    ;;      (quote ("lof" "lot" "tex~" "aux" "idx" "log" "out" "toc" "nav" "snm" "vrb" "dvi" "fdb_latexmk" "blg" "brf" "fls" "entoc" "ps" "spl" "bbl" "xmpi" "run.xml" "bcf" "acn" "acr" "alg" "glg" "gls" "ist")))
+
+    (unless (boundp 'org-latex-classes)
+      (setq org-latex-classes nil))))
+
+(after! org
+  (use-package! ox-extra
+    :config
+    (ox-extras-activate '(latex-header-blocks ignore-headlines))))
+#+end_src
+
+*** Org Journal
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+;; org journal
+;; in ~/.doom.d/+bindings.el
+;; From: https://www.rousette.org.uk/archives/doom-emacs-tweaks-org-journal-and-org-super-agenda/
+(map! :leader
+      (:prefix ("j" . "journal") ;; org-journal bindings
+        :desc "Create new journal entry" "j" #'org-journal-new-entry
+        :desc "Open previous entry" "p" #'org-journal-open-previous-entry
+        :desc "Open next entry" "n" #'org-journal-open-next-entry
+        :desc "Search journal" "s" #'org-journal-search-forever))
+
+;; The built-in calendar mode mappings for org-journal
+;; conflict with evil bindings
+(map!
+ (:map calendar-mode-map
+   :n "o" #'org-journal-display-entry
+   :n "p" #'org-journal-previous-entry
+   :n "n" #'org-journal-next-entry
+   :n "O" #'org-journal-new-date-entry))
+
+;; Local leader (<SPC m>) bindings for org-journal in calendar-mode
+;; I was running out of bindings, and these are used less frequently
+;; so it is convenient to have them under the local leader prefix
+(map!
+ :map (calendar-mode-map)
+ :localleader
+ "w" #'org-journal-search-calendar-week
+ "m" #'org-journal-search-calendar-month
+ "y" #'org-journal-search-calendar-year)
+
+(setq org-journal-dir "~/org/amalgam")
+(setq org-journal-file-format "%Y-%m.org")
+(setq org-journal-file-type 'monthly)
+#+end_src
+** In conclusione
+
+- [ ] Riportare sotto org tutte le funzioni relative (per ora mantenuto quanto più vicino possibile all'originale per evitare casini)
+- [ ] Scrivi una conclusione decente
+- [ ] Tradurre l'intero post in inglese ed esportare la traduzione
+
+Questo file è in continua trasformazione.
+
+# Esporto prism.js perché per il momento Zola ha un bug che non mi consente di colorare la sintassi.
+{{{prismcss}}}
+{{{prismjs}}}
