@@ -11,7 +11,7 @@
 * DONE Configurare Emacs in Org-mode :emacs:org:@posts:
 CLOSED: [2022-08-03 mer 21:43]
 :PROPERTIES:
-:EXPORT_HUGO_SECTION: 2022/configurare-emacs-in-org-mode
+:EXPORT_HUGO_SECTION: software/emacs-config
 :EXPORT_FILE_NAME: index
 :END:
 
@@ -20,27 +20,34 @@ Questo stesso file è anche la mia personale configurazione per Doom Emacs.
 
 {{{more}}}
 
-** Emacs?
+** Emacs
 Innanzitutto, cos'è Emacs?
 
-Se, tradizionalmente, ci si riferisce ad Emacs come ad un editor di testo (principalmente noto per l'utilizzo in programmazione, quindi per la scrittura e manipolazione di codice), Emacs in verità è molto più di questo: è un interpreter di lisp, cioè una piattaforma a tutto tondo, capace di eseguire programmi anche molto complessi all'interno di un sistema integrato.
-Detta così, però, sembra tutto troppo vago per essere comprensibile: la verità, è che le potenzialità di questo software iniziano ad essere colte solo con un utilizzo assiduo, a seguito del superamento di una barriera d'apprendimento non indifferente, ma che vale la pena affrontare se si lavora molto con il testo.
+#+begin_quote
+Emacs is not a text editor, this is a common misnomer. It is far more apt to describe Emacs as a Lisp machine providing a generic user-centric text manipulation environment. That’s quite a mouthful. In simpler terms one can think of Emacs as a platform for text-related applications. It’s a vague and generic definition because Emacs itself is generic. ([[https://tecosaur.github.io/emacs-config/config.html#why-emacs][@tecosaur]])
+#+end_quote
 
-Io, ad esempio, uso spesso Emacs per:
+Se solitamente Emacs è conosciuto come editor di testo, in verità sotto la scocca si tratta di qualcosa di molto più complesso: Emacs è una lisp machine, ovvero un sistema integrato capace di interpretare ed eseguire codice lisp e, con esso, una miriade di programmi pure molto complessi, tipicamente legati alla manipolazione del testo. Considerata la versatilità della piattaforma, mi sarebbe impossibile descriverla senza disseminare avverbi come "solitamente" o "tipicamente".
+
+Io, ad esempio, uso quotidianamente Emacs per:
 - Scrivere codice
-- Scrivere prosa
-- Git (grazie a Magit, Emacs è anche il miglior git client in circolazione)
-- RSS (grazie ad Elfeed)
+- Scrivere prosa (via [[https://orgmode.org/][Org-mode]])
+- Gestire i file (via [[https://www.emacswiki.org/emacs/DiredMode][Dired]])
+- Git (grazie a [[https://magit.vc/][Magit]], Emacs è probabilmente il miglior git client in circolazione)
+- RSS (via [[https://github.com/skeeto/elfeed][Elfeed]])
+
+Per qualche tempo l'ho usato anche come emulatore di terminale, ora capita solo in circostanze particolari, ad esempio per compilare del codice che sto scrivendo nel buffer a fianco.
 
 ** Distribuzioni Emacs
-La barriera di ingresso, in verità, può essere parzialmente abbattuta per mezzo di distribuzioni di Emacs pre-configurate, tra cui ne cito un paio (molto famose):
-- Spacemacs, che è stata la mia prima distribuzione, ed è particolarmente indicata per i neofiti, grazie a tante magie come le funzioni d'aiuto richiamate attraverso un uso spasmodico della barra spaziatrice ed i cosiddetti layer.
-- **Doom Emacs**, che è la mia distribuzione attuale, e quindi quella con cui sto scrivendo questo documento; l'impiego di svariate strategie di lazy-loading e, in generale, una meditata selezione dei pacchetti rendono questa distribuzione estremamente scattante. Per questo, per l'ottima integrazione con Evil (emulazione vim) ed altri motivi, sto su Doom Emacs fin dalle prime giornate di prova.
+La barriera di ingresso, in verità, può essere parzialmente abbattuta per mezzo di distribuzioni Emacs pre-configurate, tra cui ne cito qualcuna, pescando tra le più famose:
+- [[https://www.spacemacs.org/][Spacemacs]] è stata la mia prima distribuzione: è particolarmente indicata per i neofiti in arrivo da vim, come ero io. Non solo è efficace nell'emulare vim (grazie ad [[https://github.com/emacs-evil/evil][Evil]]), ma dispone anche di miriadi di funzioni ausiliarie richiamabili con un semplice tocco sulla barra spaziatrice (space-emacs, non a caso).
+- [[https://github.com/rougier/nano-emacs][NANO Emacs]]: dipendenze minime, eccezionalmente elegante, funzionalmente molto vicina a Vanilla Emacs;
+- [[https://github.com/doomemacs/doomemacs][**Doom Emacs**]] è la mia distribuzione attuale, e quindi quella con cui sto scrivendo questo documento; anche questa (come Spacemacs) è molto bene integrata con Evil e si presta bene alle esigenze di ogni ex-vimmer. Inoltre, l'impiego di svariate strategie di lazy-loading e, in generale, una meditata selezione dei pacchetti rendono questa distribuzione estremamente scattante.
 
 La configurazione riportata in questo file può, potenzialmente, essere adattata anche ad altre distribuzioni Emacs, ma presa com'è funziona solo su Doom Emacs.
 
-** Lisp
-Come dicevo, Emacs è un interpreter di lisp, ma per essere più corretti dovremmo fare riferimento ad Emacs Lisp, un dialetto specifico della famiglia di linguaggi di programmazione che rientra sotto la denominazione "Lisp".
+** Emacs Lisp
+Come dicevo, Emacs è un interpreter di lisp, ma per essere più corretti dovremmo fare riferimento ad Emacs Lisp, un dialetto della famiglia di linguaggi di programmazione che rientra sotto la denominazione "Lisp" (LISt Processor).
 
 Come già detto altrove [fn::da init file di Doom Emacs], "visto un dialetto di lisp, visti tutti":
 
@@ -48,13 +55,21 @@ Come già detto altrove [fn::da init file di Doom Emacs], "visto un dialetto di 
 if you've seen one lisp, you've seen them all
 #+end_quote
 
-Questo accade perché il peculiare monomorfismo di lisp determina necessariamente l'impiego di una sintassi ridotta all'osso, che è facile intimorisca chiunque arrivi da linguaggi C-like. Al di là delle prime impressioni, Lisp porta con sé una delle sintassi più semplici possibili, leggibile a patto che il codice sia scritto da mani capaci. Questo è certamente vero con qualunque linguaggio di programmazione, ma con i lisp in maniera particolare, perché di suo la sintassi non costringe lo sviluppatore a tipizzare le variabili o a gerarchizzare i dati in maniere specifiche: sono i nomi dati alle funzioni ed alle liste a dovere essere eloquenti.
+# Questo accade perché il peculiare monomorfismo di lisp determina necessariamente l'impiego di una sintassi ridotta all'osso, che è facile intimorisca chiunque arrivi da linguaggi C-like. Al di là delle prime impressioni, la sintassi di Lisp è in verità una delle più semplici, leggibile a patto che il codice sia scritto da mani capaci. Questo è certamente vero con qualunque linguaggio di programmazione, ma con i lisp in maniera particolare, perché di suo la sintassi non costringe lo sviluppatore a tipizzare le variabili o a gerarchizzare i dati in maniere specifiche: sono i nomi dati alle funzioni ed alle liste a dovere essere eloquenti.
 
-Come Emacs è tra i più antichi editor di testo ancora in circolazione, così lisp è tra i più antichi linguaggi, eppure anche lisp è tuttora vivo e vegeto ed è "parlato" quotidianamente da migliaia di sviluppatori.
+# Come Emacs è tra i più antichi editor di testo ancora in circolazione, così lisp è tra i più antichi linguaggi, eppure anche lisp è tuttora vivo e vegeto ed è "parlato" quotidianamente da migliaia di sviluppatori.
 
-[[https://www.zwitterio.it/coding/2022/elisp-intro/][Ho scritto altrove un'introduzione ad Emacs Lisp]], ma è intesa come riassunto di funzioni utili, semplici appunti personali. Avendo iniziato da relativamente poco tempo a navigare nell'oceano di meraviglie e parentesi lispiane, non sono certo la fonte più autorevole per scendere nel dettaglio.
+Non voglio dilungarmi in questa sede nella descrizione del linguaggio. Per un assaggio della sintassi e di qualche funzione base, piuttosto, rimando [[https://www.zwitterio.it/coding/2022/elisp-intro/][a questo post che ho scritto sul blog come breve introduzione]].
 
-*** TODO Riportare fonti d'apprendimento Lisp
+# [[https://www.zwitterio.it/coding/2022/elisp-intro/][Ho scritto sul blog un'introduzione ad Emacs Lisp]], ma è in effetti più un mucchietto di appunti personali, un riassunto di funzioni utili.
+
+In caso voleste spingervi lievemente oltre, rimando a questi altri post (in ordine di difficoltà):
+- [[https://zwitterio.it/coding/2022/how-do-i-play-my-lofi-music/][Come riproduco la mia musica Lo-fi]];
+- [[https://zwitterio.it/coding/2022/quote-tweets-properly-with-emacs-lisp/][Come citare un tweet in emacs lisp]];
+- [[https://zwitterio.it/coding/2022/apis-on-emacs/][Come usare le API di twitter in Emacs Lisp]] (vedi anche [[https://github.com/twitterdev/Twitter-API-v2-sample-code/pull/82/files/981dbf2e73d0168f09b9f59d420d1ebc888d345e][la mia PR alla repo ufficiale di Twitter]])
+
+Avendo iniziato solo da poco tempo a navigare nell'oceano di meraviglie e parentesi lispiane, non sono certo la fonte più autorevole per scendere ancora più nel dettaglio.
+Per una guida rapida ad Emacs Lisp, consiglio di dare un'occhiata [[https://github.com/chrisdone/elisp-guide][a questa repo]].
 
 ** Org-mode
 #+begin_quote
@@ -65,13 +80,13 @@ Your life in plain text
 A prima vista sembra "solo l'ennesimo linguaggio di markup", come [[https://en.wikipedia.org/wiki/Markdown][Markdown]] o [[https://en.wikipedia.org/wiki/ReStructuredText][reStructuredText]], ma in realtà è molto, molto di più [fn::anche se, bisogna dirlo, se pure fosse un semplice linguaggio di markup ci sarebbe da tenerne in conto, vista la piacevole sintassi].
 
 Proprio come l'abissale versatilità di Emacs riesce a farsi conoscere solo grazie ad ore ed ore di utilizzo, anche Org-mode ha bisogno di tempo per essere addomesticato; in questo caso, in compenso, è più facile annoverare gli utilizzi più comuni:
-- applicazioni di /literate programming/ (un paradigma di programmazione ideato da Donald Knuth alla base di anche di questo file),
+- applicazioni di /literate programming/ (un paradigma di programmazione ideato da Donald Knuth, che è alla base anche di questo documento),
 - scrittura di agende
 - scrittura di zettelkasten
 - stesura di documenti scientifici
-- mantenere blog
+- mantenimento di uno o più blog
 
-Org-mode, o più semplicemente "Org", può anche essere impiegato per scrivere e gestire nel tempo la propria configurazione di Emacs, cioè un mucchio di codice lisp che con il tempo tende a crescere per adeguarsi quanto più possibile alle necessità dell'utente.
+# Org-mode, o più semplicemente "Org", può anche essere impiegato per scrivere e gestire nel tempo la propria configurazione di Emacs, cioè un mucchio di codice lisp che con il tempo tende a crescere per adeguarsi quanto più possibile alle necessità dell'utente.
 
 ** Intessere
 Tradizionalmente, la configurazione di Doom Emacs è raccolta in 3 file fondamentali, a loro volta contenuti in una apposita directory nella home, =.doom.d=.
@@ -87,28 +102,32 @@ Altre distribuzioni hanno gerarchie più semplici (Vanilla Emacs prevede sia tut
 
 Doom, di suo, mantiene secondo me una piacevole via di mezzo.
 
+Anziché intervenire su questi file direttamente, possiamo scrivere la nostra configurazione su un file =.org=, da cui generare in seconda battuta i 3 file di configurazione principali.
+
 #+begin_quote
-Let us change our traditional attitude to the construction of programs: Instead of imagining that our main task is to instruct a computer what to do, let us concentrate rather on explaining to human beings what we want a computer to do. — Donald Knuth
+Let us change our traditional attitude to the construction of programs: Instead of imagining that our main task is to instruct a computer what to do, let us concentrate rather on explaining to human beings what we want a computer to do.
+
+The practitioner of literate programming can be regarded as an essayist, whose main concern is with exposition and excellence of style. Such an author, with thesaurus in hand, chooses the names of variables carefully and explains what each variable means. He or she strives for a program that is comprehensible because its concepts have been introduced in an order that is best for human understanding, using a mixture of formal and informal methods that reinforce each other. — Donald Knuth
 #+end_quote
 
-Anziché intervenire su questi file direttamente, possiamo scrivere la nostra configurazione su un file =.org=, da cui generare in seconda battuta i 3 file di configurazione principali.
-Questa prassi si rifa' ai principi della programmazione letteraria (/literate programming/), un paradigma proposto per la prima volta da Donald Knuth, che ne dimostrò le potenzialità scrivendo così il compilatore di TeX.
+Come accennavo in una parentesi sopra, questa prassi si rifa' ai principi della programmazione letteraria (/literate programming/), un paradigma proposto per la prima volta da Donald Knuth, che ne dimostrò le potenzialità scrivendo così il compilatore di TeX.
+
+# Grazie ad org-mode è possibile abbracciare il literate programming per mezzo di una libreria detta "babel".
+
+Per maggiori dettagli sul literate programming in org-mode [[https://orgmode.org/worg/org-contrib/babel/intro.html#literate-programming][vedi la documentazione ufficiale]].
 
 # [[https://blog.thomasheartman.com/posts/configuring-emacs-with-org-mode-and-literate-programming][Come scrive Thomas Heartman sul suo blog]], nelle versioni più recenti di Emacs bastano poche righe di codice per incorporare in org-mode la propria configurazione, grazie ad una funzione speciale di org-babel che supporta proprio questo scopo (sempre più diffuso nella comunità di utenti).
 
-Diego Zamboni, nella propria configurazione scrive:
+Diego Zamboni, [[https://gitlab.com/zzamboni/dot-doom][nella propria configurazione]] scrive:
  #+BEGIN_QUOTE
 Emacs config is an art, and I have learned a lot by reading through other people’s config files, and from many other resources.
 #+END_QUOTE
 
 Insomma, l'arte di configurare Emacs (come tante altre) si affina studiando i trucchetti altrui.
-Tra le configurazioni org più illuminanti, segnalo:
-- [[https://git.tecosaur.net/tec/emacs-config][la configurazione di tecosaur]]
-- [[https://gitlab.com/zzamboni/dot-doom][la configurazione di Diego Zamboni]]
+Tra le configurazioni org più illuminanti, segnalo anche [[https://git.tecosaur.net/tec/emacs-config][la configurazione di tecosaur]].
+Per entrambe trovate anche i mirrors su Github (che renderizza piacevolmente anche i file org).
 
-Per entrambe trovate anche i mirrors su Github (che renderizza molto piacevolmente i file org).
-
-Ci sono vari modi per consentire ad Emacs di leggere la configurazione attraverso un org file; come tanti altri, io qui mi limito a generare i file di configurazione a partire dal file org, per mezzo di una pratica che il già citato Donald Knuth ha chiamato "tangling" (aggrovigliare, intessere).
+Ci sono vari modi per consentire ad Emacs di leggere la configurazione attraverso un org file; come tanti altri, io qui mi limito a generare i file di configurazione a partire dal file org, per mezzo di una pratica che Donald Knuth ha chiamato "tangling" (aggrovigliare, intessere).
 
 ** Frontespizi
 
@@ -116,10 +135,11 @@ Cominciamo dalla testa dei nostri file di configurazione, cioè da tutti i comme
 
 # Aggiungere questo pezzo con una macro:
 
+#+name: do-not-edit
 #+begin_src emacs-lisp
 ;; DO NOT EDIT THIS FILE DIRECTLY
 ;; This is a file generated from a literate programing source file located at
-;; TODO INSERT LOCATION GITHUB HERE
+;; https://github.com/gicrisf/emacs-config
 ;; You should make any changes there and regenerate it from Emacs org-mode
 ;; using org-babel-tangle (C-c C-v t)
 #+end_src
@@ -127,8 +147,10 @@ Cominciamo dalla testa dei nostri file di configurazione, cioè da tutti i comme
 
 Frontespizio di =init.el=.
 
-#+begin_src emacs-lisp :tangle tangled/.doom.d/init.el
+#+begin_src emacs-lisp :tangle tangled/.doom.d/init.el :noweb yes
 ;;; init.el -*- lexical-binding: t; -*-
+
+<<do-not-edit>>
 
 ;; This file controls what Doom modules are enabled and what order they load
 ;; in. Remember to run 'doom sync' after modifying it!
@@ -146,9 +168,11 @@ Frontespizio di =init.el=.
 #+end_src
 
 Frontespizio di =packages.el=.
-#+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el
+#+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el :noweb yes
 ;; -*- no-byte-compile: t; -*-
 ;;; $DOOMDIR/packages.el
+
+<<do-not-edit>>
 
 ;; To install a package with Doom you must declare them here and run 'doom sync'
 ;; on the command line, then restart Emacs for the changes to take effect -- or
@@ -160,8 +184,10 @@ Frontespizio di =packages.el=.
 #+end_src
 
 Frontespizio di =config.el=.
-#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el :noweb yes
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
+
+<<do-not-edit>>
 
 ;; Place your private configuration here! Remember, you do not need to run 'doom
 ;; sync' after modifying this file!
