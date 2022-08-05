@@ -70,6 +70,7 @@ In caso voleste spingervi lievemente oltre, rimando a questi altri post (in ordi
 
 Avendo iniziato solo da poco tempo a navigare nell'oceano di meraviglie e parentesi lispiane, non sono certo la fonte più autorevole per scendere ancora più nel dettaglio.
 Per una guida rapida ad Emacs Lisp, consiglio di dare un'occhiata [[https://github.com/chrisdone/elisp-guide][a questa repo]].
+Per una guida meno rapida, ma più approfondita, fate riferimento a [[https://github.com/hypernumbers/learn_elisp_the_hard_way][Learn elisp the hard way]].
 
 ** Org-mode
 #+begin_quote
@@ -599,10 +600,28 @@ TODO usa file org separato
 #+end_src
 
 *** Typescript/React
+Innanzitutto, bisogna avere aggiunto alcuni moduli: =web= e =javascript=, in particolare.
+Per farlo, basta togliere =;;= nel file di configurazione =.doom.d/init.el=, come fatto nel paragrafo sopra.
+
+A questo punto, è possibile che uno voglia lavorare con file in formato =.tsx=. Il supporto per questo caso d'uso potrebbe arrivare presto, ma per il momento ci viene in soccorso una semplice riga di lisp nel file di configurazione, [[https://github.com/hlissner/doom-emacs/issues/2252#issuecomment-569059839][secondo il suggerimento di hlissner]]:
+
 #+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
 ;; Support for Typescript/React
 (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode))
 #+end_src
+
+**** Vanilla Emacs
+In caso foste in cerca di una soluzione per Vanilla Emacs o Spacemacs, quest'altra soluzione potrebbe fare al caso vostro:
+
+#+begin_src emacs-lisp
+(use-package typescript-mode
+  :mode (rx ".ts" string-end)
+  :init
+  (define-derived-mode typescript-tsx-mode typescript-mode "typescript-tsx")
+  (add-to-list 'auto-mode-alist (cons (rx ".tsx" string-end) #'typescript-tsx-mode)))
+#+end_src
+
+Praticamente dichiariamo una modalità derivata dalla =typescript-mode= e le assegniamo anche i file con estensione =.tsx=. Per maggiori dettagli, [[https://github.com/emacs-typescript/typescript.el/issues/4#issuecomment-849355222][fate riferimento a questo issue su Github]].
 
 *** Dired
 Drag and drop:
@@ -615,6 +634,32 @@ Drag and drop:
 *** Zola
 **** Markdown/Zola
 Funzioni ausiliarie che ho scritto per facilitarmi il lavoro quando scrivevo in Markdown. Ora esporto da org-mode, quindi l'utilità di queste funzioni è venuta meno, ma occasionalmente mi capita di impiegarle, quindi le lascio comunque.
+
+***** TOML frontmatter
+Immaginate di voler generare un nuovo file Markdown per il vostro sito web.
+In base al tipo di generatore, questo potrà avere bisogno di un frontespizio in TOML o in YAML, magari. Si tratta di pochi caratteri, ma scriverli di volta in volta può risultare un po' frustrante, soprattutto se si scrivono molti pezzi.
+
+Allora perché non lasciare che sia Emacs a fare il lavoro per noi? Siccome [[https://shallowsky.com/blog/linux/editors/code-file-templates.html][non sono il primo ad essermi posto questa domanda]], ho semplicemente riformulato una soluzione largamente adottata. La forza del programmatore, d'altronde, è la sua pigrizia.
+
+Iniziamo scrivendo una funzione che generi il blocco di testo di cui abbiamo bisogno.
+Io utilizzo Zola per generare il mio blog, quindi potrei scrivere il frontespizio anche in YAML, ma TOML è il formato di riferimento (ed è anche quello che preferisco, senza alcun dubbio).
+
+Vogliamo quindi ottenere qualcosa del genere:
+
+#+begin_src toml
++++
+title=""
+date=
+
+[taxonomies]
+categories=[""]
+tags=[""]
+
+[extra]
++++
+#+end_src
+
+Traduciamo in lisp:
 
 #+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
 ;; Generate TOML frontmatter
@@ -633,7 +678,19 @@ Funzioni ausiliarie che ho scritto per facilitarmi il lavoro quando scrivevo in 
           "+++"))
 #+end_src
 
-Questo hook mi permette di inserire il frontmatter ogni volta che apro un file Markdown vuoto:
+Da [[https://www.emacswiki.org/emacs/InteractiveFunction][EmacsWiki]]:
+#+begin_quote
+A Lisp function becomes a command when its body contains, at top level, a form that calls the special form `(interactive...)’. This special form does nothing when executed, but its presence in the function definition indicates that interactive calling is permitted. Its argument controls the reading of the function arguments in an interactive call.
+#+end_quote
+
+Il resto penso sia fin troppo comprensibile perché meriti spiegazione.
+
+Aggiungiamo questa nuova funzione a =.doom.d/config.el= (o =.emacs= in Vanilla Emacs).
+Poiché le funzioni nel config vengono rese disponibili al lancio di Emacs, è necessario un =doom/reload= (=SPC-h-r=).
+
+Già invocare questa funzione nel momento della creazionee del file è ben più comodo della situazione di partenza, in cui dovevamo di volta in volta scrivere l'intero frontespizio. MA non è sufficiente: noi vogliamo che il frontespizio sia automaticamente generato su ogni file markdown nuovo di zecca.
+
+Con la funzione =add-hook= possiamo agganciare il lancio della nostra funzione ad una modalità. Nel nostro caso, la =markdown-mode=:
 
 #+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
 (add-hook 'markdown-mode-hook
@@ -643,7 +700,11 @@ Questo hook mi permette di inserire il frontmatter ogni volta che apro un file M
             (message "markdown hook")))
 #+end_src
 
-Shortcode:
+Da ora in avanti, basterà aprire un file Markdown vuoto perché Emacs inserisca automaticamente il frontespizio.
+
+***** Shortcode
+Con lo stesso approccio, si possono anche ottenere delle funzioni per aggiungere degli shortcode molto usati nel corpo del testo e persino associare delle combinazioni di tasti ad esse!
+
 #+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
 ;; Generate Zola Shortcodes
 (defun new-social-shortcode ()
@@ -658,6 +719,8 @@ Shortcode:
           "\n"
           "{% end %}"))
 #+end_src
+
+Uniamoci, confratelli, nell'amore per Emacs.
 
 **** Org/Zola
 Ho esportato l'abitudine precedente anche ai metadati in org-mode.
@@ -854,8 +917,17 @@ Ho da poco cominciato a mantenere il mio CV in org-mode; poiché l'esportazione 
 (setq org-journal-file-type 'monthly)
 #+end_src
 
-** Systemd
-*** Emacs daemon
+** Emacs daemon
+Si tratta di una possibilità introdotta con Emacs 23.1 per ridurre i (già bassi) tempi di avvio di ogni finestra. Ottimo se, come me, utilizzate Emacs anche per modificare piccoli file di testo per cui andrebbe benissimo vim o nano.
+
+Per lanciare il daemon da terminale, basta scrivere:
+
+#+begin_src bash
+emacs --daemon
+#+end_src
+
+Facile, no?
+Per lanciarlo all'avvio, si può aggiungere il comando qui sopra nella sezione opportuna fornita dal DE o, meglio ancora, perdere mezzo minuto per impostare systemd (utile soprattutto per chi usa un tiling manager anziché un DE "fatto e finito").
 
 #+begin_src txt :tangle tangled/.config/systemd/user/emacs.service
 [Unit]
@@ -871,6 +943,57 @@ Restart=on-failure
 
 [Install]
 WantedBy=default.target
+#+end_src
+
+Per abilitare, lanciare due comandi:
+#+begin_src bash
+systemctl enable --user emacs
+systemctl start --user emacs
+#+end_src
+
+Ovviamente non mi sono inventato nulla, sto solo riprendendo la [[https://www.emacswiki.org/emacs/EmacsAsDaemon][documentazione]].
+L'approccio qui sopra non funziona se usate CentOS o, chiaramente, se non usate [[https://wiki.archlinux.org/title/Systemd][systemd]].
+Ma, solitamente, chi non usa systemd non ha bisogno che glielo dica io, perché se l'è andata a cercare.
+
+Fatto ciò, non è sufficiente avviare Emacs con il consueto comando =emacs=, perché quello continuerebbe ad avviare un'istanza per ogni finestra.
+È necessario specificare che vogliamo solo [[https://www.emacswiki.org/emacs/EmacsClient][lanciare un client]].
+
+Al posto di =emacs=, scriveremo:
+
+#+begin_src bash
+emacsclient --create-frame --alternate-editor=""
+#+end_src
+
+Ovviamente, scrivere questo comando per intero di volta in volta è una noia, quindi dobbiamo effettuare ancora qualche modifica.
+
+Ridefiniamo il nostro editor preferito, aggiungendo questi tre comandi a =.bashrc=:
+
+#+begin_src txt
+# ~/.bashrc
+
+export ALTERNATE_EDITOR=""
+export EDITOR="emacsclient -t"                  # $EDITOR opens in terminal
+export VISUAL="emacsclient -c -a emacs"         # $VISUAL opens in GUI mode
+#+end_src
+
+#+begin_quote
+The emacsclient program will connect to a running instance of Emacs if it exists. -c tells Emacs to open the file in a new frame, which is optional. Specifying -a=”” tells emacsclient to start an instance of emacs if it cannot find one already running.
+#+end_quote
+
+Personalmente, preferisco usare la GUI di Emacs come EDITOR, quindi sostituirò l'argomento del secondo comando con quello del terzo:
+
+#+begin_src txt
+# ~/.bashrc
+
+export EDITOR="emacsclient -c -a emacs"
+#+end_src
+
+Si può anche aggiungere un alias:
+
+#+begin_src txt
+# ~/.bashrc
+
+alias emacs="emacsclient -c -a emacs"
 #+end_src
 
 ** In conclusione
