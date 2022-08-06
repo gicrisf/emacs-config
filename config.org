@@ -631,11 +631,10 @@ Drag and drop:
 (add-hook 'dired-mode-hook 'org-download-enable)
 #+end_src
 
-*** Zola
-**** Markdown/Zola
+*** Markdown/Zola
 Funzioni ausiliarie che ho scritto per facilitarmi il lavoro quando scrivevo in Markdown. Ora esporto da org-mode, quindi l'utilità di queste funzioni è venuta meno, ma occasionalmente mi capita di impiegarle, quindi le lascio comunque.
 
-***** TOML frontmatter
+**** TOML frontmatter
 Immaginate di voler generare un nuovo file Markdown per il vostro sito web.
 In base al tipo di generatore, questo potrà avere bisogno di un frontespizio in TOML o in YAML, magari. Si tratta di pochi caratteri, ma scriverli di volta in volta può risultare un po' frustrante, soprattutto se si scrivono molti pezzi.
 
@@ -702,7 +701,7 @@ Con la funzione =add-hook= possiamo agganciare il lancio della nostra funzione a
 
 Da ora in avanti, basterà aprire un file Markdown vuoto perché Emacs inserisca automaticamente il frontespizio.
 
-***** Shortcode
+**** Shortcode
 Con lo stesso approccio, si possono anche ottenere delle funzioni per aggiungere degli shortcode molto usati nel corpo del testo e persino associare delle combinazioni di tasti ad esse!
 
 #+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
@@ -849,7 +848,21 @@ $ update-desktop-database ~/.local/share/applications/
 #+end_src
 
 *** Curriculum Vitae
-Ho da poco cominciato a mantenere il mio CV in org-mode; poiché l'esportazione avviene attraverso LaTeX, torna comoda qualche funzione che tenga in ordine la directory di output ad ogni modifica.
+# TODO make a literate CV
+Trovandomi costretto, ancora una volta, a scrivere un CV, mi sono detto, ancora una volta, quanto fosse necessario trovare un modo perché fosse l'ultima.
+Eppure, non importa quanto tempo si passi ad ideare degli automatismi, il CV è qualcosa di intrinsecamente in via di definzione, quindi sempre soggetto a cambiamenti.
+Non si può fare altro che rimaneggiarlo continuamente. Bisogna quindi focalizzarsi sulla via che garantisca l'attrito minore, così da rendere la pratica degli aggiornamenti non troppo detestabile.
+Il generato più importante di un CV, ad oggi, è sempre il formato stampabile, cioè un PDF. Ad un buon PDF si può arrivare principalmente per queste vie:
+- LaTeX
+- LibreOffice, Microsoft Office o altre suite d'ufficio WYSIWYG
+- Immagini (SVG e vettoriali in genere)
+
+A me piacerebbe, però, anche avere una pagina web sempre aggiornata, quindi gestire un file esportabile sia in PDF (più o meno direttamente) che in HTML.
+LaTeX è scomodo per esportare in formati web ed io vorrei mantenere una matrice utile ad esportare da ambo i lati con anche piccole differenze (senza mantenere due file o due branch paralleli su git).
+C'è chi ottiene questo risultato esportando a partire da un JSON, ma figurarsi se mi metto a scrivere un JSON a mano. Si potrebbe mantenere un YAML/TOML da esportare in JSON che poi esporti nei vari formati, ma comunque mi sembra una strategia poco flessibile.
+
+Sulla base di queste premesse,
+[[https://github.com/gicrisf/my-org-resume][ho da poco cominciato a mantenere il mio CV in org-mode]]; poiché l'esportazione avviene attraverso LaTeX (via template AltaCV), torna comoda qualche funzione che tenga in ordine la directory di output ad ogni modifica.
 
 #+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
 (after! org
