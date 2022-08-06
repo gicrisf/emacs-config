@@ -476,16 +476,91 @@ literate
 (default +bindings +smartparens)
 #+end_src
 
-** Pacchetti aggiuntivi
-Chiaramente, non tutti i pacchetti disponibili per emacs sono stati integrati in moduli di Doom, quindi alcuni andranno installati per altre vie, ad esempio MELPA o delle git repo.
+** Pacchetti
+Chiaramente, non tutti i pacchetti disponibili per emacs sono stati integrati in moduli di Doom, quindi alcuni andranno installati per altre vie, ad esempio MELPA o delle repository git.
 
-Questo pezzo di codice nasce per dare spazio a tutti questi pacchetti.
+*** Package!
+Mantieni i commenti originali di =packages.el= all'interno del file.
+
+#+name: packages-recipe
+#+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el
+;; To install a package directly from a remote git repo, you must specify a
+;; `:recipe'. You'll find documentation on what `:recipe' accepts here:
+;; https://github.com/raxod502/straight.el#the-recipe-format
+;(package! another-package
+;  :recipe (:host github :repo "username/repo"))
+#+end_src
+
+#+name: packages-files
+#+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el
+;; If the package you are trying to install does not contain a PACKAGENAME.el
+;; file, or is located in a subdirectory of the repo, you'll need to specify
+;; `:files' in the `:recipe':
+;(package! this-package
+;  :recipe (:host github :repo "username/repo"
+;           :files ("some-file.el" "src/lisp/*.el")))
+#+end_src
+
+#+name: packages-disable
+#+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el
+;; If you'd like to disable a package included with Doom, you can do so here
+;; with the `:disable' property:
+;(package! builtin-package :disable t)
+#+end_src
+
+#+name: packages-override
+#+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el
+;; You can override the recipe of a built in package without having to specify
+;; all the properties for `:recipe'. These will inherit the rest of its recipe
+;; from Doom or MELPA/ELPA/Emacsmirror:
+;(package! builtin-package :recipe (:nonrecursive t))
+;(package! builtin-package-2 :recipe (:repo "myfork/package"))
+#+end_src
+
+#+name: packages-branch
+#+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el
+;; Specify a `:branch' to install a package from a particular branch or tag.
+;; This is required for some packages whose default branch isn't 'master' (which
+;; our package manager can't deal with; see raxod502/straight.el#279)
+;(package! builtin-package :recipe (:branch "develop"))
+#+end_src
+
+#+name: packages-pin
+#+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el
+;; Use `:pin' to specify a particular commit to install.
+;(package! builtin-package :pin "1a2b3c4d5e")
+#+end_src
+
+#+name: packages-unpin
+#+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el
+;; Doom's packages are pinned to a specific commit and updated from release to
+;; release. The `unpin!' macro allows you to unpin single packages...
+;(unpin! pinned-package)
+;; ...or multiple packages
+;(unpin! pinned-package another-pinned-package)
+;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
+;(unpin! t)
+#+end_src
+
+*** UI
+Sono affezionato ai temi di spacemacs. Uso specialmente quello chiaro, se ho bisogno di sovrailluminare lo schermo.
 
 #+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el
 (package! spacemacs-theme)
+#+end_src
 
-;; (package! vala-mode)
+Mi piacerebbe molto avere a disposizione anche i colori di nano-emacs, ma per il momento sembra sia una cosa più complessa del previsto. Henrik Lissner ha detto un paio di volte che avrebbe intenzione di dedicare un intero modulo a questa integrazione, ma non sembra una priorità.
 
+*** Lang
+Il supporto per Vala è largamente ereditato dalla mode per C#.
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el
+(package! vala-mode)
+#+end_src
+
+*** Org-mode
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el
 (package! org-download)
 
 (package! org-drill)
@@ -495,68 +570,43 @@ Questo pezzo di codice nasce per dare spazio a tutti questi pacchetti.
 ;; (package! helm-org-rifle)
 
 (package! org-web-tools)
+#+end_src
 
-;; (package! ox-hugo)
+L'exporter per Zola è un pacchetto che sto mantenendo io, quindi capita spesso che io debba testare delle modifiche in locale. =package!= gestisce i download, quindi in teoria non dovrebbe essere impiegato per la gestione di file in locale, ma [[https://github.com/doomemacs/doomemacs/issues/3842#issuecomment-681039894][Henrik Lissner consiglia di usare comunque la macro perché è stata adattata anche a questo genere di situazioni]].
 
-;; `package!` handles downloading. We don't need it here, because I wanna test the local thing
-;; BUT
-;; https://github.com/doomemacs/doomemacs/issues/3842#issuecomment-680906603
-;; This guy say that `package!` has been adapted for this use case too
-;; hlissner suggests the use of package macro too, so I will go for it
-;; https://github.com/doomemacs/doomemacs/issues/3842#issuecomment-681039894
-;; As hlissner said,
-;; "Note: with :no-byte-compile t,
-;; you don't have to run doom sync every time you make a change to the package."
-;; Runtime error:
-;; Details: ((:private . packages) "/home/cromo/.doom.d/packages.el" (wrong-type-argument listp (doom-package-error "ox-hugo" . "Keyword argument :no-byte-compile not one of (:local-repo :files :flavor :build :pre-build :post-build :includes :type :repo :host :branch :protocol :remote :nonrecursive :fork :depth :source :inherit)")))
-;; Maybe this is the problem? => https://github.com/doomemacs/doomemacs/issues/4142#issuecomment-715532212
-;; It doesn't seems like that
+Aggiunge:
 
-;; (package! ox-hugo :recipe (:local-repo "lisp/ox-zola"))
+#+begin_quote
+Note: with =:no-byte-compile t=, you don't have to run doom sync every time you make a change to the package.
+#+end_quote
 
+Così:
+
+#+begin_src emacs-lisp
+(package! ox-hugo :recipe (:local-repo "lisp/ox-zola"))
+#+end_src
+
+Peccato che a me dia "runtime error":
+
+#+begin_quote
+Details: ((:private . packages) "/home/cromo/.doom.d/packages.el" (wrong-type-argument listp (doom-package-error "ox-hugo" . "Keyword argument :no-byte-compile not one of (:local-repo :files :flavor :build :pre-build :post-build :includes :type :repo :host :branch :protocol :remote :nonrecursive :fork :depth :source :inherit)")))
+#+end_quote
+
+Non ho ben capito perché (che sia [[https://github.com/doomemacs/doomemacs/issues/4142#issuecomment-715532212][questo il problema]]? non mi pare...), ma ho risolto più brutalmente. Innanzitutto installo il codice dalla mia repo.
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el
 (package! ox-hugo :recipe (:host github :repo "gicrisf/ox-zola"))
+#+end_src
 
+In secondo luogo, faccio le modifiche in locale e lancio =emacs-lisp-byte-compile-and-load= tutte le volte che modifico qualcosa. Finché non riavvio Emacs, è possibile testare quanto si vuole. Forse un po' più scomodo, ma è un approccio che fa il suo sporco lavoro.
+
+*** Twitter
+Questo piccolo pacchetto (che conto di estendere presto) nasce per assolvere ad una funzione molto semplice: citare i tweet nel mio blog.
+Ne racconto qui:
+- [[https://zwitterio.it/coding/2022/quote-tweets-properly-with-emacs-lisp/][Come citare un tweet in emacs lisp]];
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el
 (package! eltweet :recipe (:host github :repo "gicrisf/eltweet"))
-
-;; To install a package directly from a remote git repo, you must specify a
-;; `:recipe'. You'll find documentation on what `:recipe' accepts here:
-;; https://github.com/raxod502/straight.el#the-recipe-format
-;(package! another-package
-;  :recipe (:host github :repo "username/repo"))
-
-;; If the package you are trying to install does not contain a PACKAGENAME.el
-;; file, or is located in a subdirectory of the repo, you'll need to specify
-;; `:files' in the `:recipe':
-;(package! this-package
-;  :recipe (:host github :repo "username/repo"
-;           :files ("some-file.el" "src/lisp/*.el")))
-
-;; If you'd like to disable a package included with Doom, you can do so here
-;; with the `:disable' property:
-;(package! builtin-package :disable t)
-
-;; You can override the recipe of a built in package without having to specify
-;; all the properties for `:recipe'. These will inherit the rest of its recipe
-;; from Doom or MELPA/ELPA/Emacsmirror:
-;(package! builtin-package :recipe (:nonrecursive t))
-;(package! builtin-package-2 :recipe (:repo "myfork/package"))
-
-;; Specify a `:branch' to install a package from a particular branch or tag.
-;; This is required for some packages whose default branch isn't 'master' (which
-;; our package manager can't deal with; see raxod502/straight.el#279)
-;(package! builtin-package :recipe (:branch "develop"))
-
-;; Use `:pin' to specify a particular commit to install.
-;(package! builtin-package :pin "1a2b3c4d5e")
-
-
-;; Doom's packages are pinned to a specific commit and updated from release to
-;; release. The `unpin!' macro allows you to unpin single packages...
-;(unpin! pinned-package)
-;; ...or multiple packages
-;(unpin! pinned-package another-pinned-package)
-;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
-;(unpin! t)
 #+end_src
 
 ** Configurazione generale
@@ -1004,7 +1054,6 @@ Io sto su Arch, quindi installo con pacman:
 #+begin_src bash
 sudo pacman -S rust-analyzer
 #+end_src
-
 
 *** Curriculum Vitae
 # TODO make a literate CV
