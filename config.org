@@ -395,7 +395,7 @@ Questo pezzo di codice nasce per dare spazio a tutti questi pacchetti.
 
 (package! org-journal)
 
-(package! helm-org-rifle)
+;; (package! helm-org-rifle)
 
 (package! org-web-tools)
 
@@ -624,10 +624,9 @@ In caso foste in cerca di una soluzione per Vanilla Emacs o Spacemacs, quest'alt
 Praticamente dichiariamo una modalità derivata dalla =typescript-mode= e le assegniamo anche i file con estensione =.tsx=. Per maggiori dettagli, [[https://github.com/emacs-typescript/typescript.el/issues/4#issuecomment-849355222][fate riferimento a questo issue su Github]].
 
 *** Dired
-Drag and drop:
+Drag and drop to dired:
 
 #+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
-;; Drag-and-drop to `dired`
 (add-hook 'dired-mode-hook 'org-download-enable)
 #+end_src
 
@@ -778,8 +777,8 @@ Di questa parte ho già parlato in [[https://www.zwitterio.it/coding/2022/how-do
   (shell-command (concat "python -mwebbrowser " (car (nshuffle vaporwave-links)))))
 #+end_src
 
-*** Coltellino svizzero
-Funzioni che tornano utili in varie situazioni.
+*** Pretty print
+# Funzioni che tornano utili in varie situazioni.
 
 Questa è per la uso per il pretty-printing di HTML, di solito, ma va bene per un qualunque chunk XML:
 
@@ -928,6 +927,85 @@ Sulla base di queste premesse,
 (setq org-journal-dir "~/org/amalgam")
 (setq org-journal-file-format "%Y-%m.org")
 (setq org-journal-file-type 'monthly)
+#+end_src
+
+*** Deft
+Set directory, extension to search for and explicitly say you want to search recursively in the subfolders.
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+;; Not using deft rn
+;;(setq deft-directory "~/org"
+;;      deft-extensions '("org" "txt"))
+;;(setq deft-recursive t)
+#+end_src
+
+La funzione principale per me è troppo lenta, oltre ad essere fin troppo fornita. Per ora disabilito tutto, perché preferisco usare =SPC+n+s= (notes/search note).
+
+*** Apri questo file
+Al posto di aprire la cartella =.doom.d= per configurare Emacs, da ora in avanti vogliamo aprire questo file direttamente, quindi la funzione nella dashboard va modificata.
+Per riuscirci, innanzitutto dobbiamo creare una funzione che apra questo file.
+
+Ci servono due elementi, che possono variare di caso in caso:
+- Il nome del file
+- La directory in cui cercarlo
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+(setq config-org-file-name "config.org"
+      config-org-directory "~/emacs-config")
+#+end_src
+
+Scriviamo una funzione dedicata all'apertura del file preselezionato.
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+(defun open-config-org ()
+  "Open your private config.org file."
+  (interactive)
+  (find-file (expand-file-name config-org-file-name config-org-directory)))
+#+end_src
+
+**** Scorciatoia da tastiera
+Assegniamo una scorciatoia da tastiera dedicata, sulle orme di =SPC+f+P= (file > Private).
+
+[[https://www.dschapman.com/notes/bde6e938-0984-4d60-974d-77178f1ecd9b][Come si fa?]]
+
+#+begin_quote
+In your =config.el= file add a map declaration using the =:leader= attribute and whatever prefix key you would like to use. Then after you have added the necessary prefix keys add a =:desc "Description of the command"= ="key" #'elisp-command-to-execute= for each shortcut you wish to add.
+#+end_quote
+
+Con =map!=:
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+(map! :leader
+      (:prefix-map ("f" . "file")
+       :desc "Open your private config.org file." "O" #'open-config-org))
+#+end_src
+
+**** Dashboard section
+Per intervenire sul menù, prima diamo un'occhiata alle sezioni della dashboard.
+
+#+begin_src emacs-lisp
+(cl-subseq +doom-dashboard-menu-sections 0)
+#+end_src
+
+Otteniamo una lista, da cui estrapoliamo la funzione che vogliamo sostituire (questa):
+
+#+begin_src emacs-lisp
+("Open private configuration" :icon (all-the-icons-octicon "tools" :face 'doom-dashboard-menu-title) :when (file-directory-p doom-private-dir) :action doom/open-private-config)
+#+end_src
+
+Come intendiamo modificarla? Così:
+
+#+name: open-org-configuration-menu-section
+#+begin_src emacs-lisp
+("Open org configuration" :icon (all-the-icons-octicon "tools" :face 'doom-dashboard-menu-title) :action open-config-org)
+#+end_src
+
+# Intanto teniamo questa funzione da parte col nome di =open-org-configuration-menu-section=.
+
+Ora sostituiamola al menù [[https://stackoverflow.com/questions/170931/replace-an-item-in-a-list-in-common-lisp][con la funzione =setf=]].
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el :noweb yes
+(setf (nth 5 +doom-dashboard-menu-sections) '<<open-org-configuration-menu-section>>)
 #+end_src
 
 ** Emacs daemon
