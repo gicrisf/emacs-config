@@ -13,7 +13,7 @@ CLOSED: [2022-08-03 mer 21:43]
 :PROPERTIES:
 :EXPORT_HUGO_SECTION: software/emacs-config
 :EXPORT_FILE_NAME: index
-:EXPORT_HUGO_LASTMOD: [2022-08-06 sab]
+:EXPORT_HUGO_LASTMOD: [2022-08-07 dom]
 :END:
 
 Questo file mostra come gestire la configurazione di Emacs direttamente all'interno di org-mode.
@@ -741,13 +741,36 @@ A nil value implies no custom theme should be enabled.")
 #+end_src
 
 *** Elfeed
-TODO usa file org separato
+#+begin_quote
+Elfeed is an extensible web feed reader for Emacs, supporting both Atom and RSS.
+#+end_quote
+
+Di default, basta aggiungere gli URL dei feed desiderati in questa lista per avere già Elfeed operativo.
+
+# Not tangling it anymore
+# :tangle tangled/.doom.d/config.el
+#+begin_src emacs-lisp
+(setq elfeed-feeds (quote
+                    (("https://www.zwitterio.it/rss.xml" stem)
+                     ("https://materiaimpersonale.wordpress.com/feed/" lit))))
+#+end_src
+
+Io non uso più questo metodo perché trovo più comodo tenere i miei feed in un file org-mode separato.
+
+Per abbellire elfeed, aggiungiamo =elfeed-goodies=.
+In particolar modo, cambia il layout (apre in un altro pannello verticale, anziché orizzontale) e si guadagna una powerline.
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el
+(package! elfeed-goodies)
+#+end_src
 
 #+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
-(setq elfeed-feeds (quote
-                    (("https://www.zwitterio.it/rss.xml" zwitterio)
-                     ("https://materiaimpersonale.wordpress.com/comments/feed/" kulesko))))
+(require 'elfeed-goodies)
+(elfeed-goodies/setup)
+(setq elfeed-goodies/entry-pane-size 0.5)
 #+end_src
+
+Ora voglio assicurarmi che elfeed appaia sulla dashboard (vedi sezione dedicata alla dashboard).
 
 *** Typescript/React
 Innanzitutto, bisogna avere aggiunto alcuni moduli: =web= e =javascript=, in particolare.
@@ -1201,8 +1224,8 @@ Set directory, extension to search for and explicitly say you want to search rec
 #+end_src
 
 La funzione principale per me è troppo lenta, oltre ad essere fin troppo fornita. Per ora disabilito tutto, perché preferisco usare =SPC+n+s= (notes/search note).
-
-*** Apri questo file
+*** Dashboard
+**** Open org configuration
 Al posto di aprire la cartella =.doom.d= per configurare Emacs, da ora in avanti vogliamo aprire questo file direttamente, quindi la funzione nella dashboard va modificata.
 Per riuscirci, innanzitutto dobbiamo creare una funzione che apra questo file.
 
@@ -1224,7 +1247,7 @@ Scriviamo una funzione dedicata all'apertura del file preselezionato.
   (find-file (expand-file-name config-org-file-name config-org-directory)))
 #+end_src
 
-**** Scorciatoia da tastiera
+# Shortcut
 Assegniamo una scorciatoia da tastiera dedicata, sulle orme di =SPC+f+P= (file > Private).
 
 [[https://www.dschapman.com/notes/bde6e938-0984-4d60-974d-77178f1ecd9b][Come si fa?]]
@@ -1241,7 +1264,7 @@ Con =map!=:
        :desc "Open your private config.org file." "O" #'open-config-org))
 #+end_src
 
-**** Dashboard section
+# Dashboard
 Per intervenire sul menù, prima diamo un'occhiata alle sezioni della dashboard.
 
 #+begin_src emacs-lisp
@@ -1267,6 +1290,31 @@ Ora sostituiamola al menù [[https://stackoverflow.com/questions/170931/replace-
 
 #+begin_src emacs-lisp :tangle tangled/.doom.d/config.el :noweb yes
 (setf (nth 5 +doom-dashboard-menu-sections) '<<open-org-configuration-menu-section>>)
+#+end_src
+
+**** Elfeed
+Ripercorro i passi fatti prima, ma stavolta senza dilungarmi in chiacchiere.
+
+# Shortcut
+Prima assegno una scorciatoia da tastiera:
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+(map! :leader
+      (:prefix-map ("e" . "elfeed")
+       :desc "Enter elfeed." "e" #'elfeed))
+#+end_src
+
+# Dashboard
+Voglio questo elemento sulla dashboard:
+
+#+name: open-elfeed-menu-section
+#+begin_src emacs-lisp
+("Open elfeed" :icon (all-the-icons-octicon "rss" :face 'doom-dashboard-menu-title) :action elfeed)
+#+end_src
+
+Stavolta vado a sostituire il terzo elemento, che raramente uso (=Recently opened files=).
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el :noweb yes
+(setf (nth 2 +doom-dashboard-menu-sections) '<<open-elfeed-menu-section>>)
 #+end_src
 
 ** Daemon
