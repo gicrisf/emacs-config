@@ -643,6 +643,7 @@ TODO: differenziare tra font laptop e desktop e variare la configurazione esport
 #+end_src
 
 *** Temi
+Innanzitutto, selezioniamo un tema di default.
 
 #+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
 ;; There are two ways to load a theme. Both assume the theme is installed and
@@ -666,7 +667,10 @@ TODO: differenziare tra font laptop e desktop e variare la configurazione esport
 ;;
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
+#+end_src
 
+TODO: spiegare questo switcher.
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
 ;; Theme switcher functions
 (defvar quick-switch-themes
   (let ((themes-list (list 'doom-city-lights
@@ -698,7 +702,7 @@ A nil value implies no custom theme should be enabled.")
       :desc "Quick toggle theme" "t t" #'toggle-theme)
 #+end_src
 
-*** Org
+*** Org-mode
 #+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
@@ -1224,8 +1228,9 @@ Set directory, extension to search for and explicitly say you want to search rec
 #+end_src
 
 La funzione principale per me è troppo lenta, oltre ad essere fin troppo fornita. Per ora disabilito tutto, perché preferisco usare =SPC+n+s= (notes/search note).
+
 *** Dashboard
-**** Open org configuration
+**** Open org configuration (SPC o c)
 Al posto di aprire la cartella =.doom.d= per configurare Emacs, da ora in avanti vogliamo aprire questo file direttamente, quindi la funzione nella dashboard va modificata.
 Per riuscirci, innanzitutto dobbiamo creare una funzione che apra questo file.
 
@@ -1258,10 +1263,11 @@ In your =config.el= file add a map declaration using the =:leader= attribute and
 
 Con =map!=:
 
+# (SPC open/configuration)
 #+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
 (map! :leader
-      (:prefix-map ("f" . "file")
-       :desc "Open your private config.org file." "O" #'open-config-org))
+      (:prefix-map ("o" . "open")
+       :desc "Open your private config.org file." "c" #'open-config-org))
 #+end_src
 
 # Dashboard
@@ -1292,11 +1298,12 @@ Ora sostituiamola al menù [[https://stackoverflow.com/questions/170931/replace-
 (setf (nth 5 +doom-dashboard-menu-sections) '<<open-org-configuration-menu-section>>)
 #+end_src
 
-**** Elfeed
+**** Enter Elfeed (SPC e e)
 Ripercorro i passi fatti prima, ma stavolta senza dilungarmi in chiacchiere.
 
 # Shortcut
 Prima assegno una scorciatoia da tastiera:
+# SPC elfeed enter
 #+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
 (map! :leader
       (:prefix-map ("e" . "elfeed")
@@ -1315,6 +1322,16 @@ Stavolta vado a sostituire il terzo elemento, che raramente uso (=Recently opene
 
 #+begin_src emacs-lisp :tangle tangled/.doom.d/config.el :noweb yes
 (setf (nth 2 +doom-dashboard-menu-sections) '<<open-elfeed-menu-section>>)
+#+end_src
+
+**** Quit and go Home (SPC q h)
+Una semplice scorciatoia da tastiera per tornare alla dashboard:
+
+# SPC quit (and go) home
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+(map! :leader
+      (:prefix-map ("q" . "quit/session")
+       :desc "Switch to the dashboard in the current window, of the current FRAME." "h" #'+doom-dashboard/open))
 #+end_src
 
 ** Daemon
