@@ -90,7 +90,7 @@ Proprio come l'abissale versatilità di Emacs riesce a farsi conoscere solo graz
 
 # Org-mode, o più semplicemente "Org", può anche essere impiegato per scrivere e gestire nel tempo la propria configurazione di Emacs, cioè un mucchio di codice lisp che con il tempo tende a crescere per adeguarsi quanto più possibile alle necessità dell'utente.
 
-** Intessere
+** Literate configuration
 Tradizionalmente, la configurazione di Doom Emacs è raccolta in 3 file fondamentali, a loro volta contenuti in una apposita directory nella home, =.doom.d=.
 Questi file sono:
 - =config.el=;
@@ -129,7 +129,7 @@ Insomma, l'arte di configurare Emacs (come tante altre) si affina studiando i tr
 Tra le configurazioni org più illuminanti, segnalo anche [[https://git.tecosaur.net/tec/emacs-config][la configurazione di tecosaur]].
 Per entrambe trovate anche i mirrors su Github (che renderizza piacevolmente anche i file org).
 
-Ci sono vari modi per consentire ad Emacs di leggere la configurazione attraverso un org file; come tanti altri, io qui mi limito a generare i file di configurazione a partire dal file org, per mezzo di una pratica che Donald Knuth ha chiamato "tangling" (aggrovigliare, intessere).
+Ci sono vari modi per consentire ad Emacs di leggere la configurazione attraverso un org file; come tanti altri, io qui mi limito a generare i file di configurazione a partire dal file org, per mezzo di una pratica che Donald Knuth ha chiamato "tangling" (aggrovigliare).
 
 ** Frontespizi
 
@@ -431,7 +431,7 @@ org               ; organize your plain life in plain text
 ;;rest              ; Emacs as a REST client
 ;;rst               ; ReST in peace
 ;;(ruby +rails)     ; 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
-rust              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
+(rust + lsp)              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
 ;;scala             ; java, but good
 ;;(scheme +guile)   ; a fully conniving family of lisps
 sh                  ; she sells {ba,z,fi}sh shells on the C xor
@@ -444,8 +444,20 @@ yaml              ; JSON, but readable
 ;;zig               ; C, but simpler
 #+end_src
 
+**** Rust
+[[https://github.com/doomemacs/doomemacs/issues/2271#issuecomment-569775470][Spiega @hlissner]]:
+
+#+begin_quote
+The =:lang rust= module doesn't use =rust-mode=, it uses [[https://github.com/brotzeit/rustic][rustic-mode]], a fork of =rust-mode=.
+
+When =+lsp= is not enabled, the module uses =racer= to provide code completion, type info in the minibuffer (eldoc) and other features, but the racer package depends on =rust-mode=, so it must be installed (but doom still doesn't use it directly).
+#+end_quote
+
 *** Email
 Non uso Emacs per le mie email.
+[[https://www.zwitterio.it/software/mutt/][Una volta ho provato a gestire tutto da CLI]], anche con buoni risultati, ma a causa di problemi di vario genere alla fine ho deciso che era meglio tornare alla web-app.
+Non tanto perché sia una cattiva idea, quanto piuttosto perché è un inferno con tutto l'HTML pazzo che mettono in mezzo al testo, cosa che si può risolvere leggendo le mail con lynx o altri browser testuali, ma in fin dei conti dà l'impressione di stare sistematicamente forzando il mezzo. Usare il solito browser (coi dovuti accorgimenti) mi sembra la scelta più efficace.
+Ecco perché non uso mu4e, sebbene l'idea mi tenti di tanto in tanto.
 
 #+name: doom-email
 #+begin_src emacs-lisp
@@ -988,7 +1000,15 @@ $ update-desktop-database ~/.local/share/applications/
 
 *** Semantic analysis
 **** Rust (Racer)
-Dopo avere abilitato `lsp` e `rust` in Doom Emacs, ottenevo ancora qualche errore.
+[[https://robert.kra.hn/posts/rust-emacs-setup/][Come scrive Robert Krahn]],
+
+#+begin_quote
+Racer used to be the best option for getting IDE features (code navigation etc) into Emacs. It is a non-LSP solution which is still faster than RLS and rust-analyzer. However, the number of features especially around code completion are not up to par with rust-analyzer anymore.
+#+end_quote
+
+Il consiglio, quindi, è quello di passare direttamente al paragrafo successivo, ma chi proprio desiderasse Racer (che era piacevole), lascio qui tutte le istruzioni del caso.
+
+Dopo avere abilitato =rust= in =init.el=, Doom Emacs lamentava l'introvabilità del binario di Racer:
 
 #+begin_quote
 Please set ‘racer-rust-src-path’ or ‘RUST_SRC_PATH’
@@ -1006,21 +1026,28 @@ eldoc error: (user-error /.../.cargo/bin/racer exited with 127. ‘M-x racer-deb
 #+end_quote
 
 Questo perché manca racer, che [[https://lib.rs/crates/racer][va installato a parte]].
-Per installarlo, serve prima Cargo.
-
+Siccome Racer risiede nella nightly toolchain, installiamo prima quella:
 #+begin_src bash
 rustup toolchain install nightly
+#+end_src
+
+Poi aggiungiamo gli strumenti da sviluppatore =rustc-dev=:
+#+begin_src bash
 rustup component add rustc-dev --toolchain=nightly
+#+end_src
+
+Assicuriamoci che anche Cargo sia già installato e lanciamo:
+#+begin_src bash
 cargo +nightly install racer
 #+end_src
 
-Una cosa da tenere a mente è che Racer non è al momento mantenuto:
+[[https://github.com/racer-rust/racer/issues/1181][La compilazione potrebbe fallire]], ma bisogna tenere a mente è che Racer non è al momento mantenuto:
 
 #+begin_quote
 Racer is not actively developped now. Please consider using newer software such as rust-analyzer.
 #+end_quote
 
-Per il momento Racer funziona egregiamente, ma successivamente potrei voler dare un occhio anche a [[https://rust-analyzer.github.io/][rust-analyzer]].
+# Per il momento Racer funziona egregiamente, ma successivamente potrei voler dare un occhio anche a [[https://rust-analyzer.github.io/][rust-analyzer]].
 
 Emacs potrebbe non individuare subito Racer, nonostante l'installazione.
 
@@ -1031,8 +1058,8 @@ Emacs potrebbe non individuare subito Racer, nonostante l'installazione.
 
 Quick fix per consentire ad Emacs di trovare i binari di Racer:
 
-#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el :noweb yes
-(setq racer-rust-src-path <<racer-path>>)
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el :noweb no-export
+;; (setq racer-rust-src-path <<racer-path>>)
 #+end_src
 
 **** Rust (rust-analyzer)
@@ -1054,6 +1081,21 @@ Io sto su Arch, quindi installo con pacman:
 #+begin_src bash
 sudo pacman -S rust-analyzer
 #+end_src
+
+È il caso di specificare quale server intendiamo utilizzare, altrimenti Rustic potrebbe fraintendere o optare per Racer:
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+(setq rustic-lsp-server 'rust-analyzer)
+#+end_src
+
+Questo dovrebbe essere sufficiente, ma per essere proprio sicuri:
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+(after! lsp-rust
+  (setq lsp-rust-server 'rust-analyzer))
+#+end_src
+
+Lanciamo =lsp= in un buffer con Rust ed assistiamo al compiersi della magia.
 
 *** Curriculum Vitae
 # TODO make a literate CV
