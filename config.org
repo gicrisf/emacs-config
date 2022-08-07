@@ -444,15 +444,6 @@ yaml              ; JSON, but readable
 ;;zig               ; C, but simpler
 #+end_src
 
-**** Rust
-[[https://github.com/doomemacs/doomemacs/issues/2271#issuecomment-569775470][Spiega @hlissner]]:
-
-#+begin_quote
-The =:lang rust= module doesn't use =rust-mode=, it uses [[https://github.com/brotzeit/rustic][rustic-mode]], a fork of =rust-mode=.
-
-When =+lsp= is not enabled, the module uses =racer= to provide code completion, type info in the minibuffer (eldoc) and other features, but the racer package depends on =rust-mode=, so it must be installed (but doom still doesn't use it directly).
-#+end_quote
-
 *** Email
 Non uso Emacs per le mie email.
 [[https://www.zwitterio.it/software/mutt/][Una volta ho provato a gestire tutto da CLI]], anche con buoni risultati, ma a causa di problemi di vario genere alla fine ho deciso che era meglio tornare alla web-app.
@@ -1060,6 +1051,25 @@ Quick fix per consentire ad Emacs di trovare i binari di Racer:
 
 #+begin_src emacs-lisp :tangle tangled/.doom.d/config.el :noweb no-export
 ;; (setq racer-rust-src-path <<racer-path>>)
+#+end_src
+
+Io non uso più Racer, ma eldoc si ostina a farlo, dando sempre questo fastidiosissimo errore:
+#+begin_quote
+eldoc error: (user-error /home/cromo/.cargo/bin/racer exited with 127. ‘M-x racer-debug’ for more info)
+#+end_quote
+
+[[https://github.com/doomemacs/doomemacs/issues/2271#issuecomment-569775470][Spiega @hlissner]]:
+
+#+begin_quote
+The =:lang rust= module doesn't use =rust-mode=, it uses [[https://github.com/brotzeit/rustic][rustic-mode]], a fork of =rust-mode=.
+
+When =+lsp= is not enabled, the module uses =racer= to provide code completion, type info in the minibuffer (eldoc) and other features, but the racer package depends on =rust-mode=, so it must be installed (but doom still doesn't use it directly).
+#+end_quote
+
+Bisogna perciò evitare che Racer sia avviato tutte le volte che LSP non è attivo. Come ricordato da [[https://www.reddit.com/r/DoomEmacs/comments/slb92w/comment/hvrfkax/?utm_source=share&utm_medium=web2x&context=3][@subderisorious]], per fortuna Doom ci consente di disabilitare un pacchetto della configurazione di default semplicemente richiamando la macro =package!= in =packages.el=.
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el
+(package! racer :disable t)
 #+end_src
 
 **** Rust (rust-analyzer)
