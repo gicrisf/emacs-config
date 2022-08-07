@@ -613,7 +613,7 @@ Ne racconto qui:
 #+end_src
 
 ** Configurazione generale
-Infine, veniamo alla configurazione generale.
+Infine, veniamo alla configurazione vera e propria.
 
 *** Chi sono?
 #+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
@@ -648,7 +648,7 @@ TODO: differenziare tra font laptop e desktop e variare la configurazione esport
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-one)
+(setq doom-theme 'doom-city-lights)
 
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
@@ -669,8 +669,8 @@ TODO: differenziare tra font laptop e desktop e variare la configurazione esport
 
 ;; Theme switcher functions
 (defvar quick-switch-themes
-  (let ((themes-list (list 'doom-one
-                           'spacemacs-dark
+  (let ((themes-list (list 'doom-city-lights
+                           'doom-one
                            'spacemacs-light
                            'doom-one-light)))
     (nconc themes-list themes-list))
@@ -1269,7 +1269,7 @@ Ora sostituiamola al menù [[https://stackoverflow.com/questions/170931/replace-
 (setf (nth 5 +doom-dashboard-menu-sections) '<<open-org-configuration-menu-section>>)
 #+end_src
 
-** Emacs daemon
+** Daemon
 Si tratta di una possibilità introdotta con Emacs 23.1 per ridurre i (già bassi) tempi di avvio di ogni finestra. Ottimo se, come me, utilizzate Emacs anche per modificare piccoli file di testo per cui andrebbe benissimo vim o nano.
 
 Per lanciare il daemon da terminale, basta scrivere:
@@ -1316,45 +1316,21 @@ Al posto di =emacs=, scriveremo:
 emacsclient --create-frame --alternate-editor=""
 #+end_src
 
-Ovviamente, scrivere questo comando per intero di volta in volta è una noia, quindi dobbiamo effettuare ancora qualche modifica.
+Chiaramente, scrivere di volta in volta questo comando è a dir poco noioso, quindi ci conviene aggiungere degli alias su =.bashrc= o lanciarlo con una scorciatoia da tastiera, a seconda del nostro ambiente.
 
-Ridefiniamo il nostro editor preferito, aggiungendo questi tre comandi a =.bashrc=:
+Intendo pubblicare a breve i miei bash dots, /stay tuned/.
 
-#+begin_src txt
-# ~/.bashrc
-
-export ALTERNATE_EDITOR=""
-export EDITOR="emacsclient -t"                  # $EDITOR opens in terminal
-export VISUAL="emacsclient -c -a emacs"         # $VISUAL opens in GUI mode
-#+end_src
-
-#+begin_quote
-The emacsclient program will connect to a running instance of Emacs if it exists. -c tells Emacs to open the file in a new frame, which is optional. Specifying -a=”” tells emacsclient to start an instance of emacs if it cannot find one already running.
-#+end_quote
-
-Personalmente, preferisco usare la GUI di Emacs come EDITOR, quindi sostituirò l'argomento del secondo comando con quello del terzo:
-
-#+begin_src txt
-# ~/.bashrc
-
-export EDITOR="emacsclient -c -a emacs"
-#+end_src
-
-Si può anche aggiungere un alias:
-
-#+begin_src txt
-# ~/.bashrc
-
-alias emacs="emacsclient -c -a emacs"
-#+end_src
+# TODO
+# Per approfondire, rimando ai miei bash dots.
 
 ** In conclusione
 
-- [ ] Riportare sotto org tutte le funzioni relative (per ora mantenuto quanto più vicino possibile all'originale per evitare casini)
+Questo file è in continua trasformazione.
+
+TODOs:
+- [X] Riportare sotto org tutte le funzioni relative (per ora mantenuto quanto più vicino possibile all'originale per evitare casini)
 - [ ] Scrivi una conclusione decente
 - [ ] Tradurre l'intero post in inglese ed esportare la traduzione
-
-Questo file è in continua trasformazione.
 
 # Esporto prism.js perché per il momento Zola ha un bug che non mi consente di colorare la sintassi.
 {{{prismcss}}}
