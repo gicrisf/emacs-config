@@ -1,6 +1,14 @@
 #+title: Doom Emacs Configuration
 #+author: Giovanni Crisalfi
+#+macro: donate @@html:<a href='https://ko-fi.com/V7V425BFU' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://cdn.ko-fi.com/cdn/kofi3.png?v=3' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>@@
 
 The configuration lives inside a single file, the =config.org= file.
 
+[[https://www.zwitterio.it/software/emacs-config/][You can read it on my blog]].
+
 By now, the config file is written in italian only, but I'm counting on translate everything in english too.
+
+* Donate
+Did you find something interesting in my dots? Why don't you help me keeping myself awake?
+
+{{{donate}}}
