@@ -28,7 +28,7 @@ Innanzitutto, cos'è Emacs?
 Emacs is not a text editor, this is a common misnomer. It is far more apt to describe Emacs as a Lisp machine providing a generic user-centric text manipulation environment. That’s quite a mouthful. In simpler terms one can think of Emacs as a platform for text-related applications. It’s a vague and generic definition because Emacs itself is generic. ([[https://tecosaur.github.io/emacs-config/config.html#why-emacs][@tecosaur]])
 #+end_quote
 
-Se solitamente Emacs è conosciuto come editor di testo, in verità sotto la scocca si tratta di qualcosa di molto più complesso: Emacs è una lisp machine, ovvero un sistema integrato capace di interpretare ed eseguire codice lisp e, con esso, una miriade di programmi pure molto complessi, tipicamente legati alla manipolazione del testo. Considerata la versatilità della piattaforma, mi sarebbe impossibile descriverla senza disseminare avverbi come "solitamente" o "tipicamente".
+Se solitamente Emacs è conosciuto come editor di testo, in verità sotto la scocca si tratta di qualcosa di molto più complesso: Emacs è una lisp machine, ovvero un sistema integrato capace di interpretare ed eseguire codice lisp e, con esso, una miriade di programmi pure molto articolati, tipicamente legati alla manipolazione del testo. Considerata la versatilità della piattaforma, mi sarebbe impossibile descriverla senza disseminare avverbi come "solitamente" o "tipicamente".
 
 Io, ad esempio, uso quotidianamente Emacs per:
 - Scrivere codice
@@ -1339,6 +1339,82 @@ Una semplice scorciatoia da tastiera per tornare alla dashboard:
 (map! :leader
       (:prefix-map ("q" . "quit/session")
        :desc "Switch to the dashboard in the current window, of the current FRAME." "h" #'+doom-dashboard/open))
+#+end_src
+
+**** Org mode documentation
+Move "Open project" section of the dashboard and make space for the org mode documentation.
+
+Anche stavolta andiamo spediti.
+
+# Shortcut
+Assegniamo una scorciatoia da tastiera:
+# SPC elfeed enter
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+(map! :leader
+      (:prefix-map ("o" . "open")
+       :desc "Open org-mode docs." "i" #'org-info))
+#+end_src
+
+# Dashboard
+Voglio questo elemento sulla dashboard:
+
+#+name: open-org-docs-menu-section
+#+begin_src emacs-lisp
+("Open org-mode docs" :icon (all-the-icons-octicon "book" :face 'doom-dashboard-menu-title) :action org-info)
+#+end_src
+
+Stavolta vado a sostituire il terzo elemento, che raramente uso (=Recently opened files=).
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el :noweb yes
+(setf (nth 3 +doom-dashboard-menu-sections) '<<open-org-docs-menu-section>>)
+#+end_src
+
+Risistemiamo l'elemento rimosso (switch project) in prima posizione:
+
+#+name: switch-project-menu-section
+#+begin_src emacs-lisp
+("Open project" :icon (all-the-icons-octicon "briefcase" :face 'doom-dashboard-menu-title) :action projectile-switch-project)
+#+end_src
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el :noweb yes
+(setf (nth 0 +doom-dashboard-menu-sections) '<<switch-project-menu-section>>)
+#+end_src
+
+**** Banner
+Experimental.
+
+See [[https://discourse.doomemacs.org/t/how-to-change-your-splash-screen/57][this discourse post]].
+
+A weebish example:
+# :tangle tangled/.doom.d/config.el
+#+begin_src emacs-lisp
+(defun my-weebery-is-always-greater ()
+  (let* ((banner '("⢸⣿⣿⣿⣿⠃⠄⢀⣴⡾⠃⠄⠄⠄⠄⠄⠈⠺⠟⠛⠛⠛⠛⠻⢿⣿⣿⣿⣿⣶⣤⡀⠄"
+                   "⢸⣿⣿⣿⡟⢀⣴⣿⡿⠁⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⠄⣸⣿⣿⣿⣿⣿⣿⣿⣷"
+                   "⢸⣿⣿⠟⣴⣿⡿⡟⡼⢹⣷⢲⡶⣖⣾⣶⢄⠄⠄⠄⠄⠄⢀⣼⣿⢿⣿⣿⣿⣿⣿⣿⣿"
+                   "⢸⣿⢫⣾⣿⡟⣾⡸⢠⡿⢳⡿⠍⣼⣿⢏⣿⣷⢄⡀⠄⢠⣾⢻⣿⣸⣿⣿⣿⣿⣿⣿⣿"
+                   "⡿⣡⣿⣿⡟⡼⡁⠁⣰⠂⡾⠉⢨⣿⠃⣿⡿⠍⣾⣟⢤⣿⢇⣿⢇⣿⣿⢿⣿⣿⣿⣿⣿"
+                   "⣱⣿⣿⡟⡐⣰⣧⡷⣿⣴⣧⣤⣼⣯⢸⡿⠁⣰⠟⢀⣼⠏⣲⠏⢸⣿⡟⣿⣿⣿⣿⣿⣿"
+                   "⣿⣿⡟⠁⠄⠟⣁⠄⢡⣿⣿⣿⣿⣿⣿⣦⣼⢟⢀⡼⠃⡹⠃⡀⢸⡿⢸⣿⣿⣿⣿⣿⡟"
+                   "⣿⣿⠃⠄⢀⣾⠋⠓⢰⣿⣿⣿⣿⣿⣿⠿⣿⣿⣾⣅⢔⣕⡇⡇⡼⢁⣿⣿⣿⣿⣿⣿⢣"
+                   "⣿⡟⠄⠄⣾⣇⠷⣢⣿⣿⣿⣿⣿⣿⣿⣭⣀⡈⠙⢿⣿⣿⡇⡧⢁⣾⣿⣿⣿⣿⣿⢏⣾"
+                   "⣿⡇⠄⣼⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⣿⠟⢻⠇⠄⠄⢿⣿⡇⢡⣾⣿⣿⣿⣿⣿⣏⣼⣿"
+                   "⣿⣷⢰⣿⣿⣾⣿⣿⣿⣿⣿⣿⣿⣿⣿⢰⣧⣀⡄⢀⠘⡿⣰⣿⣿⣿⣿⣿⣿⠟⣼⣿⣿"
+                   "⢹⣿⢸⣿⣿⠟⠻⢿⣿⣿⣿⣿⣿⣿⣿⣶⣭⣉⣤⣿⢈⣼⣿⣿⣿⣿⣿⣿⠏⣾⣹⣿⣿"
+                   "⢸⠇⡜⣿⡟⠄⠄⠄⠈⠙⣿⣿⣿⣿⣿⣿⣿⣿⠟⣱⣻⣿⣿⣿⣿⣿⠟⠁⢳⠃⣿⣿⣿"
+                   "⠄⣰⡗⠹⣿⣄⠄⠄⠄⢀⣿⣿⣿⣿⣿⣿⠟⣅⣥⣿⣿⣿⣿⠿⠋⠄⠄⣾⡌⢠⣿⡿⠃"
+                   "⠜⠋⢠⣷⢻⣿⣿⣶⣾⣿⣿⣿⣿⠿⣛⣥⣾⣿⠿⠟⠛⠉⠄⠄          "))
+         (longest-line (apply #'max (mapcar #'length banner))))
+    (put-text-property
+     (point)
+     (dolist (line banner (point))
+       (insert (+doom-dashboard--center
+                +doom-dashboard--width
+                (concat line (make-string (max 0 (- longest-line (length line))) 32)))
+               "\n"))
+     'face 'doom-dashboard-banner)))
+
+(setq +doom-dashboard-ascii-banner-fn #'my-weebery-is-always-greater)
 #+end_src
 
 ** Daemon
