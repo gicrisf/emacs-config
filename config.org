@@ -1324,6 +1324,13 @@ Stavolta vado a sostituire il terzo elemento, che raramente uso (=Recently opene
 (setf (nth 2 +doom-dashboard-menu-sections) '<<open-elfeed-menu-section>>)
 #+end_src
 
+Già che ci siamo, aggiungiamo una shortcut per aggiornare elfeed:
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+(map! :leader
+      (:prefix-map ("e" . "elfeed")
+       :desc "Update all the feeds in elfeed." "u" #'elfeed-update))
+#+end_src
+
 **** Quit and go Home (SPC q h)
 Una semplice scorciatoia da tastiera per tornare alla dashboard:
 

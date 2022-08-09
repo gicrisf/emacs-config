@@ -3,12 +3,13 @@
 
 The configuration lives inside a single file, the =config.org= file.
 
-[[https://www.zwitterio.it/software/emacs-config/][You can read it on my blog]].
+[[https://www.zwitterio.it/software/emacs-config/][You can read it on my blog (HTML export)]]
 
 By now, the config file is written in italian only, but I'm counting on translate everything in english too.
 
 ** Donate
-Did you find something interesting in my dots? Why don't you help me keeping myself awake?
+Did you find something interesting in my dots?
+Why don't you help me keeping myself awake buying me a coffee?
 
 [[https://ko-fi.com/V7V425BFU][https://ko-fi.com/img/githubbutton_sm.svg]]
 
