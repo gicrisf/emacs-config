@@ -9,7 +9,7 @@
 #+MACRO: prismjs @@html:<script src="/assets/prism/prism.js"></script>@@
 
 * DONE Configurare Emacs in Org-mode :emacs:org:@posts:
-CLOSED: [2022-08-03 mer 21:43]
+CLOSED: [2022-08-10 mer]
 :PROPERTIES:
 :EXPORT_HUGO_SECTION: software/emacs-config
 :EXPORT_FILE_NAME: index
@@ -34,7 +34,7 @@ Io, ad esempio, uso quotidianamente Emacs per:
 - Scrivere codice
 - Scrivere prosa (via [[https://orgmode.org/][Org-mode]])
 - Gestire i file (via [[https://www.emacswiki.org/emacs/DiredMode][Dired]])
-- Git (grazie a [[https://magit.vc/][Magit]], Emacs è probabilmente il miglior git client in circolazione)
+- Git (grazie a [[https://magit.vc/][Magit]], Emacs è probabilmente [[https://news.ycombinator.com/item?id=28954058][il miglior git client in circolazione]])
 - RSS (via [[https://github.com/skeeto/elfeed][Elfeed]])
 
 Per qualche tempo l'ho usato anche come emulatore di terminale, ora capita solo in circostanze particolari, ad esempio per compilare del codice che sto scrivendo nel buffer a fianco.
@@ -457,6 +457,8 @@ Ecco perché non uso mu4e, sebbene l'idea mi tenti di tanto in tanto.
 ;;(wanderlust +gmail)
 #+end_src
 
+Ed ecco che la tentazione ritorna: TODO, [[https://shom.dev/posts/20220108_setting-up-protonmail-in-emacs/][sincronizzare con protonmail]].
+
 *** App
 Uso Emacs come RSS reader.
 
@@ -612,6 +614,36 @@ Ne racconto qui:
 (package! eltweet :recipe (:host github :repo "gicrisf/eltweet"))
 #+end_src
 
+*** Info pages (manuali)
+Le pagine dei manuali su Emacs mancano spesso di colore, cosa che le rende più difficili da leggere delle loro controparti web.
+Il seguente pacchetto corregge questa mancanza:
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el
+(package! info-colors)
+#+end_src
+
+[[https://github.com/ubolonton/info-colors][Come illustrato nel README]], per abilitarlo bisogna aggiungere un hook in =config.el=.
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+(add-hook 'Info-selection-hook 'info-colors-fontify-node)
+#+end_src
+
+**** TODO Screenshots :noexport:
+#+begin_quote
+non esporto finché non supporto le immagini in ox-zola
+#+end_quote
+
+Lo screenshot dal README:
+
+#+DOWNLOADED: screenshot @ 2022-08-10 14:31:12
+[[file:Configurare_Emacs_in_Org-mode/2022-08-10_14-31-12_screenshot.png]]
+
+
+Qui uno screenshot catturato con il tema city-lights.
+
+#+DOWNLOADED: screenshot @ 2022-08-10 13:34:44
+[[file:Configurare_Emacs_in_Org-mode/2022-08-10_13-34-44_screenshot.png]]
+
 ** Configurazione generale
 Infine, veniamo alla configurazione vera e propria.
 
@@ -650,7 +682,15 @@ Innanzitutto, selezioniamo un tema di default.
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
 (setq doom-theme 'doom-city-lights)
+#+end_src
 
+Al momento mi trovo bene con city lights: c'è solo una piccolezza che mi irrita parecchio.
+Nel momento in cui dichiaro concluso un task (con "DONE") in org-mode, il tema mi grigia non solo la keyword ma anche il titolo.
+
+TODO cambiare questo comportamento.
+
+Alcuni commenti da ricordare:
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
 ;; - `load!' for loading external *.el files relative to this one
@@ -975,6 +1015,17 @@ by using nxml's indentation rules."
     (indent-region begin end)
     (normal-mode))
   (message "Ah, much better!"))
+#+end_src
+
+*** Which key
+#+begin_quote
+Let’s make this popup a bit faster
+#+end_quote
+
+[[https://tecosaur.github.io/emacs-config/config.html#which-key][Dalla configurazione di tecosaur]]:
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+(setq which-key-idle-delay 0.5) ;; I need the help, I really do
 #+end_src
 
 *** Org Capture
@@ -1341,51 +1392,67 @@ Una semplice scorciatoia da tastiera per tornare alla dashboard:
        :desc "Switch to the dashboard in the current window, of the current FRAME." "h" #'+doom-dashboard/open))
 #+end_src
 
-**** Org mode documentation
-Move "Open project" section of the dashboard and make space for the org mode documentation.
+**** Org Manual (SPC o i)
+Move "Open project" section of the dashboard and make space for the documentation.
 
 Anche stavolta andiamo spediti.
-
-# Shortcut
-Assegniamo una scorciatoia da tastiera:
-# SPC elfeed enter
-#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
-(map! :leader
-      (:prefix-map ("o" . "open")
-       :desc "Open org-mode docs." "i" #'org-info))
-#+end_src
 
 # Dashboard
 Voglio questo elemento sulla dashboard:
 
-#+name: open-org-docs-menu-section
+#+name: open-docs-menu-section
 #+begin_src emacs-lisp
-("Open org-mode docs" :icon (all-the-icons-octicon "book" :face 'doom-dashboard-menu-title) :action org-info)
+("Open info" :icon (all-the-icons-octicon "info" :face 'doom-dashboard-menu-title) :action info)
 #+end_src
 
 Stavolta vado a sostituire il terzo elemento, che raramente uso (=Recently opened files=).
 
 #+begin_src emacs-lisp :tangle tangled/.doom.d/config.el :noweb yes
-(setf (nth 3 +doom-dashboard-menu-sections) '<<open-org-docs-menu-section>>)
+(setf (nth 3 +doom-dashboard-menu-sections) '<<open-docs-menu-section>>)
 #+end_src
 
-Risistemiamo l'elemento rimosso (switch project) in prima posizione:
+Riprendiamo l'elemento rimosso...
 
 #+name: switch-project-menu-section
 #+begin_src emacs-lisp
 ("Open project" :icon (all-the-icons-octicon "briefcase" :face 'doom-dashboard-menu-title) :action projectile-switch-project)
 #+end_src
 
-#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el :noweb yes
+... e sistemiamolo in prima posizione:
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el :noweb no-export
 (setf (nth 0 +doom-dashboard-menu-sections) '<<switch-project-menu-section>>)
+#+end_src
+
+Aggiungiamo una scorciatoia per org-mode, che è una delle documentazioni più consultate dal sottoscritto.
+
+# SPC elfeed enter
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+(map! :leader
+      (:prefix-map ("o" . "open")
+       :desc "Open org manual." "i" #'org-info))
+#+end_src
+**** Doom documentation (SPC h d h)
+Just changing the name.
+
+#+name: open-doom-docs-menu-section
+#+begin_src emacs-lisp
+("Doom documentation" :icon (all-the-icons-octicon "book" :face 'doom-dashboard-menu-title) :action doom/help)
+#+end_src
+
+Lasciamo che resti in sesta posizione:
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el :noweb no-export
+(setf (nth 6 +doom-dashboard-menu-sections) '<<open-doom-docs-menu-section>>)
 #+end_src
 
 **** Banner
 Experimental.
+Just trying stuff out, but I stick with the regular banner for the moment.
 
 See [[https://discourse.doomemacs.org/t/how-to-change-your-splash-screen/57][this discourse post]].
 
-A weebish example:
+A weebish example (not tangled code):
 # :tangle tangled/.doom.d/config.el
 #+begin_src emacs-lisp
 (defun my-weebery-is-always-greater ()
@@ -1415,6 +1482,14 @@ A weebish example:
      'face 'doom-dashboard-banner)))
 
 (setq +doom-dashboard-ascii-banner-fn #'my-weebery-is-always-greater)
+#+end_src
+*** Zen :noexport:
+**** TODO serif font
+Usiamo un font seriffato:
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el :noweb yes
+(defvar +zen-serif-p t
+  "Whether to use a serifed font with `mixed-pitch-mode'.")
 #+end_src
 
 ** Daemon
