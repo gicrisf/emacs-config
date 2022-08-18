@@ -8,7 +8,7 @@
 #+MACRO: prismcss @@html:<link href="/assets/prism/prism.css" rel="stylesheet" />@@
 #+MACRO: prismjs @@html:<script src="/assets/prism/prism.js"></script>@@
 
-* DONE Configurare Emacs in Org-mode :emacs:org:@posts:
+* DONE Configurare Emacs in Org-mode :emacs:org:@posts:@software:@notes:
 CLOSED: [2022-08-10 mer]
 :PROPERTIES:
 :EXPORT_HUGO_SECTION: software/emacs-config
@@ -481,12 +481,12 @@ literate
 (default +bindings +smartparens)
 #+end_src
 
-** Pacchetti
+** Package!
 Chiaramente, non tutti i pacchetti disponibili per emacs sono stati integrati in moduli di Doom, quindi alcuni andranno installati per altre vie, ad esempio MELPA o delle repository git.
 
-*** Package!
-Mantieni i commenti originali di =packages.el= all'interno del file.
+Manteniamo i commenti originali di =packages.el= all'interno del file.
 
+*** Recipe
 #+name: packages-recipe
 #+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el
 ;; To install a package directly from a remote git repo, you must specify a
@@ -496,6 +496,7 @@ Mantieni i commenti originali di =packages.el= all'interno del file.
 ;  :recipe (:host github :repo "username/repo"))
 #+end_src
 
+*** Files
 #+name: packages-files
 #+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el
 ;; If the package you are trying to install does not contain a PACKAGENAME.el
@@ -506,6 +507,7 @@ Mantieni i commenti originali di =packages.el= all'interno del file.
 ;           :files ("some-file.el" "src/lisp/*.el")))
 #+end_src
 
+*** Disable
 #+name: packages-disable
 #+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el
 ;; If you'd like to disable a package included with Doom, you can do so here
@@ -513,6 +515,7 @@ Mantieni i commenti originali di =packages.el= all'interno del file.
 ;(package! builtin-package :disable t)
 #+end_src
 
+*** Override
 #+name: packages-override
 #+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el
 ;; You can override the recipe of a built in package without having to specify
@@ -522,6 +525,7 @@ Mantieni i commenti originali di =packages.el= all'interno del file.
 ;(package! builtin-package-2 :recipe (:repo "myfork/package"))
 #+end_src
 
+*** Branch
 #+name: packages-branch
 #+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el
 ;; Specify a `:branch' to install a package from a particular branch or tag.
@@ -530,12 +534,14 @@ Mantieni i commenti originali di =packages.el= all'interno del file.
 ;(package! builtin-package :recipe (:branch "develop"))
 #+end_src
 
+*** Pin
 #+name: packages-pin
 #+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el
 ;; Use `:pin' to specify a particular commit to install.
 ;(package! builtin-package :pin "1a2b3c4d5e")
 #+end_src
 
+*** Unpin
 #+name: packages-unpin
 #+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el
 ;; Doom's packages are pinned to a specific commit and updated from release to
@@ -547,104 +553,7 @@ Mantieni i commenti originali di =packages.el= all'interno del file.
 ;(unpin! t)
 #+end_src
 
-*** UI
-Sono affezionato ai temi di spacemacs. Uso specialmente quello chiaro, se ho bisogno di sovrailluminare lo schermo.
-
-#+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el
-(package! spacemacs-theme)
-#+end_src
-
-Mi piacerebbe molto avere a disposizione anche i colori di nano-emacs, ma per il momento sembra sia una cosa più complessa del previsto. Henrik Lissner ha detto un paio di volte che avrebbe intenzione di dedicare un intero modulo a questa integrazione, ma non sembra una priorità.
-
-*** Lang
-Il supporto per Vala è largamente ereditato dalla mode per C#.
-
-#+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el
-(package! vala-mode)
-#+end_src
-
-*** Org-mode
-
-#+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el
-(package! org-download)
-
-(package! org-drill)
-
-(package! org-journal)
-
-;; (package! helm-org-rifle)
-
-(package! org-web-tools)
-#+end_src
-
-L'exporter per Zola è un pacchetto che sto mantenendo io, quindi capita spesso che io debba testare delle modifiche in locale. =package!= gestisce i download, quindi in teoria non dovrebbe essere impiegato per la gestione di file in locale, ma [[https://github.com/doomemacs/doomemacs/issues/3842#issuecomment-681039894][Henrik Lissner consiglia di usare comunque la macro perché è stata adattata anche a questo genere di situazioni]].
-
-Aggiunge:
-
-#+begin_quote
-Note: with =:no-byte-compile t=, you don't have to run doom sync every time you make a change to the package.
-#+end_quote
-
-Così:
-
-#+begin_src emacs-lisp
-(package! ox-hugo :recipe (:local-repo "lisp/ox-zola"))
-#+end_src
-
-Peccato che a me dia "runtime error":
-
-#+begin_quote
-Details: ((:private . packages) "/home/cromo/.doom.d/packages.el" (wrong-type-argument listp (doom-package-error "ox-hugo" . "Keyword argument :no-byte-compile not one of (:local-repo :files :flavor :build :pre-build :post-build :includes :type :repo :host :branch :protocol :remote :nonrecursive :fork :depth :source :inherit)")))
-#+end_quote
-
-Non ho ben capito perché (che sia [[https://github.com/doomemacs/doomemacs/issues/4142#issuecomment-715532212][questo il problema]]? non mi pare...), ma ho risolto più brutalmente. Innanzitutto installo il codice dalla mia repo.
-
-#+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el
-(package! ox-hugo :recipe (:host github :repo "gicrisf/ox-zola"))
-#+end_src
-
-In secondo luogo, faccio le modifiche in locale e lancio =emacs-lisp-byte-compile-and-load= tutte le volte che modifico qualcosa. Finché non riavvio Emacs, è possibile testare quanto si vuole. Forse un po' più scomodo, ma è un approccio che fa il suo sporco lavoro.
-
-*** Twitter
-Questo piccolo pacchetto (che conto di estendere presto) nasce per assolvere ad una funzione molto semplice: citare i tweet nel mio blog.
-Ne racconto qui:
-- [[https://zwitterio.it/coding/2022/quote-tweets-properly-with-emacs-lisp/][Come citare un tweet in emacs lisp]];
-
-#+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el
-(package! eltweet :recipe (:host github :repo "gicrisf/eltweet"))
-#+end_src
-
-*** Info pages (manuali)
-Le pagine dei manuali su Emacs mancano spesso di colore, cosa che le rende più difficili da leggere delle loro controparti web.
-Il seguente pacchetto corregge questa mancanza:
-
-#+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el
-(package! info-colors)
-#+end_src
-
-[[https://github.com/ubolonton/info-colors][Come illustrato nel README]], per abilitarlo bisogna aggiungere un hook in =config.el=.
-
-#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
-(add-hook 'Info-selection-hook 'info-colors-fontify-node)
-#+end_src
-
-**** TODO Screenshots :noexport:
-#+begin_quote
-non esporto finché non supporto le immagini in ox-zola
-#+end_quote
-
-Lo screenshot dal README:
-
-#+DOWNLOADED: screenshot @ 2022-08-10 14:31:12
-[[file:Configurare_Emacs_in_Org-mode/2022-08-10_14-31-12_screenshot.png]]
-
-
-Qui uno screenshot catturato con il tema city-lights.
-
-#+DOWNLOADED: screenshot @ 2022-08-10 13:34:44
-[[file:Configurare_Emacs_in_Org-mode/2022-08-10_13-34-44_screenshot.png]]
-
-** Configurazione generale
+** Configurazione
 Infine, veniamo alla configurazione vera e propria.
 
 *** Chi sono?
@@ -675,6 +584,7 @@ TODO: differenziare tra font laptop e desktop e variare la configurazione esport
 #+end_src
 
 *** Temi
+**** Default
 Innanzitutto, selezioniamo un tema di default.
 
 #+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
@@ -709,6 +619,16 @@ Alcuni commenti da ricordare:
 ;; they are implemented.
 #+end_src
 
+**** Spacemacs
+Sono affezionato ai temi di spacemacs. Uso specialmente quello chiaro, se ho bisogno di sovrailluminare lo schermo.
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el
+(package! spacemacs-theme)
+#+end_src
+
+Mi piacerebbe molto avere a disposizione anche i colori di nano-emacs, ma per il momento sembra sia una cosa più complessa del previsto. Henrik Lissner ha detto un paio di volte che avrebbe intenzione di dedicare un intero modulo a questa integrazione, ma non sembra una priorità.
+
+**** Ciclatore
 TODO: spiegare questo switcher.
 #+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
 ;; Theme switcher functions
@@ -742,16 +662,6 @@ A nil value implies no custom theme should be enabled.")
       :desc "Quick toggle theme" "t t" #'toggle-theme)
 #+end_src
 
-*** Org-mode
-#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
-;; If you use `org' and don't want your org files in the default location below,
-;; change `org-directory'. It must be set before org loads!
-(setq org-directory "~/org/")
-
-;; org-mode paste images
-(require 'org-download)
-#+end_src
-
 *** UI
 #+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
 ;; This determines the style of line numbers in effect. If set to `nil', line
@@ -765,6 +675,202 @@ A nil value implies no custom theme should be enabled.")
 ;; Transparency
 (set-frame-parameter (selected-frame)'alpha '(99 . 100))
 (add-to-list 'default-frame-alist'(alpha . (99 . 100)))
+#+end_src
+
+*** Org-mode
+Innanzitutto, dichiariamo in quale directory vogliamo che risiedano la maggior parte dei file org (o almeno quelli usati più di frequente), così che Emacs sappia dove cercarli.
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+;; If you use `org' and don't want your org files in the default location below,
+;; change `org-directory'. It must be set before org loads!
+(setq org-directory "~/org/")
+#+end_src
+
+**** Downloads
+Adesso possiamo cominciare ad estendere Org-mode. Una prima killer feature, a mio avviso, è data da =org-download=, che ci consente di appiccicare direttamente degli allegati al file org senza mai abbandonare Emacs, né il documento stesso.
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el
+(package! org-download)
+#+end_src
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+(require 'org-download)
+#+end_src
+
+**** Flashcards
+Una volta usavo Anki, ora mi sono chiesto perché usare una GUI quando posso semplicemente scrivere tutto il necessario.
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el
+(package! org-drill)
+#+end_src
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+(require 'org-drill)
+#+end_src
+
+**** Journal
+#+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el
+(package! org-journal)
+#+end_src
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+(require 'org-journal)
+#+end_src
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+;; org journal
+;; in ~/.doom.d/+bindings.el
+;; From: https://www.rousette.org.uk/archives/doom-emacs-tweaks-org-journal-and-org-super-agenda/
+(map! :leader
+      (:prefix ("j" . "journal") ;; org-journal bindings
+        :desc "Create new journal entry" "j" #'org-journal-new-entry
+        :desc "Open previous entry" "p" #'org-journal-open-previous-entry
+        :desc "Open next entry" "n" #'org-journal-open-next-entry
+        :desc "Search journal" "s" #'org-journal-search-forever))
+
+;; The built-in calendar mode mappings for org-journal
+;; conflict with evil bindings
+(map!
+ (:map calendar-mode-map
+   :n "o" #'org-journal-display-entry
+   :n "p" #'org-journal-previous-entry
+   :n "n" #'org-journal-next-entry
+   :n "O" #'org-journal-new-date-entry))
+
+;; Local leader (<SPC m>) bindings for org-journal in calendar-mode
+;; I was running out of bindings, and these are used less frequently
+;; so it is convenient to have them under the local leader prefix
+(map!
+ :map (calendar-mode-map)
+ :localleader
+ "w" #'org-journal-search-calendar-week
+ "m" #'org-journal-search-calendar-month
+ "y" #'org-journal-search-calendar-year)
+
+(setq org-journal-dir "~/org/amalgam")
+(setq org-journal-file-format "%Y-%m.org")
+(setq org-journal-file-type 'monthly)
+#+end_src
+
+**** Wiki
+Richiama informazioni da Wikipedia direttamente su org.
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el
+(package! wikinforg)
+#+end_src
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+(require 'wikinforg)
+#+end_src
+
+**** Ricerca veloce
+Per il momento ne faccio a meno per lo stesso motivo per cui ho disabilitato deft (vedi più avanti).
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el
+;; (package! helm-org-rifle)
+#+end_src
+
+**** Web Tools
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el
+(package! org-web-tools)
+#+end_src
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+(require 'org-web-tools)
+#+end_src
+
+**** Zola
+# Exporter
+L'exporter per Zola è un pacchetto che sto mantenendo io, quindi capita spesso che io debba testare delle modifiche in locale. =package!= gestisce i download, quindi in teoria non dovrebbe essere impiegato per la gestione di file in locale, ma [[https://github.com/doomemacs/doomemacs/issues/3842#issuecomment-681039894][Henrik Lissner consiglia di usare comunque la macro perché è stata adattata anche a questo genere di situazioni]].
+
+Aggiunge:
+
+#+begin_quote
+Note: with =:no-byte-compile t=, you don't have to run doom sync every time you make a change to the package.
+#+end_quote
+
+Così:
+
+#+begin_src emacs-lisp
+(package! ox-hugo :recipe (:local-repo "lisp/ox-zola"))
+#+end_src
+
+Peccato che a me dia "runtime error":
+
+#+begin_quote
+Details: ((:private . packages) "/home/cromo/.doom.d/packages.el" (wrong-type-argument listp (doom-package-error "ox-hugo" . "Keyword argument :no-byte-compile not one of (:local-repo :files :flavor :build :pre-build :post-build :includes :type :repo :host :branch :protocol :remote :nonrecursive :fork :depth :source :inherit)")))
+#+end_quote
+
+Non ho ben capito perché (che sia [[https://github.com/doomemacs/doomemacs/issues/4142#issuecomment-715532212][questo il problema]]? non mi pare...), ma ho risolto più brutalmente. Innanzitutto installo il codice dalla mia repo.
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el
+(package! ox-hugo :recipe (:host github :repo "gicrisf/ox-zola"))
+#+end_src
+
+In secondo luogo, faccio le modifiche in locale e lancio =emacs-lisp-byte-compile-and-load= tutte le volte che modifico qualcosa. Finché non riavvio Emacs, è possibile testare quanto si vuole. Forse un po' più scomodo, ma è un approccio che fa il suo sporco lavoro.
+
+# Frontmatter
+Esportare da org a Hugo/Zola Markdown richiede la scrittura di un =:PROPERTIES:= frontmatter.
+Ma io sono pigro e non mi va di riscrivere ogni volta lo scaffold del frontmatter, quindi ecco una funzione ausiliaria.
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+;; Generate ORG/Zola frontmatter
+;; TODO Section management
+;; MAYBE Add hook to org file IF hugo_base_dir or hugo_section is present at top
+(defun org-zola-frontmatter (slug)
+  "Insert org-mode properties under a paragraph to setup ox-hugo/zola exports"
+  (interactive "sEnter slug: ")
+  (insert ":PROPERTIES:\n"
+          (concat ":EXPORT_HUGO_SECTION: 2022/" slug "\n")
+          ":EXPORT_FILE_NAME: index\n"
+          ":END:\n"))
+#+end_src
+
+Sempre al fine di automatizzare la produzione dei metadati, meglio automatizzare l'inserimento del timestamp con questa funzione org-mode:
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+;; add "CLOSED" when an item is set with DONE state
+(setq org-log-done 'time)
+#+end_src
+
+**** Org-capture
+Org capture torna comodo per appuntarsi in org-mode frammenti di pagine web.
+
+Come manipolare l'HTML, però, è qualcosa che noi dobbiamo spiegare ad =org-capture=, fornendo uno o più template.
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+;; org-capture
+(setq org-capture-templates `(
+	("p" "Protocol" entry (file+headline ,(concat org-directory "notes.org") "Inbox")
+        "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
+	("L" "Protocol Link" entry (file+headline ,(concat org-directory "notes.org") "Inbox")
+        "* %? [[%:link][%:description]] \nCaptured On: %U")
+))
+#+end_src
+
+Al fine di usare [[https://github.com/sprig/org-capture-extension][Org capture extension (Firefox)]], dobbiamo anche impostare l'org-protocol.
+
+#+begin_quote
+The gist of it is to make your system recognize emacsclient as the handler of org-protocol:// links. In addition, one needs to set up emacs to load org-protocol and to set up capture templates.
+#+end_quote
+
+Su linux, bisogna prima registrare questo handler:
+
+#+begin_src txt :tangle tangled/.local/share/applications/org-protocol.desktop
+[Desktop Entry]
+Name=org-protocol
+Exec=emacsclient %u
+Type=Application
+Terminal=false
+Categories=System;
+MimeType=x-scheme-handler/org-protocol;
+#+end_src
+
+A questo punto, su Gnome ed altri GTK-based Desktop Environments, è sufficiente lanciare questo comando:
+
+#+begin_src bash
+$ update-desktop-database ~/.local/share/applications/
 #+end_src
 
 *** Backtab
@@ -815,8 +921,8 @@ In particolar modo, cambia il layout (apre in un altro pannello verticale, anzic
 #+end_src
 
 Ora voglio assicurarmi che elfeed appaia sulla dashboard (vedi sezione dedicata alla dashboard).
-
-*** Typescript/React
+*** Linguaggi
+**** Typescript/React
 Innanzitutto, bisogna avere aggiunto alcuni moduli: =web= e =javascript=, in particolare.
 Per farlo, basta togliere =;;= nel file di configurazione =.doom.d/init.el=, come fatto nel paragrafo sopra.
 
@@ -827,7 +933,7 @@ A questo punto, è possibile che uno voglia lavorare con file in formato =.tsx=.
 (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode))
 #+end_src
 
-**** Vanilla Emacs
+***** Vanilla Emacs
 In caso foste in cerca di una soluzione per Vanilla Emacs o Spacemacs, quest'altra soluzione potrebbe fare al caso vostro:
 
 #+begin_src emacs-lisp
@@ -840,6 +946,17 @@ In caso foste in cerca di una soluzione per Vanilla Emacs o Spacemacs, quest'alt
 
 Praticamente dichiariamo una modalità derivata dalla =typescript-mode= e le assegniamo anche i file con estensione =.tsx=. Per maggiori dettagli, [[https://github.com/emacs-typescript/typescript.el/issues/4#issuecomment-849355222][fate riferimento a questo issue su Github]].
 
+**** Vala
+Il supporto per Vala è largamente ereditato dalla mode per C#.
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el
+(package! vala-mode)
+#+end_src
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+(require 'vala-mode')
+#+end_src
+
 *** Dired
 Drag and drop to dired:
 
@@ -847,10 +964,11 @@ Drag and drop to dired:
 (add-hook 'dired-mode-hook 'org-download-enable)
 #+end_src
 
-*** Markdown/Zola
-Funzioni ausiliarie che ho scritto per facilitarmi il lavoro quando scrivevo in Markdown. Ora esporto da org-mode, quindi l'utilità di queste funzioni è venuta meno, ma occasionalmente mi capita di impiegarle, quindi le lascio comunque.
+*** Markdown
+Funzioni ausiliarie che ho scritto per facilitarmi il lavoro quando scrivevo in Markdown per Zola.
+Come già spiegato sopra, ora esporto da org-mode, quindi l'utilità di queste funzioni è venuta meno, ma occasionalmente mi capita di impiegarle, quindi le lascio comunque.
 
-**** TOML frontmatter
+**** TOML frontmatter (Zola)
 Immaginate di voler generare un nuovo file Markdown per il vostro sito web.
 In base al tipo di generatore, questo potrà avere bisogno di un frontespizio in TOML o in YAML, magari. Si tratta di pochi caratteri, ma scriverli di volta in volta può risultare un po' frustrante, soprattutto se si scrivono molti pezzi.
 
@@ -917,7 +1035,7 @@ Con la funzione =add-hook= possiamo agganciare il lancio della nostra funzione a
 
 Da ora in avanti, basterà aprire un file Markdown vuoto perché Emacs inserisca automaticamente il frontespizio.
 
-**** Shortcode
+**** Shortcode (Zola)
 Con lo stesso approccio, si possono anche ottenere delle funzioni per aggiungere degli shortcode molto usati nel corpo del testo e persino associare delle combinazioni di tasti ad esse!
 
 #+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
@@ -936,29 +1054,13 @@ Con lo stesso approccio, si possono anche ottenere delle funzioni per aggiungere
 #+end_src
 
 Uniamoci, confratelli, nell'amore per Emacs.
+*** Twitter
+Questo piccolo pacchetto (che conto di estendere presto) nasce per assolvere ad una funzione molto semplice: citare i tweet nel mio blog.
+Ne racconto qui:
+- [[https://zwitterio.it/coding/2022/quote-tweets-properly-with-emacs-lisp/][Come citare un tweet in emacs lisp]];
 
-**** Org/Zola
-Ho esportato l'abitudine precedente anche ai metadati in org-mode.
-Sì, sono pigro: figurati se sto a riscrivere "PROPERTIES" tutte le volte.
-
-#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
-;; Generate ORG/Zola frontmatter
-;; TODO Section management
-;; MAYBE Add hook to org file IF hugo_base_dir or hugo_section is present at top
-(defun org-zola-frontmatter (slug)
-  "Insert org-mode properties under a paragraph to setup ox-hugo/zola exports"
-  (interactive "sEnter slug: ")
-  (insert ":PROPERTIES:\n"
-          (concat ":EXPORT_HUGO_SECTION: 2022/" slug "\n")
-          ":EXPORT_FILE_NAME: index\n"
-          ":END:\n"))
-#+end_src
-
-Sempre al fine di automatizzare la produzione dei metadati, meglio automatizzare l'inserimento del timestamp con questa funzione org-mode:
-
-#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
-;; add "CLOSED" when an item is set with DONE state
-(setq org-log-done 'time)
+#+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el
+(package! eltweet :recipe (:host github :repo "gicrisf/eltweet"))
 #+end_src
 
 *** Musica
@@ -1026,45 +1128,6 @@ Let’s make this popup a bit faster
 
 #+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
 (setq which-key-idle-delay 0.5) ;; I need the help, I really do
-#+end_src
-
-*** Org Capture
-Org capture torna comodo per appuntarsi in org-mode frammenti di pagine web.
-
-Come manipolare l'HTML, però, è qualcosa che noi dobbiamo spiegare ad =org-capture=, fornendo uno o più template.
-
-#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
-;; org-capture
-(setq org-capture-templates `(
-	("p" "Protocol" entry (file+headline ,(concat org-directory "notes.org") "Inbox")
-        "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
-	("L" "Protocol Link" entry (file+headline ,(concat org-directory "notes.org") "Inbox")
-        "* %? [[%:link][%:description]] \nCaptured On: %U")
-))
-#+end_src
-
-Al fine di usare [[https://github.com/sprig/org-capture-extension][Org capture extension (Firefox)]], dobbiamo anche impostare l'org-protocol.
-
-#+begin_quote
-The gist of it is to make your system recognize emacsclient as the handler of org-protocol:// links. In addition, one needs to set up emacs to load org-protocol and to set up capture templates.
-#+end_quote
-
-Su linux, bisogna prima registrare questo handler:
-
-#+begin_src txt :tangle tangled/.local/share/applications/org-protocol.desktop
-[Desktop Entry]
-Name=org-protocol
-Exec=emacsclient %u
-Type=Application
-Terminal=false
-Categories=System;
-MimeType=x-scheme-handler/org-protocol;
-#+end_src
-
-A questo punto, su Gnome ed altri GTK-based Desktop Environments, è sufficiente lanciare questo comando:
-
-#+begin_src bash
-$ update-desktop-database ~/.local/share/applications/
 #+end_src
 
 *** Semantic analysis
@@ -1232,41 +1295,35 @@ Sulla base di queste premesse,
     (ox-extras-activate '(latex-header-blocks ignore-headlines))))
 #+end_src
 
-*** Org Journal
-#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
-;; org journal
-;; in ~/.doom.d/+bindings.el
-;; From: https://www.rousette.org.uk/archives/doom-emacs-tweaks-org-journal-and-org-super-agenda/
-(map! :leader
-      (:prefix ("j" . "journal") ;; org-journal bindings
-        :desc "Create new journal entry" "j" #'org-journal-new-entry
-        :desc "Open previous entry" "p" #'org-journal-open-previous-entry
-        :desc "Open next entry" "n" #'org-journal-open-next-entry
-        :desc "Search journal" "s" #'org-journal-search-forever))
+*** Manuali
+Le pagine dei manuali su Emacs mancano spesso di colore, cosa che le rende più difficili da leggere delle loro controparti web.
+Il seguente pacchetto corregge questa mancanza:
 
-;; The built-in calendar mode mappings for org-journal
-;; conflict with evil bindings
-(map!
- (:map calendar-mode-map
-   :n "o" #'org-journal-display-entry
-   :n "p" #'org-journal-previous-entry
-   :n "n" #'org-journal-next-entry
-   :n "O" #'org-journal-new-date-entry))
-
-;; Local leader (<SPC m>) bindings for org-journal in calendar-mode
-;; I was running out of bindings, and these are used less frequently
-;; so it is convenient to have them under the local leader prefix
-(map!
- :map (calendar-mode-map)
- :localleader
- "w" #'org-journal-search-calendar-week
- "m" #'org-journal-search-calendar-month
- "y" #'org-journal-search-calendar-year)
-
-(setq org-journal-dir "~/org/amalgam")
-(setq org-journal-file-format "%Y-%m.org")
-(setq org-journal-file-type 'monthly)
+#+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el
+(package! info-colors)
 #+end_src
+
+[[https://github.com/ubolonton/info-colors][Come illustrato nel README]], per abilitarlo bisogna aggiungere un hook in =config.el=.
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+(add-hook 'Info-selection-hook 'info-colors-fontify-node)
+#+end_src
+
+**** TODO Screenshots :noexport:
+#+begin_quote
+non esporto finché non supporto le immagini in ox-zola
+#+end_quote
+
+Lo screenshot dal README:
+
+#+DOWNLOADED: screenshot @ 2022-08-10 14:31:12
+[[file:Configurare_Emacs_in_Org-mode/2022-08-10_14-31-12_screenshot.png]]
+
+
+Qui uno screenshot catturato con il tema city-lights.
+
+#+DOWNLOADED: screenshot @ 2022-08-10 13:34:44
+[[file:Configurare_Emacs_in_Org-mode/2022-08-10_13-34-44_screenshot.png]]
 
 *** Deft
 Set directory, extension to search for and explicitly say you want to search recursively in the subfolders.
@@ -1490,6 +1547,21 @@ Usiamo un font seriffato:
 #+begin_src emacs-lisp :tangle tangled/.doom.d/config.el :noweb yes
 (defvar +zen-serif-p t
   "Whether to use a serifed font with `mixed-pitch-mode'.")
+#+end_src
+
+*** Meteo (wttrin)
+[[https://github.com/bcbcarl/emacs-wttrin/][Esiste già un frontend per Emacs]], ma è da almeno cinque anni che non dà segni di manutenzione. Quindi [[https://github.com/gicrisf/emacs-wttrin][lavorerò sul mio fork]] (tanto avevo comunque intenzione di aggiungere funzioni supplementari, avrei probabilmente forkato a prescindere).
+
+Innanzitutto aggiungiamo questo pacchetto:
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el :noweb yes
+(package! wttrin :recipe (:host github :repo "gicrisf/emacs-wttrin"))
+#+end_src
+
+Qui lo configuro secondo le mie necessità:
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el :noweb yes
+(setq wttrin-default-cities '("Caltagirone" "Bologna" "Ferrara" "Catania"))
+(setq wttrin-default-accept-language '("Accept-Language" . "it-IT"))
 #+end_src
 
 ** Daemon
