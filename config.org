@@ -13,7 +13,7 @@ CLOSED: [2022-08-10 mer]
 :PROPERTIES:
 :EXPORT_HUGO_SECTION: software/emacs-config
 :EXPORT_FILE_NAME: index
-:EXPORT_HUGO_LASTMOD: [2022-08-07 dom]
+:EXPORT_HUGO_LASTMOD: [2022-08-18 gio]
 :END:
 
 Questo file mostra come gestire la configurazione di Emacs direttamente all'interno di org-mode.
@@ -954,7 +954,7 @@ Il supporto per Vala è largamente ereditato dalla mode per C#.
 #+end_src
 
 #+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
-(require 'vala-mode')
+(require 'vala-mode)
 #+end_src
 
 *** Dired
@@ -1544,7 +1544,7 @@ A weebish example (not tangled code):
 **** TODO serif font
 Usiamo un font seriffato:
 
-#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el :noweb yes
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
 (defvar +zen-serif-p t
   "Whether to use a serifed font with `mixed-pitch-mode'.")
 #+end_src
