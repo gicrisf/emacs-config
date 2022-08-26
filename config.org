@@ -13,7 +13,7 @@ CLOSED: [2022-08-10 mer]
 :PROPERTIES:
 :EXPORT_HUGO_SECTION: software/emacs-config
 :EXPORT_FILE_NAME: index
-:EXPORT_HUGO_LASTMOD: [2022-08-18 gio]
+:EXPORT_HUGO_LASTMOD: [2022-08-25 gio]
 :END:
 
 Questo file mostra come gestire la configurazione di Emacs direttamente all'interno di org-mode.
@@ -444,8 +444,8 @@ yaml              ; JSON, but readable
 ;;zig               ; C, but simpler
 #+end_src
 
-*** Email
-Non uso Emacs per le mie email.
+*** Mail
+Per il momento, non uso Emacs per le mie email.
 [[https://www.zwitterio.it/software/mutt/][Una volta ho provato a gestire tutto da CLI]], anche con buoni risultati, ma a causa di problemi di vario genere alla fine ho deciso che era meglio tornare alla web-app.
 Non tanto perché sia una cattiva idea, quanto piuttosto perché è un inferno con tutto l'HTML pazzo che mettono in mezzo al testo, cosa che si può risolvere leggendo le mail con lynx o altri browser testuali, ma in fin dei conti dà l'impressione di stare sistematicamente forzando il mezzo. Usare il solito browser (coi dovuti accorgimenti) mi sembra la scelta più efficace.
 Ecco perché non uso mu4e, sebbene l'idea mi tenti di tanto in tanto.
@@ -697,6 +697,8 @@ Adesso possiamo cominciare ad estendere Org-mode. Una prima killer feature, a mi
 (require 'org-download)
 #+end_src
 
+=org-download-clipboard= è legato a =SPC m a p= [[https://github.com/doomemacs/doomemacs/issues/3830#issuecomment-679925113][dal 25 agosto 2020]] in Doom Emacs.
+
 **** Flashcards
 Una volta usavo Anki, ora mi sono chiesto perché usare una GUI quando posso semplicemente scrivere tutto il necessario.
 
@@ -752,7 +754,7 @@ Una volta usavo Anki, ora mi sono chiesto perché usare una GUI quando posso sem
 (setq org-journal-file-type 'monthly)
 #+end_src
 
-**** Wiki
+**** Wikinforg
 Richiama informazioni da Wikipedia direttamente su org.
 
 #+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el
@@ -762,6 +764,16 @@ Richiama informazioni da Wikipedia direttamente su org.
 #+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
 (require 'wikinforg)
 #+end_src
+
+Spesso mi servono i contenuti in italiano.
+L'ideale sarebbe scegliere per ogni query.
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+;; (custom-set-variables '(wikinforg-wikipedia-edition-code "it"))
+#+end_src
+
+Purtroppo, i risultati che ottengo da questa versione sono poco accurati.
+Per il momento la disabiliterò.
 
 **** Ricerca veloce
 Per il momento ne faccio a meno per lo stesso motivo per cui ho disabilitato deft (vedi più avanti).
@@ -872,6 +884,86 @@ A questo punto, su Gnome ed altri GTK-based Desktop Environments, è sufficiente
 #+begin_src bash
 $ update-desktop-database ~/.local/share/applications/
 #+end_src
+
+**** TODO Bibliography
+Tentativo di literate bibliography con org-mode basato su =org-bib-mode=, di Nicolas P. Rougier (il creatore di NANO Emacs).
+
+Innanzitutto devo installare le dipendenze dal suo profilo Github.
+
+# :tangle tangled/.doom.d/packages.el
+#+begin_src emacs-lisp
+(package! org-imenu :recipe (:host github :repo "rougier/org-imenu"))
+(package! pdf-drop-mode :recipe (:host github :repo "rougier/pdf-drop-mode"))
+(package! org-bib-mode :recipe (:host github :repo "rougier/org-bib-mode"))
+#+end_src
+
+Purtroppo, quando utilizzo =require= su =org-imenu= noto che qualcosa non va.
+Mi chiedo se il problema sia risolvibile impiegando Nano Emacs, ma non ho tempo per verificare.
+Anche se fosse, dubito che abbandonerei Doom Emacs, quindi per ora il tentativo mi pare evitabile.
+
+# :tangle tangled/.doom.d/config.el
+#+begin_src emacs-lisp
+(require 'org-imenu)
+(require 'pdf-drop-mode)
+(require 'org-bib-mode)
+#+end_src
+
+Lo stesso NPR rimanda ad =org-ref= (di John Kitchin) per chi volesse qualcosa di più elaborato.
+Anziché aggrovigliare i due blocchi precedenti, aggroviglio i prossimi.
+
+# :tangle tangled/.doom.d/packages.el
+#+begin_src emacs-lisp
+(package! org-ref :recipe (:host github :repo "jkitchin/org-ref"))
+#+end_src
+
+Ora configuriamo org-ref.
+
+# :tangle tangled/.doom.d/config.el
+#+begin_src emacs-lisp
+(setq bibtex-completion-bibliography '("~/org/papers/bibliography.bib"
+                                       "~/org/papers/dei.bib"
+                                       "~/org/papers/master.bib"
+                                       "~/org/papers/archive.bib")
+      bibtex-completion-library-path '("~/org/papers/bibtex-pdfs/")
+      bibtex-completion-notes-path "~/org/papers/notes/"
+      bibtex-completion-notes-template-multiple-files "* ${author-or-editor}, ${title}, ${journal}, (${year}) :${=type=}: \n\nSee [[cite:&${=key=}]]\n"
+
+      bibtex-completion-additional-search-fields '(keywords)
+      bibtex-completion-display-formats
+      '((article       . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${journal:40}")
+        (inbook        . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} Chapter ${chapter:32}")
+        (incollection  . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${booktitle:40}")
+        (inproceedings . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${booktitle:40}")
+        (t             . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*}"))
+      bibtex-completion-pdf-open-function
+      (lambda (fpath)
+        (call-process "open" nil 0 nil fpath)))
+#+end_src
+
+Su consiglio di Kitchin, aggiungo queste impostazioni per semplificarmi il lavoro:
+
+# :tangle tangled/.doom.d/config.el
+#+begin_src emacs-lisp
+(require 'bibtex)
+
+(setq bibtex-autokey-year-length 4
+      bibtex-autokey-name-year-separator "-"
+      bibtex-autokey-year-title-separator "-"
+      bibtex-autokey-titleword-separator "-"
+      bibtex-autokey-titlewords 2
+      bibtex-autokey-titlewords-stretch 1
+      bibtex-autokey-titleword-length 5)
+
+(define-key bibtex-mode-map (kbd "H-b") 'org-ref-bibtex-hydra/body)
+#+end_src
+
+Now require it:
+# :tangle tangled/.doom.d/config.el
+#+begin_src emacs-lisp
+(require 'org-ref)
+#+end_src
+
+Vista la complessità della libreria, ho deciso per il momento di non aggrovigliare nulla e aspettare un momento che mi consenta di studiare meglio ogni impostazione.
 
 *** Backtab
 #+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
@@ -1562,6 +1654,152 @@ Qui lo configuro secondo le mie necessità:
 #+begin_src emacs-lisp :tangle tangled/.doom.d/config.el :noweb yes
 (setq wttrin-default-cities '("Caltagirone" "Bologna" "Ferrara" "Catania"))
 (setq wttrin-default-accept-language '("Accept-Language" . "it-IT"))
+#+end_src
+
+*** Mail (disabilitato)
+Quando Protonmail ha rilasciato ProtonBridge mi sono chiesto se non valesse la pena di ritentare un approccio locale alle email.
+Le alternative apprezzabili per il momento mi sembrano due:
+- Mozilla Thunderbird
+- Emacs
+
+Thunderbird ha di recente ricevuto un importante aggiornamento che ha fatto fare all'app un apparente salto di qualità, anche in termini di design, cosa che sicuramente torna utile in un client email del 2022 in competizione con delle web app sempre più piacevoli da vedere.
+
+Emacs, d'altra parte, mi consentirebbe di scrivere le email in org-mode ed all'interno di un sistema integrato con il mio flusso di lavoro abituale; posso persino scrivere in un buffer separato mentre mi occupo di qualcos'altro nel buffer principale ecc. La comodità di avere tutto a portata di shortcut è irresistibile, soprattutto se non c'è troppo da smanettare con strani script arrangiati in casa.
+Per una volta, mi trovo dinnanzi un servizio che supporta i client locali, anziché antagonizzarli (sì gmail, guardo proprio te).
+Per fortuna, c'è già che chi si è portato avanti su questa strada:
+- [[https://shom.dev/posts/20220108_setting-up-protonmail-in-emacs/][shom.dev]]
+- [[https://systemcrafters.net/emacs-mail/][system crafters]]
+- [[http://cachestocaches.com/2017/3/complete-guide-email-emacs-using-mu-and-/][Caches to Caches (Gregory J. Stein)]]
+- [[https://jherrlin.github.io/posts/emacs-mu4e/][jherrlin.github.io]]
+
+Il primo post, in particolar modo, torna utile per la sua brevità. Cosa bisogna fare?
+
+#+begin_quote
+*ATTENZIONE!*
+
+Prima di continuare, tieni a mente che Proton Bridge è un servizio fornito solo ai possessori di un account premium.
+Io l'ho scoperto troppo tardi, motivo per cui lascerò tutto nel mio file di configurazione (potrebbe tornare utile in futuro), ma per ora non aggroviglierò nulla.
+#+end_quote
+
+**** Installare ProtonBridge
+Da AUR:
+
+#+begin_src bash
+yay protonmail-bridge
+#+end_src
+
+Si tratta di un'applicazione open source che rimane aperta in background e genera tutti i file necessari per autenticarsi in sicurezza mediante un client esterno.
+Apprezzo il fatto che non sia un'app di Electron, ma che il frontend sia in Qt. Ciononostante, comunque temo un po' per il consumo sul mio laptop.
+
+**** Installare mbsync
+Innanzitutto, è necessario installare e configurare =mbsync=. Sarebbe materia per i miei literate dotfiles, ma al fine di tenere tutto in un posto preferisco gestire da qui anche questo.
+
+#+begin_src bash
+sudo pacman -S isync
+#+end_src
+
+**** Configurazione di mbsync
+La configurazione di mbsync è l'ennesimo dotfile sulla home, =~/.mbsyncrc=:
+
+# User giovanni . crisalfi at...
+# :tangle ~/.mbsyncrc
+#+begin_src txt
+IMAPAccount proton
+Host 127.0.0.1
+User user@protonmail.com
+PassCmd "cat ~/.protonBridgePass"
+SSLType NONE
+CertificateFile /etc/ssl/certs/ca-certificates.crt
+
+IMAPStore proton-remote
+Account proton
+
+MaildirStore proton-local
+Subfolders Verbatim
+Path ~/mail/proton
+Inbox ~/mail/proton/inbox
+
+Channel proton
+Far :proton-remote:
+Near :proton-local:
+Patterns *
+Create Both
+SyncState *
+#+end_src
+
+**** Configurazione di mu4e
+Su Doom Emacs, è possibile abilitare il modulo =mu4e= onde avere quasi tutto l'occorrente.
+
+Passiamo alla configurazione di mu4e.
+- Ricerca delle mail ogni mezzora;
+- Recupero delle mail attraverso =mbsync=;
+- Tutte le mail finiscono nella home, sotto la cartella mail.
+- Le shortcut per il momento seguono la notazione inglese.
+
+# :tangle tangled/.doom.d/config.el
+#+begin_src emacs-lisp
+(setq mu4e-change-filenames-when-moving t ; avoid sync conflicts
+      mu4e-update-interval (* 30 60) ; check mail 30 minutes
+      mu4e-compose-format-flowed t ; re-flow mail so it's not hard wrapped
+      mu4e-get-mail-command "mbsync -a"
+      mu4e-maildir "~/mail/proton")
+
+(setq mu4e-drafts-folder "/proton/Drafts"
+      mu4e-sent-folder   "/proton/Sent"
+      mu4e-refile-folder "/proton/All Mail"
+      mu4e-trash-folder  "/proton/Trash")
+
+(setq mu4e-maildir-shortcuts
+      '(("/proton/inbox"     . ?i)
+    ("/proton/Sent"      . ?s)
+    ("/proton/Trash"     . ?t)
+    ("/proton/Drafts"    . ?d)
+    ("/proton/All Mail"  . ?a)))
+#+end_src
+
+**** Configurazione SMTP
+Il supporto SMTP è integrato nativamente in Emacs con =smtpmail=.
+Non c'è bisogno di installare nulla qui.
+Il server SMTP potrebbe interferire con altri server locali? Esempio quello di Zola?
+
+# :tangle tangled/.doom.d/config.el
+#+begin_src emacs-lisp
+(setq message-send-mail-function 'smtpmail-send-it
+      auth-sources '("~/.authinfo") ;need to use gpg version but only local smtp stored for now
+      smtpmail-smtp-server "127.0.0.1"
+      smtpmail-smtp-service 1025
+      smtpmail-stream-type  'ssl)
+#+end_src
+
+**** Componi le email con org-mode
+Installiamo =org-msg= per scrivere le mail in org mode ed esportarle in HTML.
+
+#+begin_quote
+[[https://github.com/jeremy-compostella/org-msg][OrgMsg]] is a GNU Emacs global minor mode mixing up Org mode and your Mail User Agent Mode (Message mode, mu4e mode, or notmuch mode) to compose and reply to emails in a Outlook HTML friendly style.
+#+end_quote
+
+Senza questa accortezza, invieremmo delle mail in puro testo, che sarebbe una cosa pure profondamente amabile, ma qualche tempo fa ho constatato che molti client email tendono ad inserire tra lo spam qualunque cosa non sia formattata in HTML. Lo so, questa idea malsana di introdurre la formattazione HTML per le mail ha rovinato le mail stesse, ma ormai è troppo tardi per opporsi.
+
+# :tangle tangled/.doom.d/packages.el
+#+begin_src emacs-lisp
+(package! org-msg)
+#+end_src
+
+Concludiamo con la configurazione minima di =org-msg=.
+
+# :tangle tangled/.doom.d/config.el
+#+begin_src emacs-lisp
+(setq mail-user-agent 'mu4e-user-agent)
+(require 'org-msg)
+
+(setq org-msg-options "html-postamble:nil H:5 num:nil ^:{} toc:nil author:nil email:nil \\n:t"
+      org-msg-startup "hidestars indent inlineimages"
+      org-msg-default-alternatives '((new . (text html))
+                                     (reply-to-html . (text html))
+                                     (reply-to-text . (text)))
+      org-msg-convert-citation t)
+
+(org-msg-mode)
 #+end_src
 
 ** Daemon
