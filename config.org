@@ -424,7 +424,7 @@ org               ; organize your plain life in plain text
 ;;php               ; perl's insecure younger brother
 ;;plantuml          ; diagrams for confusing people more
 ;;purescript        ; javascript, but functional
-;;python            ; beautiful is better than ugly
+python            ; beautiful is better than ugly
 ;;qt                ; the 'cutest' gui framework ever
 ;;racket            ; a DSL for DSLs
 ;;raku              ; the artist formerly known as perl6
@@ -965,6 +965,13 @@ Now require it:
 
 Vista la complessità della libreria, ho deciso per il momento di non aggrovigliare nulla e aspettare un momento che mi consenta di studiare meglio ogni impostazione.
 
+**** LaTeX
+Aggiungiamo altre estensioni ai cosiddetti logfile, cosicché Emacs si occupi di eliminarle dopo l'uso in fase di esportazione (e ci lasci, così, la cartella pulita).
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+(setq org-latex-logfiles-extensions (quote ("lof" "lot" "tex~" "aux" "idx" "log" "out" "toc" "nav" "snm" "vrb" "dvi" "fdb_latexmk" "blg" "brf" "fls" "entoc" "ps" "spl" "bbl" "xmpi" "run.xml" "bcf")))
+#+end_src
+
 *** Backtab
 #+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
 ;; Source: [[https://stackoverflow.com/questions/23692879/emacs24-backtab-is-undefined-how-to-define-this-shortcut-key]]
@@ -1047,6 +1054,17 @@ Il supporto per Vala è largamente ereditato dalla mode per C#.
 
 #+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
 (require 'vala-mode)
+#+end_src
+
+**** Python
+Supporto per virtualenv.
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el
+(package! pyvenv)
+#+end_src
+
+#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
+(require 'pyvenv)
 #+end_src
 
 *** Dired
