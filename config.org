@@ -149,7 +149,7 @@ Cominciamo dalla testa dei nostri file di configurazione, cioè da tutti i comme
 
 Frontespizio di =init.el=.
 
-#+begin_src emacs-lisp :tangle ~/.doom.d/init.el :noweb no-export
+#+begin_src emacs-lisp :tangle init.el :noweb no-export
 ;;; init.el -*- lexical-binding: t; -*-
 
 <<do-not-edit>>
@@ -170,7 +170,7 @@ Frontespizio di =init.el=.
 #+end_src
 
 Frontespizio di =packages.el=.
-#+begin_src emacs-lisp :tangle ~/.doom.d/packages.el :noweb no-export
+#+begin_src emacs-lisp :tangle packages.el :noweb no-export
 ;; -*- no-byte-compile: t; -*-
 ;;; $DOOMDIR/packages.el
 
@@ -186,7 +186,7 @@ Frontespizio di =packages.el=.
 #+end_src
 
 Frontespizio di =config.el=.
-#+begin_src emacs-lisp :tangle ~/.doom.d/config.el :noweb no-export
+#+begin_src emacs-lisp :tangle config.el :noweb no-export
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 
 <<do-not-edit>>
@@ -205,7 +205,7 @@ Il codice seguente è impiegato da Doom Emacs per capire quali moduli installare
 
 #+name: init.el
 #+attr_html: :collapsed t
-#+begin_src emacs-lisp :tangle ~/.doom.d/init.el :noweb no-export
+#+begin_src emacs-lisp :tangle init.el :noweb no-export
 ;;; init.el -*- lexical-binding: t; -*-
 
 ;; This file controls what Doom modules are enabled and what order they load in.
@@ -488,7 +488,7 @@ Manteniamo i commenti originali di =packages.el= all'interno del file.
 
 *** Recipe
 #+name: packages-recipe
-#+begin_src emacs-lisp :tangle ~/.doom.d/packages.el
+#+begin_src emacs-lisp :tangle packages.el
 ;; To install a package directly from a remote git repo, you must specify a
 ;; `:recipe'. You'll find documentation on what `:recipe' accepts here:
 ;; https://github.com/raxod502/straight.el#the-recipe-format
@@ -498,7 +498,7 @@ Manteniamo i commenti originali di =packages.el= all'interno del file.
 
 *** Files
 #+name: packages-files
-#+begin_src emacs-lisp :tangle ~/.doom.d/packages.el
+#+begin_src emacs-lisp :tangle packages.el
 ;; If the package you are trying to install does not contain a PACKAGENAME.el
 ;; file, or is located in a subdirectory of the repo, you'll need to specify
 ;; `:files' in the `:recipe':
@@ -509,7 +509,7 @@ Manteniamo i commenti originali di =packages.el= all'interno del file.
 
 *** Disable
 #+name: packages-disable
-#+begin_src emacs-lisp :tangle ~/.doom.d/packages.el
+#+begin_src emacs-lisp :tangle packages.el
 ;; If you'd like to disable a package included with Doom, you can do so here
 ;; with the `:disable' property:
 ;(package! builtin-package :disable t)
@@ -517,7 +517,7 @@ Manteniamo i commenti originali di =packages.el= all'interno del file.
 
 *** Override
 #+name: packages-override
-#+begin_src emacs-lisp :tangle ~/.doom.d/packages.el
+#+begin_src emacs-lisp :tangle packages.el
 ;; You can override the recipe of a built in package without having to specify
 ;; all the properties for `:recipe'. These will inherit the rest of its recipe
 ;; from Doom or MELPA/ELPA/Emacsmirror:
@@ -527,7 +527,7 @@ Manteniamo i commenti originali di =packages.el= all'interno del file.
 
 *** Branch
 #+name: packages-branch
-#+begin_src emacs-lisp :tangle ~/.doom.d/packages.el
+#+begin_src emacs-lisp :tangle packages.el
 ;; Specify a `:branch' to install a package from a particular branch or tag.
 ;; This is required for some packages whose default branch isn't 'master' (which
 ;; our package manager can't deal with; see raxod502/straight.el#279)
@@ -536,14 +536,14 @@ Manteniamo i commenti originali di =packages.el= all'interno del file.
 
 *** Pin
 #+name: packages-pin
-#+begin_src emacs-lisp :tangle ~/.doom.d/packages.el
+#+begin_src emacs-lisp :tangle packages.el
 ;; Use `:pin' to specify a particular commit to install.
 ;(package! builtin-package :pin "1a2b3c4d5e")
 #+end_src
 
 *** Unpin
 #+name: packages-unpin
-#+begin_src emacs-lisp :tangle ~/.doom.d/packages.el
+#+begin_src emacs-lisp :tangle packages.el
 ;; Doom's packages are pinned to a specific commit and updated from release to
 ;; release. The `unpin!' macro allows you to unpin single packages...
 ;(unpin! pinned-package)
@@ -557,7 +557,7 @@ Manteniamo i commenti originali di =packages.el= all'interno del file.
 Infine, veniamo alla configurazione vera e propria.
 
 *** Chi sono?
-#+begin_src emacs-lisp :tangle ~/.doom.d/config.el
+#+begin_src emacs-lisp :tangle config.el
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets.
 (setq user-full-name "gicrisf"
@@ -568,7 +568,7 @@ Infine, veniamo alla configurazione vera e propria.
 
 TODO: differenziare tra font laptop e desktop e variare la configurazione esportata in base alla situazione.
 
-#+begin_src emacs-lisp :tangle ~/.doom.d/config.el
+#+begin_src emacs-lisp :tangle config.el
 ;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
 ;; are the three important ones:
 ;;
@@ -587,7 +587,7 @@ TODO: differenziare tra font laptop e desktop e variare la configurazione esport
 **** Default
 Innanzitutto, selezioniamo un tema di default.
 
-#+begin_src emacs-lisp :tangle ~/.doom.d/config.el
+#+begin_src emacs-lisp :tangle config.el
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
@@ -600,7 +600,7 @@ Nel momento in cui dichiaro concluso un task (con "DONE") in org-mode, il tema m
 TODO cambiare questo comportamento.
 
 Alcuni commenti da ricordare:
-#+begin_src emacs-lisp :tangle ~/.doom.d/config.el
+#+begin_src emacs-lisp :tangle config.el
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
 ;; - `load!' for loading external *.el files relative to this one
@@ -622,7 +622,7 @@ Alcuni commenti da ricordare:
 **** Spacemacs
 Sono affezionato ai temi di spacemacs. Uso specialmente quello chiaro, se ho bisogno di sovrailluminare lo schermo.
 
-#+begin_src emacs-lisp :tangle ~/.doom.d/packages.el
+#+begin_src emacs-lisp :tangle packages.el
 (package! spacemacs-theme)
 #+end_src
 
@@ -630,7 +630,7 @@ Mi piacerebbe molto avere a disposizione anche i colori di nano-emacs, ma per il
 
 **** Ciclatore
 TODO: spiegare questo switcher.
-#+begin_src emacs-lisp :tangle ~/.doom.d/config.el
+#+begin_src emacs-lisp :tangle config.el
 ;; Theme switcher functions
 (defvar quick-switch-themes
   (let ((themes-list (list 'doom-city-lights
@@ -663,7 +663,7 @@ A nil value implies no custom theme should be enabled.")
 #+end_src
 
 *** UI
-#+begin_src emacs-lisp :tangle ~/.doom.d/config.el
+#+begin_src emacs-lisp :tangle config.el
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
@@ -680,7 +680,7 @@ A nil value implies no custom theme should be enabled.")
 *** Org-mode
 Innanzitutto, dichiariamo in quale directory vogliamo che risiedano la maggior parte dei file org (o almeno quelli usati più di frequente), così che Emacs sappia dove cercarli.
 
-#+begin_src emacs-lisp :tangle ~/.doom.d/config.el
+#+begin_src emacs-lisp :tangle config.el
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/org/")
@@ -689,7 +689,7 @@ Innanzitutto, dichiariamo in quale directory vogliamo che risiedano la maggior p
 **** Downloads
 Adesso possiamo cominciare ad estendere Org-mode. Una prima killer feature, a mio avviso, è data da =org-download=, che ci consente di appiccicare direttamente degli allegati al file org senza mai abbandonare Emacs, né il documento stesso.
 
-#+begin_src emacs-lisp :tangle ~/.doom.d/packages.el
+#+begin_src emacs-lisp :tangle packages.el
 (package! org-download)
 #+end_src
 
@@ -698,16 +698,16 @@ Adesso possiamo cominciare ad estendere Org-mode. Una prima killer feature, a mi
 **** Flashcards
 Una volta usavo Anki, ora mi sono chiesto perché usare una GUI quando posso semplicemente scrivere tutto il necessario.
 
-#+begin_src emacs-lisp :tangle ~/.doom.d/packages.el
+#+begin_src emacs-lisp :tangle packages.el
 (package! org-drill)
 #+end_src
 
 **** Journal
-#+begin_src emacs-lisp :tangle ~/.doom.d/packages.el
+#+begin_src emacs-lisp :tangle packages.el
 (package! org-journal)
 #+end_src
 
-#+begin_src emacs-lisp :tangle ~/.doom.d/config.el
+#+begin_src emacs-lisp :tangle config.el
 ;; org journal
 ;; in ~/.doom.d/+bindings.el
 ;; From: https://www.rousette.org.uk/archives/doom-emacs-tweaks-org-journal-and-org-super-agenda/
@@ -745,14 +745,14 @@ Una volta usavo Anki, ora mi sono chiesto perché usare una GUI quando posso sem
 **** Wikinforg
 Richiama informazioni da Wikipedia direttamente su org.
 
-#+begin_src emacs-lisp :tangle ~/.doom.d/packages.el
+#+begin_src emacs-lisp :tangle packages.el
 (package! wikinforg)
 #+end_src
 
 Spesso mi servono i contenuti in italiano.
 L'ideale sarebbe scegliere per ogni query.
 
-#+begin_src emacs-lisp :tangle ~/.doom.d/config.el
+#+begin_src emacs-lisp :tangle config.el
 ;; (custom-set-variables '(wikinforg-wikipedia-edition-code "it"))
 #+end_src
 
@@ -762,13 +762,13 @@ Per il momento la disabiliterò.
 **** Ricerca veloce
 Per il momento ne faccio a meno per lo stesso motivo per cui ho disabilitato deft (vedi più avanti).
 
-#+begin_src emacs-lisp :tangle ~/.doom.d/packages.el
+#+begin_src emacs-lisp :tangle packages.el
 ;; (package! helm-org-rifle)
 #+end_src
 
 **** Web Tools
 
-#+begin_src emacs-lisp :tangle ~/.doom.d/packages.el
+#+begin_src emacs-lisp :tangle packages.el
 (package! org-web-tools)
 #+end_src
 
@@ -796,7 +796,7 @@ Details: ((:private . packages) "/home/cromo/.doom.d/packages.el" (wrong-type-ar
 
 Non ho ben capito perché (che sia [[https://github.com/doomemacs/doomemacs/issues/4142#issuecomment-715532212][questo il problema]]? non mi pare...), ma ho risolto più brutalmente. Innanzitutto installo il codice dalla mia repo.
 
-#+begin_src emacs-lisp :tangle ~/.doom.d/packages.el
+#+begin_src emacs-lisp :tangle packages.el
 (package! ox-hugo :recipe (:host github :repo "gicrisf/ox-zola"))
 #+end_src
 
@@ -806,7 +806,7 @@ In secondo luogo, faccio le modifiche in locale e lancio =emacs-lisp-byte-compil
 Esportare da org a Hugo/Zola Markdown richiede la scrittura di un =:PROPERTIES:= frontmatter.
 Ma io sono pigro e non mi va di riscrivere ogni volta lo scaffold del frontmatter, quindi ecco una funzione ausiliaria.
 
-#+begin_src emacs-lisp :tangle ~/.doom.d/config.el
+#+begin_src emacs-lisp :tangle config.el
 ;; Generate ORG/Zola frontmatter
 ;; TODO Section management
 ;; MAYBE Add hook to org file IF hugo_base_dir or hugo_section is present at top
@@ -821,7 +821,7 @@ Ma io sono pigro e non mi va di riscrivere ogni volta lo scaffold del frontmatte
 
 Sempre al fine di automatizzare la produzione dei metadati, meglio automatizzare l'inserimento del timestamp con questa funzione org-mode:
 
-#+begin_src emacs-lisp :tangle ~/.doom.d/config.el
+#+begin_src emacs-lisp :tangle config.el
 ;; add "CLOSED" when an item is set with DONE state
 (setq org-log-done 'time)
 #+end_src
@@ -831,7 +831,7 @@ Org capture torna comodo per appuntarsi in org-mode frammenti di pagine web.
 
 Come manipolare l'HTML, però, è qualcosa che noi dobbiamo spiegare ad =org-capture=, fornendo uno o più template.
 
-#+begin_src emacs-lisp :tangle ~/.doom.d/config.el
+#+begin_src emacs-lisp :tangle config.el
 ;; org-capture
 (setq org-capture-templates `(
 	("p" "Protocol" entry (file+headline ,(concat org-directory "notes.org") "Inbox")
@@ -849,7 +849,7 @@ The gist of it is to make your system recognize emacsclient as the handler of or
 
 Su linux, bisogna prima registrare questo handler:
 
-#+begin_src txt :tangle ~/.local/share/applications/org-protocol.desktop
+#+begin_src txt :tangle tangled/.local/share/applications/org-protocol.desktop
 [Desktop Entry]
 Name=org-protocol
 Exec=emacsclient %u
@@ -870,7 +870,7 @@ Tentativo di literate bibliography con org-mode basato su =org-bib-mode=, di Nic
 
 Innanzitutto devo installare le dipendenze dal suo profilo Github.
 
-# :tangle ~/.doom.d/packages.el
+# :tangle packages.el
 #+begin_src emacs-lisp
 (package! org-imenu :recipe (:host github :repo "rougier/org-imenu"))
 (package! pdf-drop-mode :recipe (:host github :repo "rougier/pdf-drop-mode"))
@@ -884,14 +884,14 @@ Anche se fosse, dubito che abbandonerei Doom Emacs, quindi per ora il tentativo 
 Lo stesso NPR rimanda ad =org-ref= (di John Kitchin) per chi volesse qualcosa di più elaborato.
 Anziché aggrovigliare i due blocchi precedenti, aggroviglio i prossimi.
 
-# :tangle ~/.doom.d/packages.el
+# :tangle packages.el
 #+begin_src emacs-lisp
 (package! org-ref :recipe (:host github :repo "jkitchin/org-ref"))
 #+end_src
 
 Ora configuriamo org-ref.
 
-# :tangle ~/.doom.d/config.el
+# :tangle config.el
 #+begin_src emacs-lisp
 (setq bibtex-completion-bibliography '("~/org/papers/bibliography.bib"
                                        "~/org/papers/dei.bib"
@@ -915,7 +915,7 @@ Ora configuriamo org-ref.
 
 Su consiglio di Kitchin, aggiungo queste impostazioni per semplificarmi il lavoro:
 
-# :tangle ~/.doom.d/config.el
+# :tangle config.el
 #+begin_src emacs-lisp
 (require 'bibtex)
 
@@ -931,7 +931,7 @@ Su consiglio di Kitchin, aggiungo queste impostazioni per semplificarmi il lavor
 #+end_src
 
 Now require it:
-# :tangle ~/.doom.d/config.el
+# :tangle config.el
 #+begin_src emacs-lisp
 (require 'org-ref)
 #+end_src
@@ -941,12 +941,12 @@ Vista la complessità della libreria, ho deciso per il momento di non aggrovigli
 **** LaTeX
 Aggiungiamo altre estensioni ai cosiddetti logfile, cosicché Emacs si occupi di eliminarle dopo l'uso in fase di esportazione (e ci lasci, così, la cartella pulita).
 
-#+begin_src emacs-lisp :tangle ~/.doom.d/config.el
+#+begin_src emacs-lisp :tangle config.el
 (setq org-latex-logfiles-extensions (quote ("lof" "lot" "tex~" "aux" "idx" "log" "out" "toc" "nav" "snm" "vrb" "dvi" "fdb_latexmk" "blg" "brf" "fls" "entoc" "ps" "spl" "bbl" "xmpi" "run.xml" "bcf")))
 #+end_src
 
 *** Backtab
-#+begin_src emacs-lisp :tangle ~/.doom.d/config.el
+#+begin_src emacs-lisp :tangle config.el
 ;; Source: [[https://stackoverflow.com/questions/23692879/emacs24-backtab-is-undefined-how-to-define-this-shortcut-key]]
 (global-set-key (kbd "<backtab>") 'un-indent-by-removing-4-spaces)
 (defun un-indent-by-removing-4-spaces ()
@@ -970,7 +970,7 @@ Elfeed is an extensible web feed reader for Emacs, supporting both Atom and RSS.
 Di default, basta aggiungere gli URL dei feed desiderati in questa lista per avere già Elfeed operativo.
 
 # Not tangling it anymore
-# :tangle ~/.doom.d/config.el
+# :tangle config.el
 #+begin_src emacs-lisp
 (setq elfeed-feeds (quote
                     (("https://www.zwitterio.it/rss.xml" stem)
@@ -982,11 +982,11 @@ Io non uso più questo metodo perché trovo più comodo tenere i miei feed in un
 Per abbellire elfeed, aggiungiamo =elfeed-goodies=.
 In particolar modo, cambia il layout (apre in un altro pannello verticale, anziché orizzontale) e si guadagna una powerline.
 
-#+begin_src emacs-lisp :tangle ~/.doom.d/packages.el
+#+begin_src emacs-lisp :tangle packages.el
 (package! elfeed-goodies)
 #+end_src
 
-#+begin_src emacs-lisp :tangle ~/.doom.d/config.el
+#+begin_src emacs-lisp :tangle config.el
 (require 'elfeed-goodies)
 (elfeed-goodies/setup)
 (setq elfeed-goodies/entry-pane-size 0.5)
@@ -1000,7 +1000,7 @@ Per farlo, basta togliere =;;= nel file di configurazione =.doom.d/init.el=, com
 
 A questo punto, è possibile che uno voglia lavorare con file in formato =.tsx=. Il supporto per questo caso d'uso potrebbe arrivare presto, ma per il momento ci viene in soccorso una semplice riga di lisp nel file di configurazione, [[https://github.com/hlissner/doom-emacs/issues/2252#issuecomment-569059839][secondo il suggerimento di hlissner]]:
 
-#+begin_src emacs-lisp :tangle ~/.doom.d/config.el
+#+begin_src emacs-lisp :tangle config.el
 ;; Support for Typescript/React
 (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode))
 #+end_src
@@ -1021,21 +1021,21 @@ Praticamente dichiariamo una modalità derivata dalla =typescript-mode= e le ass
 **** Vala
 Il supporto per Vala è largamente ereditato dalla mode per C#.
 
-#+begin_src emacs-lisp :tangle ~/.doom.d/packages.el
+#+begin_src emacs-lisp :tangle packages.el
 (package! vala-mode)
 #+end_src
 
 **** Python
 Supporto per virtualenv.
 
-#+begin_src emacs-lisp :tangle ~/.doom.d/packages.el
+#+begin_src emacs-lisp :tangle packages.el
 (package! pyvenv)
 #+end_src
 
 *** Dired
 Drag and drop to dired:
 
-#+begin_src emacs-lisp :tangle ~/.doom.d/config.el
+#+begin_src emacs-lisp :tangle config.el
 (add-hook 'dired-mode-hook 'org-download-enable)
 #+end_src
 
@@ -1069,7 +1069,7 @@ tags=[""]
 
 Traduciamo in lisp:
 
-#+begin_src emacs-lisp :tangle ~/.doom.d/config.el
+#+begin_src emacs-lisp :tangle config.el
 ;; Generate TOML frontmatter
 (defun new-toml-frontmatter ()
   "Insert a TOML frontmatter for Markdown files"
@@ -1100,7 +1100,7 @@ Già invocare questa funzione nel momento della creazionee del file è ben più 
 
 Con la funzione =add-hook= possiamo agganciare il lancio della nostra funzione ad una modalità. Nel nostro caso, la =markdown-mode=:
 
-#+begin_src emacs-lisp :tangle ~/.doom.d/config.el
+#+begin_src emacs-lisp :tangle config.el
 (add-hook 'markdown-mode-hook
           (lambda ()
             (if (= (buffer-size) 0)
@@ -1113,7 +1113,7 @@ Da ora in avanti, basterà aprire un file Markdown vuoto perché Emacs inserisca
 **** Shortcode (Zola)
 Con lo stesso approccio, si possono anche ottenere delle funzioni per aggiungere degli shortcode molto usati nel corpo del testo e persino associare delle combinazioni di tasti ad esse!
 
-#+begin_src emacs-lisp :tangle ~/.doom.d/config.el
+#+begin_src emacs-lisp :tangle config.el
 ;; Generate Zola Shortcodes
 (defun new-social-shortcode ()
   "Generate new twitter shortcode"
@@ -1134,14 +1134,14 @@ Questo piccolo pacchetto (che conto di estendere presto) nasce per assolvere ad 
 Ne racconto qui:
 - [[https://zwitterio.it/coding/2022/quote-tweets-properly-with-emacs-lisp/][Come citare un tweet in emacs lisp]];
 
-#+begin_src emacs-lisp :tangle ~/.doom.d/packages.el
+#+begin_src emacs-lisp :tangle packages.el
 (package! eltweet :recipe (:host github :repo "gicrisf/eltweet"))
 #+end_src
 
 *** Musica
 Di questa parte ho già parlato in [[https://www.zwitterio.it/coding/2022/how-do-i-play-my-lofi-music/][un post dedicato]].
 
-#+begin_src emacs-lisp :tangle ~/.doom.d/config.el
+#+begin_src emacs-lisp :tangle config.el
 ;; Play Lo-Fi
 ;; Implementation of the knuth shuffle
 ;; TODO Start amberol or other music player
@@ -1176,7 +1176,7 @@ Di questa parte ho già parlato in [[https://www.zwitterio.it/coding/2022/how-do
 
 Questa è per la uso per il pretty-printing di HTML, di solito, ma va bene per un qualunque chunk XML:
 
-#+begin_src emacs-lisp :tangle ~/.doom.d/config.el
+#+begin_src emacs-lisp :tangle config.el
 (defun bf-pretty-print-xml-region (begin end)
   "Pretty format XML markup in region. You need to have nxml-mode
 http://www.emacswiki.org/cgi-bin/wiki/NxmlMode installed to do
@@ -1201,7 +1201,7 @@ Let’s make this popup a bit faster
 
 [[https://tecosaur.github.io/emacs-config/config.html#which-key][Dalla configurazione di tecosaur]]:
 
-#+begin_src emacs-lisp :tangle ~/.doom.d/config.el
+#+begin_src emacs-lisp :tangle config.el
 (setq which-key-idle-delay 0.5) ;; I need the help, I really do
 #+end_src
 
@@ -1265,7 +1265,7 @@ Emacs potrebbe non individuare subito Racer, nonostante l'installazione.
 
 Quick fix per consentire ad Emacs di trovare i binari di Racer:
 
-#+begin_src emacs-lisp :tangle ~/.doom.d/config.el :noweb no-export
+#+begin_src emacs-lisp :tangle config.el :noweb no-export
 ;; (setq racer-rust-src-path <<racer-path>>)
 #+end_src
 
@@ -1284,7 +1284,7 @@ When =+lsp= is not enabled, the module uses =racer= to provide code completion, 
 
 Bisogna perciò evitare che Racer sia avviato tutte le volte che LSP non è attivo. Come ricordato da [[https://www.reddit.com/r/DoomEmacs/comments/slb92w/comment/hvrfkax/?utm_source=share&utm_medium=web2x&context=3][@subderisorious]], per fortuna Doom ci consente di disabilitare un pacchetto della configurazione di default semplicemente richiamando la macro =package!= in =packages.el=.
 
-#+begin_src emacs-lisp :tangle ~/.doom.d/packages.el
+#+begin_src emacs-lisp :tangle packages.el
 (package! racer :disable t)
 #+end_src
 
@@ -1310,13 +1310,13 @@ sudo pacman -S rust-analyzer
 
 È il caso di specificare quale server intendiamo utilizzare, altrimenti Rustic potrebbe fraintendere o optare per Racer:
 
-#+begin_src emacs-lisp :tangle ~/.doom.d/config.el
+#+begin_src emacs-lisp :tangle config.el
 (setq rustic-lsp-server 'rust-analyzer)
 #+end_src
 
 Questo dovrebbe essere sufficiente, ma per essere proprio sicuri:
 
-#+begin_src emacs-lisp :tangle ~/.doom.d/config.el
+#+begin_src emacs-lisp :tangle config.el
 (after! lsp-rust
   (setq lsp-rust-server 'rust-analyzer))
 #+end_src
@@ -1340,7 +1340,7 @@ C'è chi ottiene questo risultato esportando a partire da un JSON, ma figurarsi 
 Sulla base di queste premesse,
 [[https://github.com/gicrisf/my-org-resume][ho da poco cominciato a mantenere il mio CV in org-mode]]; poiché l'esportazione avviene attraverso LaTeX (via template AltaCV), torna comoda qualche funzione che tenga in ordine la directory di output ad ogni modifica.
 
-#+begin_src emacs-lisp :tangle ~/.doom.d/config.el
+#+begin_src emacs-lisp :tangle config.el
 (after! org
   ;; Import ox-latex to get org-latex-classes and other funcitonality
   ;; for exporting to LaTeX from org
@@ -1374,13 +1374,13 @@ Sulla base di queste premesse,
 Le pagine dei manuali su Emacs mancano spesso di colore, cosa che le rende più difficili da leggere delle loro controparti web.
 Il seguente pacchetto corregge questa mancanza:
 
-#+begin_src emacs-lisp :tangle ~/.doom.d/packages.el
+#+begin_src emacs-lisp :tangle packages.el
 (package! info-colors)
 #+end_src
 
 [[https://github.com/ubolonton/info-colors][Come illustrato nel README]], per abilitarlo bisogna aggiungere un hook in =config.el=.
 
-#+begin_src emacs-lisp :tangle ~/.doom.d/config.el
+#+begin_src emacs-lisp :tangle config.el
 (add-hook 'Info-selection-hook 'info-colors-fontify-node)
 #+end_src
 
@@ -1403,7 +1403,7 @@ Qui uno screenshot catturato con il tema city-lights.
 *** Deft
 Set directory, extension to search for and explicitly say you want to search recursively in the subfolders.
 
-#+begin_src emacs-lisp :tangle ~/.doom.d/config.el
+#+begin_src emacs-lisp :tangle config.el
 ;; Not using deft rn
 ;;(setq deft-directory "~/org"
 ;;      deft-extensions '("org" "txt"))
@@ -1421,14 +1421,14 @@ Ci servono due elementi, che possono variare di caso in caso:
 - Il nome del file
 - La directory in cui cercarlo
 
-#+begin_src emacs-lisp :tangle ~/.doom.d/config.el
+#+begin_src emacs-lisp :tangle config.el
 (setq config-org-file-name "config.org"
       config-org-directory "~/emacs-config")
 #+end_src
 
 Scriviamo una funzione dedicata all'apertura del file preselezionato.
 
-#+begin_src emacs-lisp :tangle ~/.doom.d/config.el
+#+begin_src emacs-lisp :tangle config.el
 (defun open-config-org ()
   "Open your private config.org file."
   (interactive)
@@ -1447,7 +1447,7 @@ In your =config.el= file add a map declaration using the =:leader= attribute and
 Con =map!=:
 
 # (SPC open/configuration)
-#+begin_src emacs-lisp :tangle ~/.doom.d/config.el
+#+begin_src emacs-lisp :tangle config.el
 (map! :leader
       (:prefix-map ("o" . "open")
        :desc "Open your private config.org file." "c" #'open-config-org))
@@ -1477,7 +1477,7 @@ Come intendiamo modificarla? Così:
 
 Ora sostituiamola al menù [[https://stackoverflow.com/questions/170931/replace-an-item-in-a-list-in-common-lisp][con la funzione =setf=]].
 
-#+begin_src emacs-lisp :tangle ~/.doom.d/config.el :noweb yes
+#+begin_src emacs-lisp :tangle config.el :noweb yes
 (setf (nth 5 +doom-dashboard-menu-sections) '<<open-org-configuration-menu-section>>)
 #+end_src
 
@@ -1487,7 +1487,7 @@ Ripercorro i passi fatti prima, ma stavolta senza dilungarmi in chiacchiere.
 # Shortcut
 Prima assegno una scorciatoia da tastiera:
 # SPC elfeed enter
-#+begin_src emacs-lisp :tangle ~/.doom.d/config.el
+#+begin_src emacs-lisp :tangle config.el
 (map! :leader
       (:prefix-map ("e" . "elfeed")
        :desc "Enter elfeed." "e" #'elfeed))
@@ -1503,12 +1503,12 @@ Voglio questo elemento sulla dashboard:
 
 Stavolta vado a sostituire il terzo elemento, che raramente uso (=Recently opened files=).
 
-#+begin_src emacs-lisp :tangle ~/.doom.d/config.el :noweb yes
+#+begin_src emacs-lisp :tangle config.el :noweb yes
 (setf (nth 2 +doom-dashboard-menu-sections) '<<open-elfeed-menu-section>>)
 #+end_src
 
 Già che ci siamo, aggiungiamo una shortcut per aggiornare elfeed:
-#+begin_src emacs-lisp :tangle ~/.doom.d/config.el
+#+begin_src emacs-lisp :tangle config.el
 (map! :leader
       (:prefix-map ("e" . "elfeed")
        :desc "Update all the feeds in elfeed." "u" #'elfeed-update))
@@ -1518,7 +1518,7 @@ Già che ci siamo, aggiungiamo una shortcut per aggiornare elfeed:
 Una semplice scorciatoia da tastiera per tornare alla dashboard:
 
 # SPC quit (and go) home
-#+begin_src emacs-lisp :tangle ~/.doom.d/config.el
+#+begin_src emacs-lisp :tangle config.el
 (map! :leader
       (:prefix-map ("q" . "quit/session")
        :desc "Switch to the dashboard in the current window, of the current FRAME." "h" #'+doom-dashboard/open))
@@ -1539,7 +1539,7 @@ Voglio questo elemento sulla dashboard:
 
 Stavolta vado a sostituire il terzo elemento, che raramente uso (=Recently opened files=).
 
-#+begin_src emacs-lisp :tangle ~/.doom.d/config.el :noweb yes
+#+begin_src emacs-lisp :tangle config.el :noweb yes
 (setf (nth 3 +doom-dashboard-menu-sections) '<<open-docs-menu-section>>)
 #+end_src
 
@@ -1552,14 +1552,14 @@ Riprendiamo l'elemento rimosso...
 
 ... e sistemiamolo in prima posizione:
 
-#+begin_src emacs-lisp :tangle ~/.doom.d/config.el :noweb no-export
+#+begin_src emacs-lisp :tangle config.el :noweb no-export
 (setf (nth 0 +doom-dashboard-menu-sections) '<<switch-project-menu-section>>)
 #+end_src
 
 Aggiungiamo una scorciatoia per org-mode, che è una delle documentazioni più consultate dal sottoscritto.
 
 # SPC elfeed enter
-#+begin_src emacs-lisp :tangle ~/.doom.d/config.el
+#+begin_src emacs-lisp :tangle config.el
 (map! :leader
       (:prefix-map ("o" . "open")
        :desc "Open org manual." "i" #'org-info))
@@ -1574,7 +1574,7 @@ Just changing the name.
 
 Lasciamo che resti in sesta posizione:
 
-#+begin_src emacs-lisp :tangle ~/.doom.d/config.el :noweb no-export
+#+begin_src emacs-lisp :tangle config.el :noweb no-export
 (setf (nth 6 +doom-dashboard-menu-sections) '<<open-doom-docs-menu-section>>)
 #+end_src
 
@@ -1584,8 +1584,8 @@ Just trying stuff out, but I stick with the regular banner for the moment.
 
 See [[https://discourse.doomemacs.org/t/how-to-change-your-splash-screen/57][this discourse post]].
 
-A weebish example (not ~ code):
-# :tangle ~/.doom.d/config.el
+A weebish example (not tangled code):
+# :tangle config.el
 #+begin_src emacs-lisp
 (defun my-weebery-is-always-greater ()
   (let* ((banner '("⢸⣿⣿⣿⣿⠃⠄⢀⣴⡾⠃⠄⠄⠄⠄⠄⠈⠺⠟⠛⠛⠛⠛⠻⢿⣿⣿⣿⣿⣶⣤⡀⠄"
@@ -1619,7 +1619,7 @@ A weebish example (not ~ code):
 **** TODO serif font
 Usiamo un font seriffato:
 
-#+begin_src emacs-lisp :tangle ~/.doom.d/config.el
+#+begin_src emacs-lisp :tangle config.el
 (defvar +zen-serif-p t
   "Whether to use a serifed font with `mixed-pitch-mode'.")
 #+end_src
@@ -1629,12 +1629,12 @@ Usiamo un font seriffato:
 
 Innanzitutto aggiungiamo questo pacchetto:
 
-#+begin_src emacs-lisp :tangle ~/.doom.d/packages.el :noweb yes
+#+begin_src emacs-lisp :tangle packages.el :noweb yes
 (package! wttrin :recipe (:host github :repo "gicrisf/emacs-wttrin"))
 #+end_src
 
 Qui lo configuro secondo le mie necessità:
-#+begin_src emacs-lisp :tangle ~/.doom.d/config.el :noweb yes
+#+begin_src emacs-lisp :tangle config.el :noweb yes
 (setq wttrin-default-cities '("Caltagirone" "Bologna" "Ferrara" "Catania"))
 (setq wttrin-default-accept-language '("Accept-Language" . "it-IT"))
 #+end_src
@@ -1719,7 +1719,7 @@ Passiamo alla configurazione di mu4e.
 - Tutte le mail finiscono nella home, sotto la cartella mail.
 - Le shortcut per il momento seguono la notazione inglese.
 
-# :tangle ~/.doom.d/config.el
+# :tangle config.el
 #+begin_src emacs-lisp
 (setq mu4e-change-filenames-when-moving t ; avoid sync conflicts
       mu4e-update-interval (* 30 60) ; check mail 30 minutes
@@ -1745,7 +1745,7 @@ Il supporto SMTP è integrato nativamente in Emacs con =smtpmail=.
 Non c'è bisogno di installare nulla qui.
 Il server SMTP potrebbe interferire con altri server locali? Esempio quello di Zola?
 
-# :tangle ~/.doom.d/config.el
+# :tangle config.el
 #+begin_src emacs-lisp
 (setq message-send-mail-function 'smtpmail-send-it
       auth-sources '("~/.authinfo") ;need to use gpg version but only local smtp stored for now
@@ -1763,14 +1763,14 @@ Installiamo =org-msg= per scrivere le mail in org mode ed esportarle in HTML.
 
 Senza questa accortezza, invieremmo delle mail in puro testo, che sarebbe una cosa pure profondamente amabile, ma qualche tempo fa ho constatato che molti client email tendono ad inserire tra lo spam qualunque cosa non sia formattata in HTML. Lo so, questa idea malsana di introdurre la formattazione HTML per le mail ha rovinato le mail stesse, ma ormai è troppo tardi per opporsi.
 
-# :tangle ~/.doom.d/packages.el
+# :tangle packages.el
 #+begin_src emacs-lisp
 (package! org-msg)
 #+end_src
 
 Concludiamo con la configurazione minima di =org-msg=.
 
-# :tangle ~/.doom.d/config.el
+# :tangle config.el
 #+begin_src emacs-lisp
 (setq mail-user-agent 'mu4e-user-agent)
 (require 'org-msg)
@@ -1797,7 +1797,7 @@ emacs --daemon
 Facile, no?
 Per lanciarlo all'avvio, si può aggiungere il comando qui sopra nella sezione opportuna fornita dal DE o, meglio ancora, perdere mezzo minuto per impostare systemd (utile soprattutto per chi usa un tiling manager anziché un DE "fatto e finito").
 
-#+begin_src txt :tangle ~/.config/systemd/user/emacs.service
+#+begin_src txt :tangle tangled/.config/systemd/user/emacs.service
 [Unit]
 Description=Emacs text editor
 Documentation=info:emacs man:emacs(1) https://gnu.org/software/emacs/
