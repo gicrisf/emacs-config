@@ -693,10 +693,6 @@ Adesso possiamo cominciare ad estendere Org-mode. Una prima killer feature, a mi
 (package! org-download)
 #+end_src
 
-#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
-(require 'org-download)
-#+end_src
-
 =org-download-clipboard= è legato a =SPC m a p= [[https://github.com/doomemacs/doomemacs/issues/3830#issuecomment-679925113][dal 25 agosto 2020]] in Doom Emacs.
 
 **** Flashcards
@@ -706,17 +702,9 @@ Una volta usavo Anki, ora mi sono chiesto perché usare una GUI quando posso sem
 (package! org-drill)
 #+end_src
 
-#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
-(require 'org-drill)
-#+end_src
-
 **** Journal
 #+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el
 (package! org-journal)
-#+end_src
-
-#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
-(require 'org-journal)
 #+end_src
 
 #+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
@@ -761,10 +749,6 @@ Richiama informazioni da Wikipedia direttamente su org.
 (package! wikinforg)
 #+end_src
 
-#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
-(require 'wikinforg)
-#+end_src
-
 Spesso mi servono i contenuti in italiano.
 L'ideale sarebbe scegliere per ogni query.
 
@@ -786,10 +770,6 @@ Per il momento ne faccio a meno per lo stesso motivo per cui ho disabilitato def
 
 #+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el
 (package! org-web-tools)
-#+end_src
-
-#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
-(require 'org-web-tools)
 #+end_src
 
 **** Zola
@@ -900,13 +880,6 @@ Innanzitutto devo installare le dipendenze dal suo profilo Github.
 Purtroppo, quando utilizzo =require= su =org-imenu= noto che qualcosa non va.
 Mi chiedo se il problema sia risolvibile impiegando Nano Emacs, ma non ho tempo per verificare.
 Anche se fosse, dubito che abbandonerei Doom Emacs, quindi per ora il tentativo mi pare evitabile.
-
-# :tangle tangled/.doom.d/config.el
-#+begin_src emacs-lisp
-(require 'org-imenu)
-(require 'pdf-drop-mode)
-(require 'org-bib-mode)
-#+end_src
 
 Lo stesso NPR rimanda ad =org-ref= (di John Kitchin) per chi volesse qualcosa di più elaborato.
 Anziché aggrovigliare i due blocchi precedenti, aggroviglio i prossimi.
@@ -1052,19 +1025,11 @@ Il supporto per Vala è largamente ereditato dalla mode per C#.
 (package! vala-mode)
 #+end_src
 
-#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
-(require 'vala-mode)
-#+end_src
-
 **** Python
 Supporto per virtualenv.
 
 #+begin_src emacs-lisp :tangle tangled/.doom.d/packages.el
 (package! pyvenv)
-#+end_src
-
-#+begin_src emacs-lisp :tangle tangled/.doom.d/config.el
-(require 'pyvenv)
 #+end_src
 
 *** Dired
