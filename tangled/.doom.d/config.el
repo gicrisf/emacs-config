@@ -99,12 +99,6 @@ A nil value implies no custom theme should be enabled.")
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/org/")
 
-(require 'org-download)
-
-(require 'org-drill)
-
-(require 'org-journal)
-
 ;; org journal
 ;; in ~/.doom.d/+bindings.el
 ;; From: https://www.rousette.org.uk/archives/doom-emacs-tweaks-org-journal-and-org-super-agenda/
@@ -138,11 +132,7 @@ A nil value implies no custom theme should be enabled.")
 (setq org-journal-file-format "%Y-%m.org")
 (setq org-journal-file-type 'monthly)
 
-(require 'wikinforg)
-
 ;; (custom-set-variables '(wikinforg-wikipedia-edition-code "it"))
-
-(require 'org-web-tools)
 
 ;; Generate ORG/Zola frontmatter
 ;; TODO Section management
@@ -188,10 +178,6 @@ A nil value implies no custom theme should be enabled.")
 
 ;; Support for Typescript/React
 (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode))
-
-(require 'vala-mode)
-
-(require 'pyvenv)
 
 (add-hook 'dired-mode-hook 'org-download-enable)
 
