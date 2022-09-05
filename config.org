@@ -1423,7 +1423,7 @@ Ci servono due elementi, che possono variare di caso in caso:
 
 #+begin_src emacs-lisp :tangle config.el
 (setq config-org-file-name "config.org"
-      config-org-directory "~/emacs-config")
+      config-org-directory "~/.doom.d")
 #+end_src
 
 Scriviamo una funzione dedicata all'apertura del file preselezionato.

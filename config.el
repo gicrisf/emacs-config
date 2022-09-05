@@ -304,7 +304,7 @@ by using nxml's indentation rules."
 ;;(setq deft-recursive t)
 
 (setq config-org-file-name "config.org"
-      config-org-directory "~/emacs-config")
+      config-org-directory "~/.doom.d")
 
 (defun open-config-org ()
   "Open your private config.org file."
