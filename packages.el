@@ -70,6 +70,8 @@
 
 (package! ox-hugo :recipe (:host github :repo "gicrisf/ox-zola"))
 
+(package! citeproc)
+
 (package! elfeed-goodies)
 
 (package! vala-mode)

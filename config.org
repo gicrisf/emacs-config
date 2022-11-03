@@ -394,7 +394,7 @@ magit             ; a git porcelain for Emacs
 ;;data              ; config/data formats
 ;;(dart +flutter)   ; paint ui and not much else
 ;;elixir            ; erlang done right
-;;elm               ; care for a cup of TEA?
+elm               ; care for a cup of TEA?
 emacs-lisp        ; drown in parentheses
 ;;erlang            ; an elegant language for a more civilized age
 ;;ess               ; emacs speaks statistics
@@ -863,6 +863,13 @@ A questo punto, su Gnome ed altri GTK-based Desktop Environments, è sufficiente
 
 #+begin_src bash
 $ update-desktop-database ~/.local/share/applications/
+#+end_src
+
+**** Citations
+Export processor to use format files written in Citation Style Language (=.csl=). This isn't latex-only, so I should be able to use it with Libre Office and HTML too, if needed.
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! citeproc)
 #+end_src
 
 **** TODO Bibliography
@@ -1784,6 +1791,82 @@ Concludiamo con la configurazione minima di =org-msg=.
 
 (org-msg-mode)
 #+end_src
+
+*** mol2chemfig
+Poiché non sento d'avere controllo di qualcosa se non è prima stato informatizzato e parametrizzato dalle fondamenta, trovo poco sopportabile scrivere di chimica dovendo vivere di immagini appiccicate da chissà dove o, anche peggio, dovendo generare, editare e manipolare a mano ogni singola immagine contenente una formula di struttura. È tedioso, a dir poco. Ancora più tedioso è descrivere a mano la molecola perché pacchetti LaTeX siano capaci di renderizzare la molecola finita, soprattutto se parliamo di molecole di grand dimensioni, ma questa via ha il vantaggio di essere informatizzata e parametrizzata sino alle ossa, quindi non c'è dubbio che io la preferisca. Per questo motivo, mi sono messo in testa di dovere automatizzare il più possibile il processo di scrittura delle molecole attraverso un meraviglioso pacchetto LaTeX chiamato =chemfig=. Si tratta di un pacchetto che si occupa di disegnare le molecole via 'TikZ' e che può vantare un'ottima sintassi, semplice ma versatile, soprattutto quando si viene agli angoli di legame. Finché si tratta di piccole molecole non è difficile tenere a mente la sequenza dei legami, ma oltre un certo numero di atomi il processo può farsi decisamente più tedioso di quello tradizionale, quindi si rende necessario passare attraverso una GUI.
+
+Anziché generare delle immagini da copiare ed incollare in giro, però, è una soluzione decisamente più pulita quella di esportare delle stringhe di testo che siano riproducibilmente convertite nello stesso diagramma. Chemfig è chiaramente un ottimo ponte di mezzo. Abbiamo bisogno di qualcosa che trasformi i nostri SMILES o =mol= files in stringhe che Chemfig sia in grado di interpretare.
+È qui che =mol2chemfig= si rende decisamente utile. Si tratta di un piccolo programma python per convertire stringhe SMILES o =mol= in stringhe =chemfig=.
+
+Qualcuno potrebbe chiedersi: perché non usare direttamente le immagini generate con l'editor o gli SMILES, a questo punto. La risposta è semplice: perché è molto più semplice intervenire al volo su una stringa di Chemfig per manipolare il diagramma, pur lasciando possibilmente intatto il nucleo della molecola. Si possono variare opportunamente gli angoli di legame, i sostituenti, il tutto senza lasciare l'editor. Il problema rimane dover lasciare l'editor per lanciare =mol2chemfig=. Potremmo aprire un emulatore di terminale nel frame a fianco, ma rimane una soluzione scomoda ed inelegante. È qui che subentra il bello di vivere dentro Emacs: possiamo configurarlo perché sia lui a fare il lavoro al posto nostro.
+
+Ci troviamo dinnanzi alle seguenti vie:
+- Scrivere un port di =mol2chemfig= in emacs lisp;
+- Richiamare =mol2chemfig= come libreria Python all'interno di uno script emacs lisp (per mezzo di =Pymacs=, che si situerebbe all'interfaccia);
+- Lanciare =mol2chemfig= nella shell e catturare l'output.
+
+La prima soluzione è la più elegante, ma anche la più energivora. Io non ho il tempo e le risorse necessarie al momento per affrontare un simile cammino, anche se mi piacerebbe.
+L'idea di utilizzare Pymacs è allettante, ma non ha i benefici della prima via, né riesce a cavarci dagli impicci in cui ci pone la terza.
+Quest'ultima, infatti, richiede che =mol2chemfig= sia installato globalmente, altrimenti il comando inevitabilmente fallirà. Potrebbe anche essere la via più lenta, ma parliamo di frazioni di secondo che non sono sinceramente particolarmente preoccupanti. Si tratta anche del metodo più efficiente dal punto di vista dello sviluppo, tanto da potere essere affrontato qui nella configurazione generale.
+Ecco perché ne parlo in questa sede; ecco perché l'ho scelto. Riservo per il futuro l'ambizione di riscrivere il modulo in elisp. Nel frattempo, eccoci qua.
+
+Di cosa abbiamo bisogno? Innanzitutto, come dicevo, dobbiamo assicurarci che =mol2chemfig= sia installato.
+Per comodità, io installo una riproposizione in Python3 chiamata [[https://github.com/Augus1999/mol2chemfigPy3][=mol2chemfigPy3=]].
+
+#+begin_src bash
+$ pip install -U mol2chemfigPy3
+#+end_src
+
+Viene installata anche una dipendenza vitale, cioè Indigo:
+
+#+begin_src
+Successfully installed epam.indigo-1.7.4 mol2chemfigPy3-1.5.7
+#+end_src
+
+Al momento dell'installazione, queste sono le versioni:
+- indigo 1.7.4
+- mol2chemfig 1.5.7
+
+Poiché pip potrebbe installare al di fuori dal PATH, per sicurezza meglio lanciare il comando attraverso Python.
+Visto che dobbiamo scriptare, non vale la pena di imbattersi in inutili ed evitabili errori. Scriveremo quindi non =mol2chemfig= ma:
+
+#+begin_src bash
+python -m mol2chemfigPy3
+#+end_src
+
+Per testare la conversione di uno SMILES,
+
+#+begin_src bash :results output latex
+python -m mol2chemfigPy3 -zw -i direct "C1=CC=C(C=C1)O"
+#+end_src
+
+#+RESULTS:
+#+begin_export latex
+\chemfig{OH-[:180,,1]=_[:240]-[:180]=_[:120]-[:60]=_(-[:300])}
+#+end_export
+
+Non resta che scrivere una semplice funzione elisp per automatizzare il lancio di questo comando a partire da uno SMILES in input.
+[[https://emacs.stackexchange.com/a/30273][Come illustrato da Dan, su StackExchange di Emacs]], questo è un modo molto semplice per lanciare un comando attraverso la shell ed inserire l'output nel buffer attuale.
+
+#+begin_src emacs-lisp
+(defun insert-shell-command-output (command)
+  "Get shell COMMAND output and insert it at point in current
+buffer."
+  (insert (shell-command-to-string command)))
+#+end_src
+
+[[https://stackoverflow.com/a/15528629/13436102][Come fa notare sds su StackOverflow]], =call-process= sarebbe più veloce, perché è una funzione che non aspetta la mediazione della shell, ma si tratta di uno script da richiamare all'occorrenza e per il momento le performance possono anche essere messe da parte. Ci torneremo in un altro momento, nel frattempo è bene lavorare su questo.
+Perché una funzione possa essere richiamabile, va introdotta da =(interactive)=, quindi scriviamola tenendone conto:
+
+#+begin_src emacs-lisp :tangle config.el
+(defun mol2chemfig (mol)
+  "Generate chemfig code from molfiles or SMILES"
+  (interactive "sEnter molecule: ")
+  (insert (shell-command-to-string (concat "python -m mol2chemfigPy3 -zw -i direct " mol))))
+#+end_src
+
+Ora possiamo tornare a scrivere i nostri documenti senza dover più rimbalzare da un software all'altro.
+Sia lodato Emacs, il sacro editor.
 
 ** Daemon
 Si tratta di una possibilità introdotta con Emacs 23.1 per ridurre i (già bassi) tempi di avvio di ogni finestra. Ottimo se, come me, utilizzate Emacs anche per modificare piccoli file di testo per cui andrebbe benissimo vim o nano.

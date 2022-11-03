@@ -346,3 +346,8 @@ by using nxml's indentation rules."
 
 (setq wttrin-default-cities '("Caltagirone" "Bologna" "Ferrara" "Catania"))
 (setq wttrin-default-accept-language '("Accept-Language" . "it-IT"))
+
+(defun mol2chemfig (mol)
+  "Generate chemfig code from molfiles or SMILES"
+  (interactive "sEnter molecule: ")
+  (insert (shell-command-to-string (concat "python -m mol2chemfigPy3 -zw -i direct " mol))))
