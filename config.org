@@ -60,16 +60,16 @@ if you've seen one lisp, you've seen them all
 
 # Come Emacs è tra i più antichi editor di testo ancora in circolazione, così lisp è tra i più antichi linguaggi, eppure anche lisp è tuttora vivo e vegeto ed è "parlato" quotidianamente da migliaia di sviluppatori.
 
-Non voglio dilungarmi in questa sede nella descrizione del linguaggio. Per un assaggio della sintassi e di qualche funzione base, piuttosto, rimando [[https://www.zwitterio.it/coding/2022/elisp-intro/][a questo post che ho scritto sul blog come breve introduzione]].
+Non voglio dilungarmi in questa sede nella descrizione del linguaggio. Per un assaggio della sintassi e di qualche funzione base, piuttosto, rimando [[https://www.zwitterio.it/software/elisp-intro/][a questo post che ho scritto sul blog come breve introduzione]].
 
 # [[https://www.zwitterio.it/coding/2022/elisp-intro/][Ho scritto sul blog un'introduzione ad Emacs Lisp]], ma è in effetti più un mucchietto di appunti personali, un riassunto di funzioni utili.
 
 In caso voleste spingervi lievemente oltre, rimando a questi altri post (in ordine di difficoltà):
-- [[https://zwitterio.it/coding/2022/how-do-i-play-my-lofi-music/][Come riproduco la mia musica Lo-fi]];
-- [[https://zwitterio.it/coding/2022/quote-tweets-properly-with-emacs-lisp/][Come citare un tweet in emacs lisp]];
-- [[https://zwitterio.it/coding/2022/apis-on-emacs/][Come usare le API di twitter in Emacs Lisp]] (vedi anche [[https://github.com/twitterdev/Twitter-API-v2-sample-code/pull/82/files/981dbf2e73d0168f09b9f59d420d1ebc888d345e][la mia PR alla repo ufficiale di Twitter]])
+- [[https://zwitterio.it/software/how-do-i-play-my-lofi-music/][Come riproduco la mia musica Lo-fi]];
+- [[https://zwitterio.it/software/quote-tweets-properly-with-emacs-lisp/][Come citare un tweet in emacs lisp]];
+- [[https://zwitterio.it/software/apis-on-emacs/][Come usare le API di twitter in Emacs Lisp]].
 
-Avendo iniziato solo da poco tempo a navigare nell'oceano di meraviglie e parentesi lispiane, non sono certo la fonte più autorevole per scendere ancora più nel dettaglio.
+Avendo iniziato solo da poco tempo a navigare nell'oceano di meraviglie e parentesi lispiane, non sono certo la fonte più autorevole per scendere più nel dettaglio.
 Per una guida rapida ad Emacs Lisp, consiglio di dare un'occhiata [[https://github.com/chrisdone/elisp-guide][a questa repo]].
 Per una guida meno rapida, ma più approfondita, fate riferimento a [[https://github.com/hypernumbers/learn_elisp_the_hard_way][Learn elisp the hard way]].
 
@@ -1860,13 +1860,49 @@ Perché una funzione possa essere richiamabile, va introdotta da =(interactive)=
 
 #+begin_src emacs-lisp :tangle config.el
 (defun mol2chemfig (mol)
-  "Generate chemfig code from molfiles or SMILES"
+  "Generate chemfig code from mol or SMILES."
   (interactive "sEnter molecule: ")
-  (insert (shell-command-to-string (concat "python -m mol2chemfigPy3 -zw -i direct " mol))))
+  (insert (shell-command-to-string (concat "python -m mol2chemfigPy3 -w -i direct " mol))))
 #+end_src
 
 Ora possiamo tornare a scrivere i nostri documenti senza dover più rimbalzare da un software all'altro.
 Sia lodato Emacs, il sacro editor.
+
+Così abbiamo coperto il caso base. Non resta che scrivere funzioni che tengano conto delle varie impostazioni di =mol2chemfig=.
+
+Finora abbiamo dato per scontato che l'utente introduca direttamente nel minibuffer la stringa da convertire, ma in verità potremmo anche disporre di un file. =mol2chemfig= di default si aspetta, questo, quindi basta lanciare il comando senza =-i direct= per poter lavorare con il percorso di un file. Rinominando la funzione coerentemente, scriveremmo:
+
+#+begin_src emacs-lisp
+(defun mol2chemfig-from-file (molpath)
+  "Generate chemfig code from molfiles."
+  (interactive "sEnter molecule file path: ")
+  (insert (shell-command-to-string (concat "python -m mol2chemfigPy3 -zw " molpath))))
+#+end_src
+
+Removing whitespaces.
+
+#+begin_src emacs-lisp
+(defun mol2chemfig-terse (mol)
+  "Generate chemfig code from mol or SMILES without whitespace and comments."
+  (interactive "sEnter molecule: ")
+  (insert (shell-command-to-string (concat "python -m mol2chemfigPy3 -zw -i direct " mol))))
+#+end_src
+
+Potremmo andare avanti ancora per un pezzo, ma questo è un pessimo approccio, perché implica siano scritte tutte le combinazioni possibili. Sarebbe molto meglio partire da un default considerata la funzione preferita dall'utente (quindi configurabile via lisp) e che poi le funzioni supplementari varino il comando di default, lasciando il resto intatto. Potremmo passare gli argomenti, ma il bello di Emacs è proprio avere funzioni verbose, perché così si può lanciare il comando desiderato anche senza ricordare a memoria le flags. Per arrivare al risultato desiderato si può passare per varie vie: una, più vicina al comando reale, prevede l'introduzione di argomenti facoltativi nella funzione principale. Un'altra passa per un dedalo di condizioni if/else che verifichino prima se la funzione specifica sia stata esplicitamente espressa, poi quale sia il default e compongano così il comando finale. Un modulo dedicato potrebbe tenere conto di entrambi gli approcci, così da offrire la massima flessibilità possibile all'utente.
+
+Per un ipotetico pacchetto dedicato chiamato =tochemfig=, i default divergenti dall'impostazione di =mol2chemfig= potrebbero essere indicati nel modo seguente.
+
+#+begin_src emacs-lisp :tangle config.el
+(setq tochemfig-default-input 'direct')
+
+(setq tochemfig-default-relative-angles t)
+
+(setq tochemfig-default-fancy-bonds t)
+
+(setq tochemfig-default-wrap-chemfig t)
+#+end_src
+
+Anziché proseguire con le speculazioni, non mi resta che proseguire il lavoro su =tochemfig.el= e renderlo disponibile attraverso [[https://github.com/gicrisf/tochemfig][questa repo]]. In attesa che =tochemfig= sia concluso, o anche nel caso di un uso occasionale con pochi comandi, un approccio come quello sopra è più che sufficiente.
 
 ** Daemon
 Si tratta di una possibilità introdotta con Emacs 23.1 per ridurre i (già bassi) tempi di avvio di ogni finestra. Ottimo se, come me, utilizzate Emacs anche per modificare piccoli file di testo per cui andrebbe benissimo vim o nano.

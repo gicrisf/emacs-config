@@ -348,6 +348,14 @@ by using nxml's indentation rules."
 (setq wttrin-default-accept-language '("Accept-Language" . "it-IT"))
 
 (defun mol2chemfig (mol)
-  "Generate chemfig code from molfiles or SMILES"
+  "Generate chemfig code from mol or SMILES."
   (interactive "sEnter molecule: ")
-  (insert (shell-command-to-string (concat "python -m mol2chemfigPy3 -zw -i direct " mol))))
+  (insert (shell-command-to-string (concat "python -m mol2chemfigPy3 -w -i direct " mol))))
+
+(setq tochemfig-default-input 'direct')
+
+(setq tochemfig-default-relative-angles t)
+
+(setq tochemfig-default-fancy-bonds t)
+
+(setq tochemfig-default-wrap-chemfig t)
