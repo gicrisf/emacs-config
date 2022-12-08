@@ -72,6 +72,8 @@
 
 (package! citeproc)
 
+(package! ob-d2 :recipe (:host github :repo "dmacvicar/ob-d2"))
+
 (package! elfeed-goodies)
 
 (package! vala-mode)
@@ -80,8 +82,14 @@
 
 (package! eltweet :recipe (:host github :repo "gicrisf/eltweet"))
 
+(package! mastodon)
+
 (package! racer :disable t)
 
 (package! info-colors)
 
 (package! wttrin :recipe (:host github :repo "gicrisf/emacs-wttrin"))
+
+(package! tochemfig :recipe (:host github :repo "gicrisf/tochemfig"))
+
+(package! anki-editor)

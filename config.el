@@ -158,6 +158,19 @@ A nil value implies no custom theme should be enabled.")
 
 (setq org-latex-logfiles-extensions (quote ("lof" "lot" "tex~" "aux" "idx" "log" "out" "toc" "nav" "snm" "vrb" "dvi" "fdb_latexmk" "blg" "brf" "fls" "entoc" "ps" "spl" "bbl" "xmpi" "run.xml" "bcf")))
 
+(defun template-org-anki-cloze-drawer ()
+  (interactive)
+  (insert "\n:PROPERTIES:\n:ANKI_DECK: "
+          "colinergico"
+          "\n:ANKI_NOTE_TYPE: Cloze"
+          "\n:END:"))
+
+(org-babel-do-load-languages
+    'org-babel-load-languages
+    '((d2 . t)))
+
+(add-to-list 'exec-path "~/.local/bin/")
+
 ;; Source: [[https://stackoverflow.com/questions/23692879/emacs24-backtab-is-undefined-how-to-define-this-shortcut-key]]
 (global-set-key (kbd "<backtab>") 'un-indent-by-removing-4-spaces)
 (defun un-indent-by-removing-4-spaces ()
@@ -214,6 +227,9 @@ A nil value implies no custom theme should be enabled.")
           "\) %}"
           "\n"
           "{% end %}"))
+
+(setq mastodon-instance-url "https://fosstodon.org"
+      mastodon-active-user "gicrisf")
 
 ;; Play Lo-Fi
 ;; Implementation of the knuth shuffle
@@ -352,10 +368,7 @@ by using nxml's indentation rules."
   (interactive "sEnter molecule: ")
   (insert (shell-command-to-string (concat "python -m mol2chemfigPy3 -w -i direct " mol))))
 
-(setq tochemfig-default-input 'direct')
-
+(setq tochemfig-default-input "direct")
 (setq tochemfig-default-relative-angles t)
-
 (setq tochemfig-default-fancy-bonds t)
-
 (setq tochemfig-default-wrap-chemfig t)

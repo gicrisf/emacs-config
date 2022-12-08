@@ -1,14 +1,18 @@
 #+title: Doom Emacs Config
 #+author: Giovanni Crisalfi
 #+hugo_base_dir: ~/zwitterio-it/
-#+hugo_section: doom-emacs-config
+#+hugo_tags: emacs org
+#+hugo_categories: software
+# #+hugo_section: doom-emacs-config
+#+hugo_section: software/emacs-config
+#+hugo_
 #+STARTUP: show2levels
 #+MACRO: more @@html:<!-- more -->@@
 # Temporary macros for prism support:
 #+MACRO: prismcss @@html:<link href="/assets/prism/prism.css" rel="stylesheet" />@@
 #+MACRO: prismjs @@html:<script src="/assets/prism/prism.js"></script>@@
 
-* DONE Configurare Emacs in Org-mode :emacs:org:@posts:@software:@notes:
+* Configurare Emacs in Org-mode :emacs:org:@posts:@software:@notes:
 CLOSED: [2022-08-10 mer]
 :PROPERTIES:
 :EXPORT_HUGO_SECTION: software/emacs-config
@@ -72,23 +76,6 @@ In caso voleste spingervi lievemente oltre, rimando a questi altri post (in ordi
 Avendo iniziato solo da poco tempo a navigare nell'oceano di meraviglie e parentesi lispiane, non sono certo la fonte più autorevole per scendere più nel dettaglio.
 Per una guida rapida ad Emacs Lisp, consiglio di dare un'occhiata [[https://github.com/chrisdone/elisp-guide][a questa repo]].
 Per una guida meno rapida, ma più approfondita, fate riferimento a [[https://github.com/hypernumbers/learn_elisp_the_hard_way][Learn elisp the hard way]].
-
-** Org-mode
-#+begin_quote
-Your life in plain text
-#+end_quote
-
-[[https://orgmode.org/][Org-mode]] è una delle più amate major mode esistenti per Emacs ed è anche uno dei migliori pezzi di software che io abbia conosciuto in vita mia.
-A prima vista sembra "solo l'ennesimo linguaggio di markup", come [[https://en.wikipedia.org/wiki/Markdown][Markdown]] o [[https://en.wikipedia.org/wiki/ReStructuredText][reStructuredText]], ma in realtà è molto, molto di più [fn::anche se, bisogna dirlo, se pure fosse un semplice linguaggio di markup ci sarebbe da tenerne in conto, vista la piacevole sintassi].
-
-Proprio come l'abissale versatilità di Emacs riesce a farsi conoscere solo grazie ad ore ed ore di utilizzo, anche Org-mode ha bisogno di tempo per essere addomesticato; in questo caso, in compenso, è più facile annoverare gli utilizzi più comuni:
-- applicazioni di /literate programming/ (un paradigma di programmazione ideato da Donald Knuth, che è alla base anche di questo documento),
-- scrittura di agende
-- scrittura di zettelkasten
-- stesura di documenti scientifici
-- mantenimento di uno o più blog
-
-# Org-mode, o più semplicemente "Org", può anche essere impiegato per scrivere e gestire nel tempo la propria configurazione di Emacs, cioè un mucchio di codice lisp che con il tempo tende a crescere per adeguarsi quanto più possibile alle necessità dell'utente.
 
 ** Literate configuration
 Tradizionalmente, la configurazione di Doom Emacs è raccolta in 3 file fondamentali, a loro volta contenuti in una apposita directory nella home, =.doom.d=.
@@ -678,6 +665,22 @@ A nil value implies no custom theme should be enabled.")
 #+end_src
 
 *** Org-mode
+#+begin_quote
+Your life in plain text
+#+end_quote
+
+[[https://orgmode.org/][Org-mode]] è una delle più amate major mode esistenti per Emacs ed è anche uno dei migliori pezzi di software che io abbia conosciuto in vita mia.
+A prima vista sembra "solo l'ennesimo linguaggio di markup", come [[https://en.wikipedia.org/wiki/Markdown][Markdown]] o [[https://en.wikipedia.org/wiki/ReStructuredText][reStructuredText]], ma in realtà è molto, molto di più [fn::anche se, bisogna dirlo, se pure fosse un semplice linguaggio di markup ci sarebbe da tenerne in conto, vista la piacevole sintassi].
+
+Proprio come l'abissale versatilità di Emacs riesce a farsi conoscere solo grazie ad ore ed ore di utilizzo, anche Org-mode ha bisogno di tempo per essere addomesticato; in questo caso, in compenso, è più facile annoverare gli utilizzi più comuni:
+- applicazioni di /literate programming/ (un paradigma di programmazione ideato da Donald Knuth, che è alla base anche di questo documento),
+- scrittura di agende
+- scrittura di zettelkasten
+- stesura di documenti scientifici
+- mantenimento di uno o più blog
+
+# Org-mode, o più semplicemente "Org", può anche essere impiegato per scrivere e gestire nel tempo la propria configurazione di Emacs, cioè un mucchio di codice lisp che con il tempo tende a crescere per adeguarsi quanto più possibile alle necessità dell'utente.
+
 Innanzitutto, dichiariamo in quale directory vogliamo che risiedano la maggior parte dei file org (o almeno quelli usati più di frequente), così che Emacs sappia dove cercarli.
 
 #+begin_src emacs-lisp :tangle config.el
@@ -686,7 +689,7 @@ Innanzitutto, dichiariamo in quale directory vogliamo che risiedano la maggior p
 (setq org-directory "~/org/")
 #+end_src
 
-**** Downloads
+*** Org downloads
 Adesso possiamo cominciare ad estendere Org-mode. Una prima killer feature, a mio avviso, è data da =org-download=, che ci consente di appiccicare direttamente degli allegati al file org senza mai abbandonare Emacs, né il documento stesso.
 
 #+begin_src emacs-lisp :tangle packages.el
@@ -695,14 +698,14 @@ Adesso possiamo cominciare ad estendere Org-mode. Una prima killer feature, a mi
 
 =org-download-clipboard= è legato a =SPC m a p= [[https://github.com/doomemacs/doomemacs/issues/3830#issuecomment-679925113][dal 25 agosto 2020]] in Doom Emacs.
 
-**** Flashcards
+*** Org drill (flashcards)
 Una volta usavo Anki, ora mi sono chiesto perché usare una GUI quando posso semplicemente scrivere tutto il necessario.
 
 #+begin_src emacs-lisp :tangle packages.el
 (package! org-drill)
 #+end_src
 
-**** Journal
+*** Org Journal
 #+begin_src emacs-lisp :tangle packages.el
 (package! org-journal)
 #+end_src
@@ -742,7 +745,7 @@ Una volta usavo Anki, ora mi sono chiesto perché usare una GUI quando posso sem
 (setq org-journal-file-type 'monthly)
 #+end_src
 
-**** Wikinforg
+*** Wikinforg
 Richiama informazioni da Wikipedia direttamente su org.
 
 #+begin_src emacs-lisp :tangle packages.el
@@ -759,20 +762,20 @@ L'ideale sarebbe scegliere per ogni query.
 Purtroppo, i risultati che ottengo da questa versione sono poco accurati.
 Per il momento la disabiliterò.
 
-**** Ricerca veloce
+*** Ricerca veloce
 Per il momento ne faccio a meno per lo stesso motivo per cui ho disabilitato deft (vedi più avanti).
 
 #+begin_src emacs-lisp :tangle packages.el
 ;; (package! helm-org-rifle)
 #+end_src
 
-**** Web Tools
+*** Org Web Tools
 
 #+begin_src emacs-lisp :tangle packages.el
 (package! org-web-tools)
 #+end_src
 
-**** Zola
+*** Zola on org-mode
 # Exporter
 L'exporter per Zola è un pacchetto che sto mantenendo io, quindi capita spesso che io debba testare delle modifiche in locale. =package!= gestisce i download, quindi in teoria non dovrebbe essere impiegato per la gestione di file in locale, ma [[https://github.com/doomemacs/doomemacs/issues/3842#issuecomment-681039894][Henrik Lissner consiglia di usare comunque la macro perché è stata adattata anche a questo genere di situazioni]].
 
@@ -826,7 +829,7 @@ Sempre al fine di automatizzare la produzione dei metadati, meglio automatizzare
 (setq org-log-done 'time)
 #+end_src
 
-**** Org-capture
+*** Org-capture
 Org capture torna comodo per appuntarsi in org-mode frammenti di pagine web.
 
 Come manipolare l'HTML, però, è qualcosa che noi dobbiamo spiegare ad =org-capture=, fornendo uno o più template.
@@ -865,14 +868,14 @@ A questo punto, su Gnome ed altri GTK-based Desktop Environments, è sufficiente
 $ update-desktop-database ~/.local/share/applications/
 #+end_src
 
-**** Citations
+*** Citations
 Export processor to use format files written in Citation Style Language (=.csl=). This isn't latex-only, so I should be able to use it with Libre Office and HTML too, if needed.
 
 #+begin_src emacs-lisp :tangle packages.el
 (package! citeproc)
 #+end_src
 
-**** TODO Bibliography
+*** TODO Org bibliography
 Tentativo di literate bibliography con org-mode basato su =org-bib-mode=, di Nicolas P. Rougier (il creatore di NANO Emacs).
 
 Innanzitutto devo installare le dipendenze dal suo profilo Github.
@@ -945,11 +948,75 @@ Now require it:
 
 Vista la complessità della libreria, ho deciso per il momento di non aggrovigliare nulla e aspettare un momento che mi consenta di studiare meglio ogni impostazione.
 
-**** LaTeX
+*** Org LaTeX export
 Aggiungiamo altre estensioni ai cosiddetti logfile, cosicché Emacs si occupi di eliminarle dopo l'uso in fase di esportazione (e ci lasci, così, la cartella pulita).
 
 #+begin_src emacs-lisp :tangle config.el
 (setq org-latex-logfiles-extensions (quote ("lof" "lot" "tex~" "aux" "idx" "log" "out" "toc" "nav" "snm" "vrb" "dvi" "fdb_latexmk" "blg" "brf" "fls" "entoc" "ps" "spl" "bbl" "xmpi" "run.xml" "bcf")))
+#+end_src
+
+*** Org drawer templates
+Mi annoia scrivere a mano i drawer tutte le volte.
+
+***** Anki template
+Non serve, perché c'è già =insert-note=;
+
+#+begin_src emacs-lisp :tangle config.el
+(defun template-org-anki-cloze-drawer ()
+  (interactive)
+  (insert "\n:PROPERTIES:\n:ANKI_DECK: "
+          "colinergico"
+          "\n:ANKI_NOTE_TYPE: Cloze"
+          "\n:END:"))
+#+end_src
+
+*** Org D2 diagrams
+I want to generate D2 diagrams without leaving my org-mode files.
+Apparently, that's why [[https://github.com/dmacvicar/ob-d2][ob-d2]] (an org-babel exporter for D2) was written.
+It's not on MELPA yet, so I'll get it from its GitHub repo.
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! ob-d2 :recipe (:host github :repo "dmacvicar/ob-d2"))
+#+end_src
+
+Add d2 to =org-babel-load-languages=.
+
+#+begin_src emacs-lisp :tangle config.el
+(org-babel-do-load-languages
+    'org-babel-load-languages
+    '((d2 . t)))
+#+end_src
+
+Add d2 to exec-path.
+
+#+begin_src emacs-lisp :tangle config.el
+(add-to-list 'exec-path "~/.local/bin/")
+#+end_src
+
+Test D2 (d2 requires a ":file" header argument):
+
+#+begin_src d2 :file test.png
+# Actors
+hans: Hans Niemann
+
+defendants: {
+  mc: Magnus Carlsen
+  playmagnus: Play Magnus Group
+  chesscom: Chess.com
+  naka: Hikaru Nakamura
+
+  mc -> playmagnus: Owns majority
+  playmagnus <-> chesscom: Merger talks
+  chesscom -> naka: Sponsoring
+}
+
+# Accusations
+hans -> defendants: 'sueing for $100M'
+
+# Offense
+defendants.naka -> hans: Accused of cheating on his stream
+defendants.mc -> hans: Lost then withdrew with accusations
+defendants.chesscom -> hans: 72 page report of cheating
 #+end_src
 
 *** Backtab
@@ -1000,6 +1067,7 @@ In particolar modo, cambia il layout (apre in un altro pannello verticale, anzic
 #+end_src
 
 Ora voglio assicurarmi che elfeed appaia sulla dashboard (vedi sezione dedicata alla dashboard).
+
 *** Linguaggi
 **** Typescript/React
 Innanzitutto, bisogna avere aggiunto alcuni moduli: =web= e =javascript=, in particolare.
@@ -1144,6 +1212,24 @@ Ne racconto qui:
 #+begin_src emacs-lisp :tangle packages.el
 (package! eltweet :recipe (:host github :repo "gicrisf/eltweet"))
 #+end_src
+
+*** Mastodon
+Prima di tutto, installiamo mastodon.el:
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! mastodon)
+#+end_src
+
+Io sono su "@gicrisf@fosstodon.org", quindi:
+
+#+begin_src emacs-lisp :tangle config.el
+(setq mastodon-instance-url "https://fosstodon.org"
+      mastodon-active-user "gicrisf")
+#+end_src
+
+Sono meravigliato da quanto facile sia stato arrivare alla propria TL da Emacs grazie a mastodon.el, ma il layout di default è veramente insostenibile.
+Fortunatamente, Nicolas Rougier ha già [[https://gist.github.com/rougier/e92d446600dfe350b9ec9d7cabaca211][pubblicato un gist in cui rielabora il layout per adeguarlo alla propria configurazione]].
+Io non uso NANO, quindi servirà qualche ritocco sicuramente.
 
 *** Musica
 Di questa parte ho già parlato in [[https://www.zwitterio.it/coding/2022/how-do-i-play-my-lofi-music/][un post dedicato]].
@@ -1870,6 +1956,7 @@ Sia lodato Emacs, il sacro editor.
 
 Così abbiamo coperto il caso base. Non resta che scrivere funzioni che tengano conto delle varie impostazioni di =mol2chemfig=.
 
+*** tochemfig
 Finora abbiamo dato per scontato che l'utente introduca direttamente nel minibuffer la stringa da convertire, ma in verità potremmo anche disporre di un file. =mol2chemfig= di default si aspetta, questo, quindi basta lanciare il comando senza =-i direct= per poter lavorare con il percorso di un file. Rinominando la funzione coerentemente, scriveremmo:
 
 #+begin_src emacs-lisp
@@ -1893,16 +1980,30 @@ Potremmo andare avanti ancora per un pezzo, ma questo è un pessimo approccio, p
 Per un ipotetico pacchetto dedicato chiamato =tochemfig=, i default divergenti dall'impostazione di =mol2chemfig= potrebbero essere indicati nel modo seguente.
 
 #+begin_src emacs-lisp :tangle config.el
-(setq tochemfig-default-input 'direct')
-
+(setq tochemfig-default-input "direct")
 (setq tochemfig-default-relative-angles t)
-
 (setq tochemfig-default-fancy-bonds t)
-
 (setq tochemfig-default-wrap-chemfig t)
 #+end_src
 
 Anziché proseguire con le speculazioni, non mi resta che proseguire il lavoro su =tochemfig.el= e renderlo disponibile attraverso [[https://github.com/gicrisf/tochemfig][questa repo]]. In attesa che =tochemfig= sia concluso, o anche nel caso di un uso occasionale con pochi comandi, un approccio come quello sopra è più che sufficiente.
+
+Installiamo il pacchetto:
+
+#+begin_src emacs-lisp :tangle packages.el :noweb yes
+(package! tochemfig :recipe (:host github :repo "gicrisf/tochemfig"))
+#+end_src
+
+*** Anki
+#+begin_quote
+anki-editor – Emacs minor mode for making Anki cards with Org
+#+end_quote
+
+Bisogna ricordare di installare il plugin Anki chiamato "anki-connect", altrimenti non funziona.
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! anki-editor)
+#+end_src
 
 ** Daemon
 Si tratta di una possibilità introdotta con Emacs 23.1 per ridurre i (già bassi) tempi di avvio di ogni finestra. Ottimo se, come me, utilizzate Emacs anche per modificare piccoli file di testo per cui andrebbe benissimo vim o nano.
