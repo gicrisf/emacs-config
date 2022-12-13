@@ -60,6 +60,8 @@
 
 (package! org-drill)
 
+(package! anki-editor)
+
 (package! org-journal)
 
 (package! wikinforg)
@@ -92,4 +94,4 @@
 
 (package! tochemfig :recipe (:host github :repo "gicrisf/tochemfig"))
 
-(package! anki-editor)
+(package! whisper)

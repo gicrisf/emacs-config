@@ -17,7 +17,7 @@ CLOSED: [2022-08-10 mer]
 :PROPERTIES:
 :EXPORT_HUGO_SECTION: software/emacs-config
 :EXPORT_FILE_NAME: index
-:EXPORT_HUGO_LASTMOD: [2022-08-25 gio]
+:EXPORT_HUGO_LASTMOD: [2022-12-13 mar]
 :END:
 
 Questo file mostra come gestire la configurazione di Emacs direttamente all'interno di org-mode.
@@ -541,9 +541,12 @@ Manteniamo i commenti originali di =packages.el= all'interno del file.
 #+end_src
 
 ** Configurazione
-Infine, veniamo alla configurazione vera e propria.
+# Infine, veniamo alla configurazione vera e propria.
+In the end, we get to the actual configuration.
 
-*** Chi sono?
+*** Who am I?
+# *** Chi sono?
+
 #+begin_src emacs-lisp :tangle config.el
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
 ;; clients, file templates and snippets.
@@ -552,8 +555,6 @@ Infine, veniamo alla configurazione vera e propria.
 #+end_src
 
 *** Font
-
-TODO: differenziare tra font laptop e desktop e variare la configurazione esportata in base alla situazione.
 
 #+begin_src emacs-lisp :tangle config.el
 ;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
@@ -570,9 +571,15 @@ TODO: differenziare tra font laptop e desktop e variare la configurazione esport
       doom-variable-pitch-font (font-spec :family "sans" :size 16))
 #+end_src
 
+
+# TODO: differenziare tra font laptop e desktop e variare la configurazione esportata in base alla situazione.
+
+Since I use Emacs both on a laptop and a desktop computer, I wish I could export the same configuration with simple variations to adjust it to the different hardware. In this case, just changing the font would be nice. I still hadn't work on this, but I have to.
+
 *** Temi
 **** Default
-Innanzitutto, selezioniamo un tema di default.
+First of all, let's select a default theme.
+# Innanzitutto, selezioniamo un tema di default.
 
 #+begin_src emacs-lisp :tangle config.el
 ;; There are two ways to load a theme. Both assume the theme is installed and
@@ -581,12 +588,16 @@ Innanzitutto, selezioniamo un tema di default.
 (setq doom-theme 'doom-city-lights)
 #+end_src
 
-Al momento mi trovo bene con city lights: c'è solo una piccolezza che mi irrita parecchio.
-Nel momento in cui dichiaro concluso un task (con "DONE") in org-mode, il tema mi grigia non solo la keyword ma anche il titolo.
+I'm loving City Lights right now and [[https://github.com/gicrisf/qute-city-lights][I realized a City Lights theme for qutebrowser]] too because I wanted to keep everything so uniform and polished.
+There's just one single thing that makes me annoyed: when I declare a task as DONE in org-mode, not only the "DONE" keyword gets grayed out, but the title too. I should work on this detail.
 
-TODO cambiare questo comportamento.
+# Al momento mi trovo bene con city lights: c'è solo una piccolezza che mi irrita parecchio.
+# Nel momento in cui dichiaro concluso un task (con "DONE") in org-mode, il tema mi grigia non solo la keyword ma anche il titolo.
+# TODO cambiare questo comportamento.
 
-Alcuni commenti da ricordare:
+# Alcuni commenti da ricordare:
+I leave those default comments here; they're pretty helpful and concise.
+
 #+begin_src emacs-lisp :tangle config.el
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
@@ -607,16 +618,20 @@ Alcuni commenti da ricordare:
 #+end_src
 
 **** Spacemacs
-Sono affezionato ai temi di spacemacs. Uso specialmente quello chiaro, se ho bisogno di sovrailluminare lo schermo.
+# Sono affezionato ai temi di spacemacs. Uso specialmente quello chiaro, se ho bisogno di sovrailluminare lo schermo.
+I'm emotionally attached to the Spacemacs' themes. Sometimes I make use of =spacemacs-light=, usually when the environment is brighter than usual (e.g. I'm trying to read outside on a sunny day).
 
 #+begin_src emacs-lisp :tangle packages.el
 (package! spacemacs-theme)
 #+end_src
 
-Mi piacerebbe molto avere a disposizione anche i colori di nano-emacs, ma per il momento sembra sia una cosa più complessa del previsto. Henrik Lissner ha detto un paio di volte che avrebbe intenzione di dedicare un intero modulo a questa integrazione, ma non sembra una priorità.
+I would like to make use of Nano-Emacs' colors, but by the moment it does look harder then it seems. Henrik Lissner, Doom Emacs' creator, said he would have made a specific module for this integration, but of course it's not an immediate priority, so I think I'll wait with hope.
+# Mi piacerebbe molto avere a disposizione anche i colori di nano-emacs, ma per il momento sembra sia una cosa più complessa del previsto. Henrik Lissner ha detto un paio di volte che avrebbe intenzione di dedicare un intero modulo a questa integrazione, ma non sembra una priorità.
 
-**** Ciclatore
-TODO: spiegare questo switcher.
+**** Theme ciclator
+# TODO: spiegare questo switcher.
+Some day I will write what this is about, but I hope the point is pretty easy to grasp for any lisp enthysiast like you probably are.
+
 #+begin_src emacs-lisp :tangle config.el
 ;; Theme switcher functions
 (defvar quick-switch-themes
@@ -698,17 +713,35 @@ Adesso possiamo cominciare ad estendere Org-mode. Una prima killer feature, a mi
 
 =org-download-clipboard= è legato a =SPC m a p= [[https://github.com/doomemacs/doomemacs/issues/3830#issuecomment-679925113][dal 25 agosto 2020]] in Doom Emacs.
 
-*** Org drill (flashcards)
-Una volta usavo Anki, ora mi sono chiesto perché usare una GUI quando posso semplicemente scrivere tutto il necessario.
+*** Flashcards
+**** Org drill
+# Una volta usavo Anki, ora mi sono chiesto perché usare una GUI quando posso semplicemente scrivere tutto il necessario.
+I occasionally use this package, but I prefer writing my text here, then exporting my cards in Anki, so I mostly do that now.
 
 #+begin_src emacs-lisp :tangle packages.el
 (package! org-drill)
 #+end_src
 
+**** Anki
+#+begin_quote
+anki-editor – Emacs minor mode for making Anki cards with Org
+#+end_quote
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! anki-editor)
+#+end_src
+
+In order to make this work, you should install the =anki-connect= Anki plugin too.
+# Bisogna ricordare di installare il plugin Anki chiamato "anki-connect", altrimenti non funziona.
+
 *** Org Journal
+Install the package.
+
 #+begin_src emacs-lisp :tangle packages.el
 (package! org-journal)
 #+end_src
+
+Configure the keybindings and some parameters.
 
 #+begin_src emacs-lisp :tangle config.el
 ;; org journal
@@ -746,12 +779,14 @@ Una volta usavo Anki, ora mi sono chiesto perché usare una GUI quando posso sem
 #+end_src
 
 *** Wikinforg
-Richiama informazioni da Wikipedia direttamente su org.
+Get Wikipedia data directly on org-mode.
+# Richiama informazioni da Wikipedia direttamente su org.
 
 #+begin_src emacs-lisp :tangle packages.el
 (package! wikinforg)
 #+end_src
 
+**** Italian wikipedia
 Spesso mi servono i contenuti in italiano.
 L'ideale sarebbe scegliere per ogni query.
 
@@ -763,13 +798,16 @@ Purtroppo, i risultati che ottengo da questa versione sono poco accurati.
 Per il momento la disabiliterò.
 
 *** Ricerca veloce
-Per il momento ne faccio a meno per lo stesso motivo per cui ho disabilitato deft (vedi più avanti).
+# Per il momento ne faccio a meno per lo stesso motivo per cui ho disabilitato deft (vedi più avanti).
+I'm living without right now for similar reasons on why I disabled DEFT (see later); so, I leave the line commented.
 
 #+begin_src emacs-lisp :tangle packages.el
 ;; (package! helm-org-rifle)
 #+end_src
 
 *** Org Web Tools
+
+Install the package.
 
 #+begin_src emacs-lisp :tangle packages.el
 (package! org-web-tools)
@@ -869,13 +907,14 @@ $ update-desktop-database ~/.local/share/applications/
 #+end_src
 
 *** Citations
+**** Use CSL format files
 Export processor to use format files written in Citation Style Language (=.csl=). This isn't latex-only, so I should be able to use it with Libre Office and HTML too, if needed.
 
 #+begin_src emacs-lisp :tangle packages.el
 (package! citeproc)
 #+end_src
 
-*** TODO Org bibliography
+**** TODO Org Bibliography
 Tentativo di literate bibliography con org-mode basato su =org-bib-mode=, di Nicolas P. Rougier (il creatore di NANO Emacs).
 
 Innanzitutto devo installare le dipendenze dal suo profilo Github.
@@ -1018,6 +1057,9 @@ defendants.naka -> hans: Accused of cheating on his stream
 defendants.mc -> hans: Lost then withdrew with accusations
 defendants.chesscom -> hans: 72 page report of cheating
 #+end_src
+
+#+RESULTS:
+[[file:test.png]]
 
 *** Backtab
 #+begin_src emacs-lisp :tangle config.el
@@ -1994,15 +2036,49 @@ Installiamo il pacchetto:
 (package! tochemfig :recipe (:host github :repo "gicrisf/tochemfig"))
 #+end_src
 
-*** Anki
+*** orgtochemfig
+Since I usually write LaTeX code from org-mode, I find annoying to wrap the code in latex exporter all the time. Let's get rid of the problem writing some lispy code.
+
+Siccome devo modificare il comportamento di una funzione preferibilmente senza inficiare il codice della libreria originale, la cosa più immediata sarebbe quella di agganciare il lavoro delle funzioni di tochemfig, per esempio di =tochemfig-default=, per iniziare con la funzione più facile da approcciare.
+
 #+begin_quote
-anki-editor – Emacs minor mode for making Anki cards with Org
+When you need to modify a function defined in another library [...] or basically any variable or object field which holds a function value, you can use the appropriate setter function, such as fset or defun for named functions, setq for hook variables, or set-process-filter for process filters, but those are often too blunt, completely throwing away the previous value.
+
+*The advice feature lets you add to the existing definition of a function, by advising the function*. This is a cleaner method than redefining the whole function.
 #+end_quote
 
-Bisogna ricordare di installare il plugin Anki chiamato "anki-connect", altrimenti non funziona.
+Un esempio che consente di modificare il valore restituito dalla funzione tutte le volte che viene lanciata:
+
+#+begin_src emacs-lisp
+(defun my-double (x)
+  (* x 2))
+(defun my-increase (x)
+  (+ x 1))
+(advice-add 'my-double :filter-return #'my-increase)
+
+(my-double 2)
+#+end_src
+
+#+RESULTS:
+: 5
+
+A me interessa che Emacs sappia che quando scrivo in org-mode è necessario l'exporter. Va detto pure che magari io sono già dentro un blocco e allora non voglio aggiungere blocchi dentro blocchi, in a nested fashion. Not at all. I prefer using different function's names: this gives the control to the user.
+
+*** TODO Whisper (Speech to Text)
+I simply find this interesting, so I want to try it.
 
 #+begin_src emacs-lisp :tangle packages.el
-(package! anki-editor)
+(package! whisper)
+#+end_src
+
+#+begin_src emacs-lisp :tangle config.el
+(use-package whisper
+  :bind ("C-H-r" . whisper-run)
+  :config
+  (setq whisper-install-directory "/tmp/"
+        whisper-model "base"
+        whisper-language "en"
+        whisper-translate nil))
 #+end_src
 
 ** Daemon
@@ -2059,14 +2135,18 @@ Intendo pubblicare a breve i miei bash dots, /stay tuned/.
 # TODO
 # Per approfondire, rimando ai miei bash dots.
 
-** In conclusione
+** Conclusions
+# ** In conclusione
+# Questo file è in continua trasformazione.
 
-Questo file è in continua trasformazione.
+This is file is in constant change: more like a partially molded amorphous substance than like a liquid, but still in constant change.
 
 TODOs:
 - [X] Riportare sotto org tutte le funzioni relative (per ora mantenuto quanto più vicino possibile all'originale per evitare casini)
-- [ ] Scrivi una conclusione decente
-- [ ] Tradurre l'intero post in inglese ed esportare la traduzione
+# - [ ] Scrivi una conclusione decente
+- [ ] Write a decent conclusion
+# - [ ] Tradurre l'intero post in inglese ed esportare la traduzione
+- [ ] Translate everything in english and export the translated file to the blog.
 
 # Esporto prism.js perché per il momento Zola ha un bug che non mi consente di colorare la sintassi.
 {{{prismcss}}}

@@ -372,3 +372,11 @@ by using nxml's indentation rules."
 (setq tochemfig-default-relative-angles t)
 (setq tochemfig-default-fancy-bonds t)
 (setq tochemfig-default-wrap-chemfig t)
+
+(use-package whisper
+  :bind ("C-H-r" . whisper-run)
+  :config
+  (setq whisper-install-directory "/tmp/"
+        whisper-model "base"
+        whisper-language "en"
+        whisper-translate nil))
