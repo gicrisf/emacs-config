@@ -158,32 +158,11 @@ A nil value implies no custom theme should be enabled.")
 
 (setq org-latex-logfiles-extensions (quote ("lof" "lot" "tex~" "aux" "idx" "log" "out" "toc" "nav" "snm" "vrb" "dvi" "fdb_latexmk" "blg" "brf" "fls" "entoc" "ps" "spl" "bbl" "xmpi" "run.xml" "bcf")))
 
-(defun template-org-anki-cloze-drawer ()
-  (interactive)
-  (insert "\n:PROPERTIES:\n:ANKI_DECK: "
-          "colinergico"
-          "\n:ANKI_NOTE_TYPE: Cloze"
-          "\n:END:"))
-
 (org-babel-do-load-languages
     'org-babel-load-languages
     '((d2 . t)))
 
 (add-to-list 'exec-path "~/.local/bin/")
-
-;; Source: [[https://stackoverflow.com/questions/23692879/emacs24-backtab-is-undefined-how-to-define-this-shortcut-key]]
-(global-set-key (kbd "<backtab>") 'un-indent-by-removing-4-spaces)
-(defun un-indent-by-removing-4-spaces ()
-  "remove 4 spaces from beginning of of line"
-  (interactive)
-  (save-excursion
-    (save-match-data
-      (beginning-of-line)
-      ;; get rid of tabs at beginning of line
-      (when (looking-s "^\\at-+")
-        (untabify (match-beginning 0) (match-end 0)))
-      (when (looking-at "^    ")
-        (replace-match "")))))
 
 (require 'elfeed-goodies)
 (elfeed-goodies/setup)
@@ -314,11 +293,6 @@ by using nxml's indentation rules."
 
 (add-hook 'Info-selection-hook 'info-colors-fontify-node)
 
-;; Not using deft rn
-;;(setq deft-directory "~/org"
-;;      deft-extensions '("org" "txt"))
-;;(setq deft-recursive t)
-
 (setq config-org-file-name "config.org"
       config-org-directory "~/.doom.d")
 
@@ -356,9 +330,6 @@ by using nxml's indentation rules."
        :desc "Open org manual." "i" #'org-info))
 
 (setf (nth 6 +doom-dashboard-menu-sections) '("Doom documentation" :icon (all-the-icons-octicon "book" :face 'doom-dashboard-menu-title) :action doom/help))
-
-(defvar +zen-serif-p t
-  "Whether to use a serifed font with `mixed-pitch-mode'.")
 
 (setq wttrin-default-cities '("Caltagirone" "Bologna" "Ferrara" "Catania"))
 (setq wttrin-default-accept-language '("Accept-Language" . "it-IT"))
