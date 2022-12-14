@@ -1,28 +1,41 @@
 #+title: Doom Emacs Configuration
 #+author: Giovanni Crisalfi
+#+STARTUP: show2levels
+
+# Export metadata
 #+hugo_base_dir: ~/zwitterio-it/
 #+hugo_tags: emacs org
 #+hugo_categories: software posts notes
-# #+hugo_section: doom-emacs-config
-#+hugo_section: software/emacs-config
-#+STARTUP: show2levels
+#+hugo_publishdate: 2022-08-10
+#+hugo_auto_set_lastmod: t
+#+hugo_section: software/emacs-config/index.md
+
+# Zola specific divider
 #+MACRO: more @@html:<!-- more -->@@
-# Temporary macros for prism support:
+# Temporary macros for prism support
 #+MACRO: prismcss @@html:<link href="/assets/prism/prism.css" rel="stylesheet" />@@
 #+MACRO: prismjs @@html:<script src="/assets/prism/prism.js"></script>@@
 
 * Configurare Emacs in Org-mode :emacs:org:@posts:@software:@notes:
-CLOSED: [2022-08-10 mer]
+CLOSED:
 :PROPERTIES:
 :EXPORT_HUGO_SECTION: software/emacs-config
 :EXPORT_FILE_NAME: index
-:EXPORT_HUGO_LASTMOD: [2022-12-13 mar]
+:EXPORT_DATE: [2022-08-10 mer]
+:EXPORT_HUGO_LASTMOD: [2022-12-14 mer]
 :END:
 
-Questo file mostra come gestire la configurazione di Emacs direttamente all'interno di org-mode.
-Questo stesso file è anche la mia personale configurazione per Doom Emacs.
+# Questo file mostra come gestire la configurazione di Emacs direttamente all'interno di org-mode.
+# Questo stesso file è anche la mia personale configurazione per Doom Emacs.
+Welcome to my Emacs configuration, written in Org-mode.
+Being this a /literate configuration/, most of the choices I made are extensively documented here.
 
 {{{more}}}
+
+#+begin_quote
+*Keep in mind* that not evey part is translated in English.
+It happens to me writing stuff down in Italian, my mother language, so some sections are published as they are. It can take some time before I translate everyhting in English.
+#+end_quote
 
 ** Emacs
 Innanzitutto, cos'è Emacs?
@@ -185,8 +198,9 @@ Frontespizio di =config.el=.
 ;; clients, file templates and snippets.
 #+end_src
 
-** Moduli
-Il codice seguente è impiegato da Doom Emacs per capire quali moduli installare e lanciare tutte le volte che viene avviato.
+** Doom modules
+Every time Doom Emacs is started, the following code is evaluated for adding or deleting eventually edited packages.
+# Il codice seguente è impiegato da Doom Emacs per capire quali moduli installare e lanciare tutte le volte che viene avviato.
 # Ogni modifica a questo livello richiede =doom/sync=.
 
 #+name: init.el
@@ -238,6 +252,7 @@ Il codice seguente è impiegato da Doom Emacs per capire quali moduli installare
        )
 #+end_src
 
+As you can see, this part basically consists of a simple list of modules.
 # Si tratta di uno dei tratti più leggibili in assoluto, visto che, appunto, è una lista di moduli.
 # Lo riporto qui senza modifiche particolari.
 
@@ -303,8 +318,9 @@ snippets          ; my elves. They type so I don't have to
 ;;word-wrap         ; soft wrapping with language-aware indent
 #+end_src
 
-**** Cursori multipli
-Basta usare =g z z= come shortcut sequenziale per avviare un altro cursore sul posto.
+# **** Cursori multipli
+About multiple cursors: just run the =g z z= sequence to spawn a new cursor on place.
+# Basta usare =g z z= come shortcut sequenziale per avviare un altro cursore sul posto.
 
 *** Emacs
 #+name: doom-emacs
@@ -459,7 +475,8 @@ Uso Emacs come RSS reader.
 #+end_src
 
 *** Config
-Questa è una literate configuration, quindi mi pare il caso di abilitare il modulo relativo.
+# Questa è una literate configuration, quindi mi pare il caso di abilitare il modulo relativo.
+This is a literate configuration, so it looks reasonable to enable the relative module.
 
 #+name: doom-config
 #+begin_src emacs-lisp
@@ -468,11 +485,14 @@ literate
 #+end_src
 
 ** Package!
-Chiaramente, non tutti i pacchetti disponibili per emacs sono stati integrati in moduli di Doom, quindi alcuni andranno installati per altre vie, ad esempio MELPA o delle repository git.
+# Chiaramente, non tutti i pacchetti disponibili per emacs sono stati integrati in moduli di Doom, quindi alcuni andranno installati per altre vie, ad esempio MELPA o delle repository git.
+Clearly, not every package in Emacs are molded as Doom Emacs modules: it would be crazy. Many of them are to be installed via MELPA or git repositories.
+Like before, I keep original comments of =packages.el= here, but the file will be populated in the next part, side by side with the relative package configuration.
 
-Manteniamo i commenti originali di =packages.el= all'interno del file.
+# Manteniamo i commenti originali di =packages.el= all'interno del file.
 
 *** Recipe
+
 #+name: packages-recipe
 #+begin_src emacs-lisp :tangle packages.el
 ;; To install a package directly from a remote git repo, you must specify a
@@ -539,7 +559,7 @@ Manteniamo i commenti originali di =packages.el= all'interno del file.
 ;(unpin! t)
 #+end_src
 
-** Configurazione
+** Configuration
 # Infine, veniamo alla configurazione vera e propria.
 In the end, we get to the actual configuration.
 
