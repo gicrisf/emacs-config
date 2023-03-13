@@ -164,9 +164,15 @@ A nil value implies no custom theme should be enabled.")
 
 (add-to-list 'exec-path "~/.local/bin/")
 
+(require 'ox-json)
+
 (require 'elfeed-goodies)
 (elfeed-goodies/setup)
 (setq elfeed-goodies/entry-pane-size 0.5)
+
+(require 'elfeed-score)
+(elfeed-score-enable)
+(define-key elfeed-search-mode-map "=" elfeed-score-map)
 
 ;; Support for Typescript/React
 (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode))
@@ -343,11 +349,3 @@ by using nxml's indentation rules."
 (setq tochemfig-default-relative-angles t)
 (setq tochemfig-default-fancy-bonds t)
 (setq tochemfig-default-wrap-chemfig t)
-
-(use-package whisper
-  :bind ("C-H-r" . whisper-run)
-  :config
-  (setq whisper-install-directory "/tmp/"
-        whisper-model "base"
-        whisper-language "en"
-        whisper-translate nil))

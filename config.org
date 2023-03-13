@@ -37,7 +37,7 @@ Being this a /literate configuration/, most of the choices I made are extensivel
 It happens to me writing stuff down in Italian, my mother language, so some sections are published as they are. It can take some time before I translate everyhting in English.
 #+end_quote
 
-** Emacs
+** Emacs :it:
 Innanzitutto, cos'è Emacs?
 
 #+begin_quote
@@ -55,7 +55,7 @@ Io, ad esempio, uso quotidianamente Emacs per:
 
 Per qualche tempo l'ho usato anche come emulatore di terminale, ora capita solo in circostanze particolari, ad esempio per compilare del codice che sto scrivendo nel buffer a fianco.
 
-** Distribuzioni Emacs
+** Distribuzioni Emacs :it:
 La barriera di ingresso, in verità, può essere parzialmente abbattuta per mezzo di distribuzioni Emacs pre-configurate, tra cui ne cito qualcuna, pescando tra le più famose:
 - [[https://www.spacemacs.org/][Spacemacs]] è stata la mia prima distribuzione: è particolarmente indicata per i neofiti in arrivo da vim, come ero io. Non solo è efficace nell'emulare vim (grazie ad [[https://github.com/emacs-evil/evil][Evil]]), ma dispone anche di miriadi di funzioni ausiliarie richiamabili con un semplice tocco sulla barra spaziatrice (space-emacs, non a caso).
 - [[https://github.com/rougier/nano-emacs][NANO Emacs]]: dipendenze minime, eccezionalmente elegante, funzionalmente molto vicina a Vanilla Emacs;
@@ -63,7 +63,7 @@ La barriera di ingresso, in verità, può essere parzialmente abbattuta per mezz
 
 La configurazione riportata in questo file può, potenzialmente, essere adattata anche ad altre distribuzioni Emacs, ma presa com'è funziona solo su Doom Emacs.
 
-** Emacs Lisp
+** Emacs Lisp :it:
 Come dicevo, Emacs è un interpreter di lisp, ma per essere più corretti dovremmo fare riferimento ad Emacs Lisp, un dialetto della famiglia di linguaggi di programmazione che rientra sotto la denominazione "Lisp" (LISt Processor).
 
 Come già detto altrove [fn::da init file di Doom Emacs], "visto un dialetto di lisp, visti tutti":
@@ -89,7 +89,7 @@ Avendo iniziato solo da poco tempo a navigare nell'oceano di meraviglie e parent
 Per una guida rapida ad Emacs Lisp, consiglio di dare un'occhiata [[https://github.com/chrisdone/elisp-guide][a questa repo]].
 Per una guida meno rapida, ma più approfondita, fate riferimento a [[https://github.com/hypernumbers/learn_elisp_the_hard_way][Learn elisp the hard way]].
 
-** Literate configuration
+** Literate configuration :it:
 Tradizionalmente, la configurazione di Doom Emacs è raccolta in 3 file fondamentali, a loro volta contenuti in una apposita directory nella home, =.doom.d=.
 Questi file sono:
 - =config.el=;
@@ -130,8 +130,7 @@ Per entrambe trovate anche i mirrors su Github (che renderizza piacevolmente anc
 
 Ci sono vari modi per consentire ad Emacs di leggere la configurazione attraverso un org file; come tanti altri, io qui mi limito a generare i file di configurazione a partire dal file org, per mezzo di una pratica che Donald Knuth ha chiamato "tangling" (aggrovigliare).
 
-** Frontespizi
-
+** Frontmatters :it:
 Cominciamo dalla testa dei nostri file di configurazione, cioè da tutti i commenti che troviamo di norma nelle prime 10-20 righe. C'è solo una modifica che è il caso di fare in questo punto: aggiungere un piccolo commento che ricordi all'eventuale lettore che il file in uscita è un file generato e che non va modificato direttamente.
 
 # Aggiungere questo pezzo con una macro:
@@ -647,6 +646,11 @@ I'm emotionally attached to the Spacemacs' themes. Sometimes I make use of =spac
 I would like to make use of Nano-Emacs' colors, but by the moment it does look harder then it seems. Henrik Lissner, Doom Emacs' creator, said he would have made a specific module for this integration, but of course it's not an immediate priority, so I think I'll wait with hope.
 # Mi piacerebbe molto avere a disposizione anche i colori di nano-emacs, ma per il momento sembra sia una cosa più complessa del previsto. Henrik Lissner ha detto un paio di volte che avrebbe intenzione di dedicare un intero modulo a questa integrazione, ma non sembra una priorità.
 
+**** Catppuccin
+#+begin_src emacs-lisp :tangle packages.el
+(package! catppuccin :recipe (:host github :repo "catppuccin/emacs"))
+#+end_src
+
 **** Theme ciclator
 # TODO: spiegare questo switcher.
 Some day I will write what this is about, but I hope the point is pretty easy to grasp for any lisp enthysiast like you probably are.
@@ -1083,6 +1087,20 @@ defendants.mc -> hans: Lost then withdrew with accusations
 defendants.chesscom -> hans: 72 page report of cheating
 #+end_src
 
+*** Org export to JSON
+#+begin_src emacs-lisp :tangle packages.el
+(package! ox-json)
+#+end_src
+
+#+begin_src emacs-lisp :tangle config.el
+(require 'ox-json)
+#+end_src
+
+*** Org ref
+#+begin_src emacs-lisp :tangle packages.el
+(package! org-ref)
+#+end_src
+
 *** Backtab
 I should find an alternative way, because this one doesn't work, so I'm de-tangling it.
 
@@ -1103,7 +1121,7 @@ I should find an alternative way, because this one doesn't work, so I'm de-tangl
         (replace-match "")))))
 #+end_src
 
-*** Elfeed (RSS)
+*** Feed
 #+begin_quote
 Elfeed is an extensible web feed reader for Emacs, supporting both Atom and RSS.
 #+end_quote
@@ -1138,6 +1156,65 @@ Particularly, this adds a cool powerline and changes the layout (panels are spli
 #+end_src
 
 # Ora voglio assicurarmi che elfeed appaia sulla dashboard (vedi sezione dedicata alla dashboard).
+
+You can make a lot of different uses of elfeed: if you just follow some blogs, you probably have no problem with it. Let's say you follow 20, 30, 50 blogs and you love them all. You want to see every news, but every blog posts once a week, if they are active. In this case, elfeed is already perfect. It shows you everything in the chronological order. *But*, what if you follow sources that publish a lot of content day by day? For example, you follow RSS feed of governative agencies or scientific publishers. In that case, you better filter the posts to list most important things first. A lot of social media platforms do that: they let you see the posts of accounts you interact most before any other, then they proceed with others. It doesn't matter that the other are more recent: the point is to maximize the probability you see the stuff you're more interested to, in order to make you interact and stay on the platform as long as you can. Here we're facing a similar problem: since we all know you're never going to see every single post in your feed, it's fundamental to establish priorities. We will not implement a machine learning model to learn our preference like social media do, but there's a package that keep things simple, and let you score the posts by keywords: not surprisingly, it's called =elfeed-score=.
+
+You can see it in action in [[https://emacsconf.org/2021/talks/research/][this interesting Emacs talk, published in 2021]].
+Like said by Ahmed Khaled, the author,
+
+#+begin_quote
+Elfeed-score enables me to assign a numerical score [...] This numerical score is very simple. It's just based on matching things.
+#+end_quote
+
+We're now fully convinced that we need =elfeed-score=, so we install it:
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! elfeed-score)
+#+end_src
+
+Arxiv or ChemRxiv feeds are manipulated in the org file like any other feed.
+Now, we have to configure it =elfeed-score=. From [[https://www.unwoundstack.com/doc/elfeed-score/curr#The-Score-File][the docs]]:
+
+#+begin_quote
+The rules for scoring are written down in the score file, a plain-text file containing a single Lisp form. The location of the score file is defined in =elfeed-score-serde-score-file=.
+#+end_quote
+
+By default, the configuration is written in a file named =elfeed.score= in the =.emacs.d= directory:
+
+#+begin_src emacs-lisp :tangle ~/.emacs.d/elfeed.score
+;;; Elfeed score file                                     -*- lisp -*-
+(("title")
+ ("content")
+ ("title-or-content"
+  (:text "spectroscopy" :title-value 50 :content-value 10 :type s)
+  (:text "Alzheimer" :title-value 50 :content-value 10 :type s)
+  (:text "small-molecule" :title-value 50 :content-value 10 :type s)
+  (:text "small molecule" :title-value 50 :content-value 10 :type s)
+  (:text "Peptide" :title-value 50 :content-value 10 :type s)
+  (:text "Molecular Dynamics" :title-value 50 :content-value 10 :type s)
+  (:text "infrared" :title-value 100 :content-value 10 :type s))
+ ("tag")
+ ("authors")
+ ("feed")
+ (mark -600)
+ ("adjust-tags"))
+#+end_src
+
+About using regex in the =text= field and =title-or-content= as a field, I suggest to look at [[https://cundy.me/post/elfeed/][this Chris Cundy's blog post]]:
+
+#+begin_quote
+So the field (".*[- ]ODE[- s].*" 100 20 R 1596818708.18127) is a case-sensitive (specified by the R) regexp matching against any of " ODEs”, " ODE “, " ODE-", etc. If a match occurs in the title it adds 100 to the score of the entry. If a match occurs in the content field (for us, this is the abstract of the paper) it will add 20 to the score of the entry. The scale is arbitrary, but I’m aiming for a score of 0 for papers I may want to read, 100 for papers I will probably want to read, 200 for papers I will very likely want to read, and 300 for papers I will certainly want to read. I generally put the content matches with a lower score since they may occur multiply times and e.g. I don’t want to miss an interesting paper just because one of the applications was an area I’m not interested in.
+#+end_quote
+
+With the =authors= field, you can push up specific authors' work.
+
+Finally, we activate =elfeed-score= by adding these lines in the init file:
+
+#+begin_src emacs-lisp :tangle config.el
+(require 'elfeed-score)
+(elfeed-score-enable)
+(define-key elfeed-search-mode-map "=" elfeed-score-map)
+#+end_src
 
 *** Linguaggi :it:
 **** Typescript/React
@@ -2106,11 +2183,13 @@ A me interessa che Emacs sappia che quando scrivo in org-mode è necessario l'ex
 *** TODO Whisper (Speech to Text)
 I simply find this interesting, so I want to try it.
 
-#+begin_src emacs-lisp :tangle packages.el
+# :tangle packages.el
+#+begin_src emacs-lisp
 (package! whisper)
 #+end_src
 
-#+begin_src emacs-lisp :tangle config.el
+# :tangle config.el
+#+begin_src emacs-lisp
 (use-package whisper
   :bind ("C-H-r" . whisper-run)
   :config
@@ -2118,6 +2197,27 @@ I simply find this interesting, so I want to try it.
         whisper-model "base"
         whisper-language "en"
         whisper-translate nil))
+#+end_src
+
+*** TODO My life in Emacs: EXWM
+I'm a Gnome user, but I think it would be nice to have the EXWM option, especially because I'm interested to study the power consumption.
+
+# :tangle packages.el
+#+begin_src emacs-lisp
+(package! exwm)
+#+end_src
+
+Not tangled, because it's experimental.
+# :tangle config.el
+#+begin_src emacs-lisp
+ (use-package exwm
+    :init
+    ;; (require 'exwm-randr)
+    (exwm-enable)
+    ;; (tsa/safe-load-file "~/local-config.el")
+    (exwm-randr-enable) ; https://github.com/ch11ng/exwm/wiki
+    ;; (defvar efs/polybar-process nil
+    ;;  "Holds the process of the running Polybar instance, if any")
 #+end_src
 
 ** Daemon

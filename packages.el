@@ -56,6 +56,8 @@
 
 (package! spacemacs-theme)
 
+(package! catppuccin :recipe (:host github :repo "catppuccin/emacs"))
+
 (package! org-download)
 
 (package! org-drill)
@@ -76,7 +78,13 @@
 
 (package! ob-d2 :recipe (:host github :repo "dmacvicar/ob-d2"))
 
+(package! ox-json)
+
+(package! org-ref)
+
 (package! elfeed-goodies)
+
+(package! elfeed-score)
 
 (package! vala-mode)
 
@@ -93,5 +101,3 @@
 (package! wttrin :recipe (:host github :repo "gicrisf/emacs-wttrin"))
 
 (package! tochemfig :recipe (:host github :repo "gicrisf/tochemfig"))
-
-(package! whisper)
