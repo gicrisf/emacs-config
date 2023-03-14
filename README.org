@@ -11,9 +11,9 @@ It can take some time before I translate everything in English.
 
 If you prefer to read specific section of the configuration in a specific language, you can search for them on my blog.
 
-[Click here for english blog posts with the "EMACS" tag](https://www.zwitterio.it/en/tags/emacs/)
+[[https://www.zwitterio.it/en/tags/emacs/][Click here for english blog posts with the "EMACS" tag]]
 
-[Clicca qui per post in italiano con il tag "EMACS"](https://www.zwitterio.it/tags/emacs/)
+[[https://www.zwitterio.it/tags/emacs/][Clicca qui per post in italiano sul blog con il tag "EMACS"]]
 
 ** Donate
 Did you find something interesting in my dots?
