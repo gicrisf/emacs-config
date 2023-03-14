@@ -2,10 +2,18 @@
 #+author: Giovanni Crisalfi
 
 The configuration lives inside a single file, the =config.org= file.
+GitHub is able to render org files! If you want to read the configuration entirely, just open the file here in this repo.
 
-[[https://www.zwitterio.it/software/emacs-config/][You can read it on my blog (HTML export)]]
+> *Keep in mind* that not evey part is translated in English.
 
-By now, the config file is written in italian only, but I'm counting on translate everything in english too.
+It happens to me writing stuff down in Italian, my mother language, so some sections are published as they are.
+It can take some time before I translate everything in English.
+
+If you prefer to read specific section of the configuration in a specific language, you can search for them on my blog.
+
+[Click here for english blog posts with the "EMACS" tag](https://www.zwitterio.it/en/tags/emacs/)
+
+[Clicca qui per post in italiano con il tag "EMACS"](https://www.zwitterio.it/tags/emacs/)
 
 ** Donate
 Did you find something interesting in my dots?

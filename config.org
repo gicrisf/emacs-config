@@ -16,15 +16,6 @@
 #+MACRO: prismcss @@html:<link href="/assets/prism/prism.css" rel="stylesheet" />@@
 #+MACRO: prismjs @@html:<script src="/assets/prism/prism.js"></script>@@
 
-* Configurare Emacs in Org-mode :emacs:org:@posts:@software:@notes:
-CLOSED:
-:PROPERTIES:
-:EXPORT_HUGO_SECTION: software/emacs-config
-:EXPORT_FILE_NAME: index
-:EXPORT_DATE: [2022-08-10 mer]
-:EXPORT_HUGO_LASTMOD: [2022-12-14 mer]
-:END:
-
 # Questo file mostra come gestire la configurazione di Emacs direttamente all'interno di org-mode.
 # Questo stesso file è anche la mia personale configurazione per Doom Emacs.
 Welcome to my Emacs configuration, written in Org-mode.
@@ -37,7 +28,7 @@ Being this a /literate configuration/, most of the choices I made are extensivel
 It happens to me writing stuff down in Italian, my mother language, so some sections are published as they are. It can take some time before I translate everyhting in English.
 #+end_quote
 
-** Emacs :it:
+* Emacs :it:
 Innanzitutto, cos'è Emacs?
 
 #+begin_quote
@@ -55,7 +46,7 @@ Io, ad esempio, uso quotidianamente Emacs per:
 
 Per qualche tempo l'ho usato anche come emulatore di terminale, ora capita solo in circostanze particolari, ad esempio per compilare del codice che sto scrivendo nel buffer a fianco.
 
-** Distribuzioni Emacs :it:
+* Distribuzioni Emacs :it:
 La barriera di ingresso, in verità, può essere parzialmente abbattuta per mezzo di distribuzioni Emacs pre-configurate, tra cui ne cito qualcuna, pescando tra le più famose:
 - [[https://www.spacemacs.org/][Spacemacs]] è stata la mia prima distribuzione: è particolarmente indicata per i neofiti in arrivo da vim, come ero io. Non solo è efficace nell'emulare vim (grazie ad [[https://github.com/emacs-evil/evil][Evil]]), ma dispone anche di miriadi di funzioni ausiliarie richiamabili con un semplice tocco sulla barra spaziatrice (space-emacs, non a caso).
 - [[https://github.com/rougier/nano-emacs][NANO Emacs]]: dipendenze minime, eccezionalmente elegante, funzionalmente molto vicina a Vanilla Emacs;
@@ -63,7 +54,7 @@ La barriera di ingresso, in verità, può essere parzialmente abbattuta per mezz
 
 La configurazione riportata in questo file può, potenzialmente, essere adattata anche ad altre distribuzioni Emacs, ma presa com'è funziona solo su Doom Emacs.
 
-** Emacs Lisp :it:
+* Emacs Lisp :it:
 Come dicevo, Emacs è un interpreter di lisp, ma per essere più corretti dovremmo fare riferimento ad Emacs Lisp, un dialetto della famiglia di linguaggi di programmazione che rientra sotto la denominazione "Lisp" (LISt Processor).
 
 Come già detto altrove [fn::da init file di Doom Emacs], "visto un dialetto di lisp, visti tutti":
@@ -89,7 +80,7 @@ Avendo iniziato solo da poco tempo a navigare nell'oceano di meraviglie e parent
 Per una guida rapida ad Emacs Lisp, consiglio di dare un'occhiata [[https://github.com/chrisdone/elisp-guide][a questa repo]].
 Per una guida meno rapida, ma più approfondita, fate riferimento a [[https://github.com/hypernumbers/learn_elisp_the_hard_way][Learn elisp the hard way]].
 
-** Literate configuration :it:
+* Literate configuration :it:
 Tradizionalmente, la configurazione di Doom Emacs è raccolta in 3 file fondamentali, a loro volta contenuti in una apposita directory nella home, =.doom.d=.
 Questi file sono:
 - =config.el=;
@@ -1121,10 +1112,19 @@ I should find an alternative way, because this one doesn't work, so I'm de-tangl
         (replace-match "")))))
 #+end_src
 
-*** Feed
+*** Emacs Feed Configuration
+:PROPERTIES:
+:EXPORT_HUGO_SECTION: software/emacs-config-feed
+:EXPORT_FILE_NAME: index.en.md
+:EXPORT_DATE: [2023-03-13 lun 21:48]
+:EXPORT_HUGO_LASTMOD: [2022-12-14 mer]
+:END:
+
 #+begin_quote
 Elfeed is an extensible web feed reader for Emacs, supporting both Atom and RSS.
 #+end_quote
+
+{{{more}}}
 
 By default, adding feed URLs in this list is enough to let Elfeed work.
 # Di default, basta aggiungere gli URL dei feed desiderati in questa lista per avere già Elfeed operativo.
@@ -1157,7 +1157,14 @@ Particularly, this adds a cool powerline and changes the layout (panels are spli
 
 # Ora voglio assicurarmi che elfeed appaia sulla dashboard (vedi sezione dedicata alla dashboard).
 
-You can make a lot of different uses of elfeed: if you just follow some blogs, you probably have no problem with it. Let's say you follow 20, 30, 50 blogs and you love them all. You want to see every news, but every blog posts once a week, if they are active. In this case, elfeed is already perfect. It shows you everything in the chronological order. *But*, what if you follow sources that publish a lot of content day by day? For example, you follow RSS feed of governative agencies or scientific publishers. In that case, you better filter the posts to list most important things first. A lot of social media platforms do that: they let you see the posts of accounts you interact most before any other, then they proceed with others. It doesn't matter that the other are more recent: the point is to maximize the probability you see the stuff you're more interested to, in order to make you interact and stay on the platform as long as you can. Here we're facing a similar problem: since we all know you're never going to see every single post in your feed, it's fundamental to establish priorities. We will not implement a machine learning model to learn our preference like social media do, but there's a package that keep things simple, and let you score the posts by keywords: not surprisingly, it's called =elfeed-score=.
+You can make a lot of different uses of elfeed: if you just follow some blogs, you probably have no problem with it as it out of the box. Let's say you follow 20, 30, 50 blogs and you love them all. You want to see every news, but every blog posts once a week, if they are active. In this case, elfeed is already perfect, because it shows every result in chronological order.
+
+*But*, what if you follow sources that publish a lot of content day by day?
+For example, you follow feeds of governative agencies or scientific publishers, that publish a lot of content day by day. In this case, you better filter out the posts you don't want to see and prioritize the most important ones.
+
+It would be an approach similar to what a lot of social media platforms are doing in this very moment: they let you see the posts of accounts you interact most before any other, then they proceed with others. It doesn't matter that the other are more recent: the point is to maximize the probability you see the stuff you're more interested to, in order to make you interact and stay on the platform as long as you can.
+
+Going back to Emacs, here we're facing an analogo problem: since we all know you're never going to see every single post in your feed, it's fundamental to establish priorities. We will not implement a machine learning model to learn our preference like social media do, but there's a package that keep things simple, and let you score the posts by keywords: not surprisingly, it's called =elfeed-score=.
 
 You can see it in action in [[https://emacsconf.org/2021/talks/research/][this interesting Emacs talk, published in 2021]].
 Like said by Ahmed Khaled, the author,
@@ -1188,7 +1195,6 @@ By default, the configuration is written in a file named =elfeed.score= in the =
  ("title-or-content"
   (:text "spectroscopy" :title-value 50 :content-value 10 :type s)
   (:text "Alzheimer" :title-value 50 :content-value 10 :type s)
-  (:text "small-molecule" :title-value 50 :content-value 10 :type s)
   (:text "small molecule" :title-value 50 :content-value 10 :type s)
   (:text "Peptide" :title-value 50 :content-value 10 :type s)
   (:text "Molecular Dynamics" :title-value 50 :content-value 10 :type s)
@@ -1200,7 +1206,7 @@ By default, the configuration is written in a file named =elfeed.score= in the =
  ("adjust-tags"))
 #+end_src
 
-About using regex in the =text= field and =title-or-content= as a field, I suggest to look at [[https://cundy.me/post/elfeed/][this Chris Cundy's blog post]]:
+About using regex in the =text= field and =title-or-content= as a field, I suggest to see at [[https://cundy.me/post/elfeed/][this Chris Cundy's blog post]]:
 
 #+begin_quote
 So the field (".*[- ]ODE[- s].*" 100 20 R 1596818708.18127) is a case-sensitive (specified by the R) regexp matching against any of " ODEs”, " ODE “, " ODE-", etc. If a match occurs in the title it adds 100 to the score of the entry. If a match occurs in the content field (for us, this is the abstract of the paper) it will add 20 to the score of the entry. The scale is arbitrary, but I’m aiming for a score of 0 for papers I may want to read, 100 for papers I will probably want to read, 200 for papers I will very likely want to read, and 300 for papers I will certainly want to read. I generally put the content matches with a lower score since they may occur multiply times and e.g. I don’t want to miss an interesting paper just because one of the applications was an area I’m not interested in.
@@ -1215,6 +1221,9 @@ Finally, we activate =elfeed-score= by adding these lines in the init file:
 (elfeed-score-enable)
 (define-key elfeed-search-mode-map "=" elfeed-score-map)
 #+end_src
+
+{{{prismcss}}}
+{{{prismjs}}}
 
 *** Linguaggi :it:
 **** Typescript/React
@@ -1890,7 +1899,7 @@ Qui lo configuro secondo le mie necessità:
 (setq wttrin-default-accept-language '("Accept-Language" . "it-IT"))
 #+end_src
 
-*** Email (detangled) :it:
+*** COMMENT Email (detangled) :it:
 Quando Protonmail ha rilasciato ProtonBridge mi sono chiesto se non valesse la pena di ritentare un approccio locale alle email.
 Le alternative apprezzabili per il momento mi sembrano due:
 - Mozilla Thunderbird
@@ -2152,7 +2161,7 @@ Installiamo il pacchetto:
 (package! tochemfig :recipe (:host github :repo "gicrisf/tochemfig"))
 #+end_src
 
-*** orgtochemfig
+*** TODO orgtochemfig
 Since I usually write LaTeX code from org-mode, I find annoying to wrap the code in latex exporter all the time. Let's get rid of the problem writing some lispy code.
 
 Siccome devo modificare il comportamento di una funzione preferibilmente senza inficiare il codice della libreria originale, la cosa più immediata sarebbe quella di agganciare il lavoro delle funzioni di tochemfig, per esempio di =tochemfig-default=, per iniziare con la funzione più facile da approcciare.
@@ -2180,7 +2189,7 @@ Un esempio che consente di modificare il valore restituito dalla funzione tutte 
 
 A me interessa che Emacs sappia che quando scrivo in org-mode è necessario l'exporter. Va detto pure che magari io sono già dentro un blocco e allora non voglio aggiungere blocchi dentro blocchi, in a nested fashion. Not at all. I prefer using different function's names: this gives the control to the user.
 
-*** TODO Whisper (Speech to Text)
+*** COMMENT Whisper (Speech to Text)
 I simply find this interesting, so I want to try it.
 
 # :tangle packages.el
@@ -2199,7 +2208,7 @@ I simply find this interesting, so I want to try it.
         whisper-translate nil))
 #+end_src
 
-*** TODO My life in Emacs: EXWM
+*** COMMENT My life in Emacs: EXWM
 I'm a Gnome user, but I think it would be nice to have the EXWM option, especially because I'm interested to study the power consumption.
 
 # :tangle packages.el
@@ -2220,7 +2229,7 @@ Not tangled, because it's experimental.
     ;;  "Holds the process of the running Polybar instance, if any")
 #+end_src
 
-** Daemon
+* Daemon
 Si tratta di una possibilità introdotta con Emacs 23.1 per ridurre i (già bassi) tempi di avvio di ogni finestra. Ottimo se, come me, utilizzate Emacs anche per modificare piccoli file di testo per cui andrebbe benissimo vim o nano.
 
 Per lanciare il daemon da terminale, basta scrivere:
@@ -2274,7 +2283,7 @@ Intendo pubblicare a breve i miei bash dots, /stay tuned/.
 # TODO
 # Per approfondire, rimando ai miei bash dots.
 
-** Conclusions
+* Conclusions
 # ** In conclusione
 # Questo file è in continua trasformazione.
 
