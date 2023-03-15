@@ -412,7 +412,7 @@ markdown          ; writing docs for people to ignore
 ;;nim               ; python + lisp at the speed of c
 ;;nix               ; I hereby declare "nix geht mehr!"
 ;;ocaml             ; an objective camel
-org               ; organize your plain life in plain text
+(org +roam2)               ; organize your plain life in plain text
 ;;php               ; perl's insecure younger brother
 ;;plantuml          ; diagrams for confusing people more
 ;;purescript        ; javascript, but functional
@@ -423,7 +423,7 @@ python            ; beautiful is better than ugly
 ;;rest              ; Emacs as a REST client
 ;;rst               ; ReST in peace
 ;;(ruby +rails)     ; 1.step {|i| p "Ruby is #{i.even? ? 'love' : 'life'}"}
-(rust + lsp)              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
+(rust +lsp)              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
 ;;scala             ; java, but good
 ;;(scheme +guile)   ; a fully conniving family of lisps
 sh                  ; she sells {ba,z,fi}sh shells on the C xor
@@ -654,10 +654,10 @@ Some day I will write what this is about, but I hope the point is pretty easy to
 #+begin_src emacs-lisp :tangle config.el
 ;; Theme switcher functions
 (defvar quick-switch-themes
-  (let ((themes-list (list 'doom-city-lights
-                           'doom-one
-                           'spacemacs-light
-                           'doom-one-light)))
+  (let ((themes-list (list 'lambda-dark-faded
+                           'lambda-dark
+                           'lambda-light
+                           'lambda-light-faded)))
     (nconc themes-list themes-list))
   "A circular list of themes to keep switching between.
 Make sure that the currently enabled theme is at the head of this
@@ -1096,6 +1096,37 @@ defendants.chesscom -> hans: 72 page report of cheating
 #+begin_src emacs-lisp :tangle packages.el
 (package! org-ref)
 #+end_src
+
+*** Zettelkasten
+Ogni volta che devo prendere un appunto, una domanda torna a pungolarmi: dove scriverlo?
+I miei org files crescono sempre di più ed a un certo punto mi sono arreso all'idea che avere un database potrebbe essere d'aiuto.
+Per fortuna, non sono il primo ad essermi posto questi problemi ed esistono già molti strumenti che coprono questa necessità.
+Tipicamente, sono associati al metodo dello zettelkasten.
+Software web-based sono sempre più usati, ma io non voglio abbandonare org-mode. Logseq fornisce supporto per org-mode, ma si tratta di una versione di org-mode con modifiche che la rendono dipendente dalla piattaforma stessa. Non possono essere lette (così come sono) su Emacs. A quel punto, tanto vale usare una versione modificata di Markdown, la portabilità è uguale, i limiti sono gli stessi.
+No, a me piacerebbe sfruttare org-mode al suo meglio, senza sottrarmi alle piacevolezze di una web UI di tanto in tanto.
+Org-roam sembra venirmi incontro perché:
+- Sfrutta SQLite3, che comunque è un database con molti pregi, tra cui una portabilità più elevata rispetto ad altri
+- È già alla seconda versione ed il codice è stato riscritto superando le difficoltà presenti in fase iniziale
+- Ha una community estesa (relativamente a quanto possa essere estesa per uno zettelkasten basato su org-mode)
+- Supporto nativo per delle UI web onde visualizzare i nodi
+
+Essendo il mio primo approccio, sicuramente sto trascurando fattori che emergeranno in seguito, ma mi sembrano buone basi.
+Ho anche letto delle [[https://karl-voit.at/2020/06/14/Zettelkasten-concerns/][critiche]], ad esempio relative al fatto che risulterebbe scomodo mantenere contemporaneamente differenti domini.
+Non mi importa molto, anzi, la mia idea è proprio quella di avere un database per tutto; non mi spiego nemmeno da dove nasca l'esigenza di differenziare. Le performance, forse?
+Installare è stato molto semplice:
+- Bisogna assicurarsi che sia installato SQLite3
+- Su Doom basta aggiungere il modulo =(org +roam2)=
+
+A questo punto, bisogna passare alla configurazione.
+In pratica, grazie a Doom abbiamo già una preconfigurazione, ma dobbiamo comunicare almeno la directory in cui vogliamo tenere i file.
+
+#+begin_src emacs-lisp :tangle config.el
+(setq org-roam-directory "~/roam")
+#+end_src
+
+Non resta che seguire i comandi di Doom Emacs per creare la prima nota: =SPC+n+r+i= per inserire una nota.
+Mentre stiamo scrivendo la nota, con la stessa combinazione si può inserire un link ad una nota.
+Questa risulterà connessa alla prima nel buffer.
 
 *** Backtab
 I should find an alternative way, because this one doesn't work, so I'm de-tangling it.

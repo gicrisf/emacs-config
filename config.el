@@ -55,10 +55,10 @@
 
 ;; Theme switcher functions
 (defvar quick-switch-themes
-  (let ((themes-list (list 'doom-city-lights
-                           'doom-one
-                           'spacemacs-light
-                           'doom-one-light)))
+  (let ((themes-list (list 'lambda-dark-faded
+                           'lambda-dark
+                           'lambda-light
+                           'lambda-light-faded)))
     (nconc themes-list themes-list))
   "A circular list of themes to keep switching between.
 Make sure that the currently enabled theme is at the head of this
@@ -165,6 +165,8 @@ A nil value implies no custom theme should be enabled.")
 (add-to-list 'exec-path "~/.local/bin/")
 
 (require 'ox-json)
+
+(setq org-roam-directory "~/roam")
 
 (require 'elfeed-goodies)
 (elfeed-goodies/setup)
