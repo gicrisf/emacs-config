@@ -68,23 +68,19 @@
 
 (package! org-journal)
 
-(package! wikinforg)
-
-;; (package! helm-org-rifle)
-
 (package! org-web-tools)
-
-(package! ox-hugo :recipe (:host github :repo "gicrisf/ox-zola"))
-
-(package! citeproc)
-
-(package! ob-d2 :recipe (:host github :repo "dmacvicar/ob-d2"))
-
-(package! ox-json)
 
 (package! org-ref)
 
 (package! citar)
+
+(package! citeproc)
+
+(package! wikinforg)
+
+(package! ob-d2 :recipe (:host github :repo "dmacvicar/ob-d2"))
+
+(package! ox-json)
 
 (package! elfeed-goodies)
 
@@ -94,11 +90,13 @@
 
 (package! pyvenv)
 
+(package! racer :disable t)
+
+(package! ox-hugo :recipe (:host github :repo "gicrisf/ox-zola"))
+
 (package! eltweet :recipe (:host github :repo "gicrisf/eltweet"))
 
 (package! mastodon)
-
-(package! racer :disable t)
 
 (package! info-colors)
 

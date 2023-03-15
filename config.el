@@ -18,6 +18,18 @@
 (setq user-full-name "gicrisf"
       user-mail-address "giovanni.crisalfi@protonmail.com")
 
+;; This determines the style of line numbers in effect. If set to `nil', line
+;; numbers are disabled. For relative line numbers, set this to `relative'.
+(setq display-line-numbers-type t)
+
+;; Maximize the window upon startup
+;; TODO testing this one
+(setq initial-frame-alist '((top . 1) (left . 1) (width . 114) (height . 32)))
+
+;; Transparency
+(set-frame-parameter (selected-frame)'alpha '(99 . 100))
+(add-to-list 'default-frame-alist'(alpha . (99 . 100)))
+
 ;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
 ;; are the three important ones:
 ;;
@@ -34,7 +46,7 @@
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-city-lights)
+(setq doom-theme 'lambda-dark)
 
 ;; Here are some additional functions/macros that could help you configure Doom:
 ;;
@@ -83,18 +95,6 @@ A nil value implies no custom theme should be enabled.")
 (map! :leader
       :desc "Quick toggle theme" "t t" #'toggle-theme)
 
-;; This determines the style of line numbers in effect. If set to `nil', line
-;; numbers are disabled. For relative line numbers, set this to `relative'.
-(setq display-line-numbers-type t)
-
-;; Maximize the window upon startup
-;; TODO testing this one
-(setq initial-frame-alist '((top . 1) (left . 1) (width . 114) (height . 32)))
-
-;; Transparency
-(set-frame-parameter (selected-frame)'alpha '(99 . 100))
-(add-to-list 'default-frame-alist'(alpha . (99 . 100)))
-
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/org/")
@@ -132,22 +132,6 @@ A nil value implies no custom theme should be enabled.")
 (setq org-journal-file-format "%Y-%m.org")
 (setq org-journal-file-type 'monthly)
 
-;; (custom-set-variables '(wikinforg-wikipedia-edition-code "it"))
-
-;; Generate ORG/Zola frontmatter
-;; TODO Section management
-;; MAYBE Add hook to org file IF hugo_base_dir or hugo_section is present at top
-(defun org-zola-frontmatter (slug)
-  "Insert org-mode properties under a paragraph to setup ox-hugo/zola exports"
-  (interactive "sEnter slug: ")
-  (insert ":PROPERTIES:\n"
-          (concat ":EXPORT_HUGO_SECTION: 2022/" slug "\n")
-          ":EXPORT_FILE_NAME: index\n"
-          ":END:\n"))
-
-;; add "CLOSED" when an item is set with DONE state
-(setq org-log-done 'time)
-
 ;; org-capture
 (setq org-capture-templates `(
 	("p" "Protocol" entry (file+headline ,(concat org-directory "notes.org") "Inbox")
@@ -178,6 +162,13 @@ A nil value implies no custom theme should be enabled.")
 
 ;; Support for Typescript/React
 (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode))
+
+;; (setq racer-rust-src-path "~/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library")
+
+(setq rustic-lsp-server 'rust-analyzer)
+
+(after! lsp-rust
+  (setq lsp-rust-server 'rust-analyzer))
 
 (add-hook 'dired-mode-hook 'org-download-enable)
 
@@ -214,6 +205,20 @@ A nil value implies no custom theme should be enabled.")
           "\) %}"
           "\n"
           "{% end %}"))
+
+;; Generate ORG/Zola frontmatter
+;; TODO Section management
+;; MAYBE Add hook to org file IF hugo_base_dir or hugo_section is present at top
+(defun org-zola-frontmatter (slug)
+  "Insert org-mode properties under a paragraph to setup ox-hugo/zola exports"
+  (interactive "sEnter slug: ")
+  (insert ":PROPERTIES:\n"
+          (concat ":EXPORT_HUGO_SECTION: 2022/" slug "\n")
+          ":EXPORT_FILE_NAME: index\n"
+          ":END:\n"))
+
+;; add "CLOSED" when an item is set with DONE state
+(setq org-log-done 'time)
 
 (setq mastodon-instance-url "https://fosstodon.org"
       mastodon-active-user "gicrisf")
@@ -263,13 +268,6 @@ by using nxml's indentation rules."
   (message "Ah, much better!"))
 
 (setq which-key-idle-delay 0.5) ;; I need the help, I really do
-
-;; (setq racer-rust-src-path "~/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library")
-
-(setq rustic-lsp-server 'rust-analyzer)
-
-(after! lsp-rust
-  (setq lsp-rust-server 'rust-analyzer))
 
 (after! org
   ;; Import ox-latex to get org-latex-classes and other funcitonality

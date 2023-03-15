@@ -555,6 +555,7 @@ In the end, we get to the actual configuration.
 
 *** Who am I?
 # *** Chi sono?
+Hi there, I am Giovanni Crisalfi.
 
 #+begin_src emacs-lisp :tangle config.el
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
@@ -563,7 +564,24 @@ In the end, we get to the actual configuration.
       user-mail-address "giovanni.crisalfi@protonmail.com")
 #+end_src
 
-*** Font
+*** Emacs UI
+Just generic UI settings.
+
+#+begin_src emacs-lisp :tangle config.el
+;; This determines the style of line numbers in effect. If set to `nil', line
+;; numbers are disabled. For relative line numbers, set this to `relative'.
+(setq display-line-numbers-type t)
+
+;; Maximize the window upon startup
+;; TODO testing this one
+(setq initial-frame-alist '((top . 1) (left . 1) (width . 114) (height . 32)))
+
+;; Transparency
+(set-frame-parameter (selected-frame)'alpha '(99 . 100))
+(add-to-list 'default-frame-alist'(alpha . (99 . 100)))
+#+end_src
+
+**** Fonts
 
 #+begin_src emacs-lisp :tangle config.el
 ;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
@@ -585,8 +603,7 @@ In the end, we get to the actual configuration.
 
 Since I use Emacs both on a laptop and a desktop computer, I wish I could export the same configuration with simple variations to adjust it to the different hardware. In this case, just changing the font would be nice. I still hadn't work on this, but I have to.
 
-*** Temi
-**** Default
+**** Default theme
 First of all, let's select a default theme.
 # Innanzitutto, selezioniamo un tema di default.
 
@@ -594,7 +611,7 @@ First of all, let's select a default theme.
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'doom-city-lights)
+(setq doom-theme 'lambda-dark)
 #+end_src
 
 I'm loving City Lights right now and [[https://github.com/gicrisf/qute-city-lights][I realized a City Lights theme for qutebrowser]] too because I wanted to keep everything so uniform and polished.
@@ -626,7 +643,7 @@ I leave those default comments here; they're pretty helpful and concise.
 ;; they are implemented.
 #+end_src
 
-**** Spacemacs
+**** Spacemacs themes
 # Sono affezionato ai temi di spacemacs. Uso specialmente quello chiaro, se ho bisogno di sovrailluminare lo schermo.
 I'm emotionally attached to the Spacemacs' themes. Sometimes I make use of =spacemacs-light=, usually when the environment is brighter than usual (e.g. I'm trying to read outside on a sunny day).
 
@@ -637,12 +654,12 @@ I'm emotionally attached to the Spacemacs' themes. Sometimes I make use of =spac
 I would like to make use of Nano-Emacs' colors, but by the moment it does look harder then it seems. Henrik Lissner, Doom Emacs' creator, said he would have made a specific module for this integration, but of course it's not an immediate priority, so I think I'll wait with hope.
 # Mi piacerebbe molto avere a disposizione anche i colori di nano-emacs, ma per il momento sembra sia una cosa più complessa del previsto. Henrik Lissner ha detto un paio di volte che avrebbe intenzione di dedicare un intero modulo a questa integrazione, ma non sembra una priorità.
 
-**** Catppuccin
+**** Catppuccin theme
 #+begin_src emacs-lisp :tangle packages.el
 (package! catppuccin :recipe (:host github :repo "catppuccin/emacs"))
 #+end_src
 
-**** Lambda Themes
+**** Lambda themes
 #+begin_src emacs-lisp :tangle packages.el
 (package! lambda-themes :recipe (:host github :repo "lambda-emacs/lambda-themes"))
 #+end_src
@@ -683,24 +700,7 @@ A nil value implies no custom theme should be enabled.")
       :desc "Quick toggle theme" "t t" #'toggle-theme)
 #+end_src
 
-*** UI
-Just generic UI settings.
-
-#+begin_src emacs-lisp :tangle config.el
-;; This determines the style of line numbers in effect. If set to `nil', line
-;; numbers are disabled. For relative line numbers, set this to `relative'.
-(setq display-line-numbers-type t)
-
-;; Maximize the window upon startup
-;; TODO testing this one
-(setq initial-frame-alist '((top . 1) (left . 1) (width . 114) (height . 32)))
-
-;; Transparency
-(set-frame-parameter (selected-frame)'alpha '(99 . 100))
-(add-to-list 'default-frame-alist'(alpha . (99 . 100)))
-#+end_src
-
-*** Org-mode
+*** Org-mode essentials
 #+begin_quote
 Your life in plain text
 #+end_quote
@@ -752,7 +752,7 @@ Org-download-clipboard is bound to =SPC m a p= in org-mode.
 
 # =org-download-clipboard= è legato a =SPC m a p= [[https://github.com/doomemacs/doomemacs/issues/3830#issuecomment-679925113][dal 25 agosto 2020]] in Doom Emacs.
 
-*** Flashcards
+*** Spaced repetition
 **** Org drill
 # Una volta usavo Anki, ora mi sono chiesto perché usare una GUI quando posso semplicemente scrivere tutto il necessario.
 I occasionally use this package, but I prefer writing my text here, then exporting my cards in Anki, so I mostly do that now.
@@ -817,93 +817,17 @@ Configure the keybindings and some parameters.
 (setq org-journal-file-type 'monthly)
 #+end_src
 
-*** Wikinforg
-Get Wikipedia data directly on org-mode.
-# Richiama informazioni da Wikipedia direttamente su org.
-
-#+begin_src emacs-lisp :tangle packages.el
-(package! wikinforg)
-#+end_src
-
-**** Italian wikipedia
-Spesso mi servono i contenuti in italiano.
-L'ideale sarebbe scegliere per ogni query.
-
-#+begin_src emacs-lisp :tangle config.el
-;; (custom-set-variables '(wikinforg-wikipedia-edition-code "it"))
-#+end_src
-
-Purtroppo, i risultati che ottengo da questa versione sono poco accurati.
-Per il momento la disabiliterò.
-
-*** Ricerca veloce
-# Per il momento ne faccio a meno per lo stesso motivo per cui ho disabilitato deft (vedi più avanti).
-I'm living without right now for similar reasons on why I disabled DEFT (see later); so, I leave the line commented.
-
-#+begin_src emacs-lisp :tangle packages.el
-;; (package! helm-org-rifle)
-#+end_src
-
 *** Org Web Tools
+From [[https://github.com/alphapapa/org-web-tools][the README]]:
 
-Install the package.
+#+begin_quote
+This file contains library functions and commands useful for retrieving web page content and processing it into Org-mode content.
+#+end_quote
+
+To install the package:
 
 #+begin_src emacs-lisp :tangle packages.el
 (package! org-web-tools)
-#+end_src
-
-*** Zola on org-mode :it:
-# Exporter
-L'exporter per Zola è un pacchetto che sto mantenendo io, quindi capita spesso che io debba testare delle modifiche in locale. =package!= gestisce i download, quindi in teoria non dovrebbe essere impiegato per la gestione di file in locale, ma [[https://github.com/doomemacs/doomemacs/issues/3842#issuecomment-681039894][Henrik Lissner consiglia di usare comunque la macro perché è stata adattata anche a questo genere di situazioni]].
-
-Aggiunge:
-
-#+begin_quote
-Note: with =:no-byte-compile t=, you don't have to run doom sync every time you make a change to the package.
-#+end_quote
-
-Così:
-
-#+begin_src emacs-lisp
-(package! ox-hugo :recipe (:local-repo "lisp/ox-zola"))
-#+end_src
-
-Peccato che a me dia "runtime error":
-
-#+begin_quote
-Details: ((:private . packages) "/home/cromo/.doom.d/packages.el" (wrong-type-argument listp (doom-package-error "ox-hugo" . "Keyword argument :no-byte-compile not one of (:local-repo :files :flavor :build :pre-build :post-build :includes :type :repo :host :branch :protocol :remote :nonrecursive :fork :depth :source :inherit)")))
-#+end_quote
-
-Non ho ben capito perché (che sia [[https://github.com/doomemacs/doomemacs/issues/4142#issuecomment-715532212][questo il problema]]? non mi pare...), ma ho risolto più brutalmente. Innanzitutto installo il codice dalla mia repo.
-
-#+begin_src emacs-lisp :tangle packages.el
-(package! ox-hugo :recipe (:host github :repo "gicrisf/ox-zola"))
-#+end_src
-
-In secondo luogo, faccio le modifiche in locale e lancio =emacs-lisp-byte-compile-and-load= tutte le volte che modifico qualcosa. Finché non riavvio Emacs, è possibile testare quanto si vuole. Forse un po' più scomodo, ma è un approccio che fa il suo sporco lavoro.
-
-# Frontmatter
-Esportare da org a Hugo/Zola Markdown richiede la scrittura di un =:PROPERTIES:= frontmatter.
-Ma io sono pigro e non mi va di riscrivere ogni volta lo scaffold del frontmatter, quindi ecco una funzione ausiliaria.
-
-#+begin_src emacs-lisp :tangle config.el
-;; Generate ORG/Zola frontmatter
-;; TODO Section management
-;; MAYBE Add hook to org file IF hugo_base_dir or hugo_section is present at top
-(defun org-zola-frontmatter (slug)
-  "Insert org-mode properties under a paragraph to setup ox-hugo/zola exports"
-  (interactive "sEnter slug: ")
-  (insert ":PROPERTIES:\n"
-          (concat ":EXPORT_HUGO_SECTION: 2022/" slug "\n")
-          ":EXPORT_FILE_NAME: index\n"
-          ":END:\n"))
-#+end_src
-
-Sempre al fine di automatizzare la produzione dei metadati, meglio automatizzare l'inserimento del timestamp con questa funzione org-mode:
-
-#+begin_src emacs-lisp :tangle config.el
-;; add "CLOSED" when an item is set with DONE state
-(setq org-log-done 'time)
 #+end_src
 
 *** Org-capture :it:
@@ -946,14 +870,43 @@ $ update-desktop-database ~/.local/share/applications/
 #+end_src
 
 *** Citations
-**** Use CSL format files
+Install Org-ref:
+#+begin_src emacs-lisp :tangle packages.el
+(package! org-ref)
+#+end_src
+
+Install Citar:
+#+begin_src emacs-lisp :tangle packages.el
+(package! citar)
+#+end_src
+
+Use CSL format files.
 Export processor to use format files written in Citation Style Language (=.csl=). This isn't latex-only, so I should be able to use it with Libre Office and HTML too, if needed.
 
 #+begin_src emacs-lisp :tangle packages.el
 (package! citeproc)
 #+end_src
 
-**** TODO Org Bibliography :it:
+**** Citing Wikipedia
+Get Wikipedia data directly on org-mode.
+# Richiama informazioni da Wikipedia direttamente su org.
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! wikinforg)
+#+end_src
+
+***** COMMENT Italian wikipedia :it:
+Spesso mi servono i contenuti in italiano.
+L'ideale sarebbe scegliere per ogni query.
+
+#+begin_src emacs-lisp :tangle config.el
+;; (custom-set-variables '(wikinforg-wikipedia-edition-code "it"))
+#+end_src
+
+Purtroppo, i risultati che ottengo da questa versione sono poco accurati.
+Per il momento la disabiliterò.
+
+**** COMMENT Org Bibliography :it:
 Tentativo di literate bibliography con org-mode basato su =org-bib-mode=, di Nicolas P. Rougier (il creatore di NANO Emacs).
 
 Innanzitutto devo installare le dipendenze dal suo profilo Github.
@@ -1083,24 +1036,13 @@ defendants.mc -> hans: Lost then withdrew with accusations
 defendants.chesscom -> hans: 72 page report of cheating
 #+end_src
 
-*** Org export to JSON
+*** Org JSON export
 #+begin_src emacs-lisp :tangle packages.el
 (package! ox-json)
 #+end_src
 
 #+begin_src emacs-lisp :tangle config.el
 (require 'ox-json)
-#+end_src
-
-*** Citations on Emacs
-Org-ref:
-#+begin_src emacs-lisp :tangle packages.el
-(package! org-ref)
-#+end_src
-
-Citar:
-#+begin_src emacs-lisp :tangle packages.el
-(package! citar)
 #+end_src
 
 *** Zettelkasten
@@ -1133,26 +1075,6 @@ In pratica, grazie a Doom abbiamo già una preconfigurazione, ma dobbiamo comuni
 Non resta che seguire i comandi di Doom Emacs per creare la prima nota: =SPC+n+r+i= per inserire una nota.
 Mentre stiamo scrivendo la nota, con la stessa combinazione si può inserire un link ad una nota.
 Questa risulterà connessa alla prima nel buffer.
-
-*** Backtab
-I should find an alternative way, because this one doesn't work, so I'm de-tangling it.
-
-# :tangle config.el
-#+begin_src emacs-lisp
-;; Source: [[https://stackoverflow.com/questions/23692879/emacs24-backtab-is-undefined-how-to-define-this-shortcut-key]]
-(global-set-key (kbd "<backtab>") 'un-indent-by-removing-4-spaces)
-(defun un-indent-by-removing-4-spaces ()
-  "remove 4 spaces from beginning of of line"
-  (interactive)
-  (save-excursion
-    (save-match-data
-      (beginning-of-line)
-      ;; get rid of tabs at beginning of line
-      (when (looking-s "^\\at-+")
-        (untabify (match-beginning 0) (match-end 0)))
-      (when (looking-at "^    ")
-        (replace-match "")))))
-#+end_src
 
 *** Emacs Feed Configuration
 :PROPERTIES:
@@ -1330,6 +1252,125 @@ Virtualenv support.
 (package! pyvenv)
 #+end_src
 
+*** Rust :it:
+**** Semantic analysis
+[[https://robert.kra.hn/posts/rust-emacs-setup/][Come scrive Robert Krahn]],
+
+#+begin_quote
+Racer used to be the best option for getting IDE features (code navigation etc) into Emacs. It is a non-LSP solution which is still faster than RLS and rust-analyzer. However, the number of features especially around code completion are not up to par with rust-analyzer anymore.
+#+end_quote
+
+Il consiglio, quindi, è quello di passare direttamente al paragrafo successivo, ma chi proprio desiderasse Racer (che era piacevole), lascio qui tutte le istruzioni del caso.
+
+***** Racer
+Dopo avere abilitato =rust= in =init.el=, Doom Emacs lamentava l'introvabilità del binario di Racer:
+
+#+begin_quote
+Please set ‘racer-rust-src-path’ or ‘RUST_SRC_PATH’
+#+end_quote
+
+Il primo problema derivava non tanto dal fatto che fosse scorretta la variabile =racer-rust-src-path=, ma che proprio non esistesse alcuna =src-path= perché bisognava prima che installarla:
+
+#+begin_src bash
+rustup component add rust-src
+#+end_src
+
+Ma si ottiene un altro errore:
+#+begin_quote
+eldoc error: (user-error /.../.cargo/bin/racer exited with 127. ‘M-x racer-debug’ for more info)
+#+end_quote
+
+Questo perché manca racer, che [[https://lib.rs/crates/racer][va installato a parte]].
+Siccome Racer risiede nella nightly toolchain, installiamo prima quella:
+#+begin_src bash
+rustup toolchain install nightly
+#+end_src
+
+Poi aggiungiamo gli strumenti da sviluppatore =rustc-dev=:
+#+begin_src bash
+rustup component add rustc-dev --toolchain=nightly
+#+end_src
+
+Assicuriamoci che anche Cargo sia già installato e lanciamo:
+#+begin_src bash
+cargo +nightly install racer
+#+end_src
+
+[[https://github.com/racer-rust/racer/issues/1181][La compilazione potrebbe fallire]], ma bisogna tenere a mente è che Racer non è al momento mantenuto:
+
+#+begin_quote
+Racer is not actively developped now. Please consider using newer software such as rust-analyzer.
+#+end_quote
+
+# Per il momento Racer funziona egregiamente, ma successivamente potrei voler dare un occhio anche a [[https://rust-analyzer.github.io/][rust-analyzer]].
+
+Emacs potrebbe non individuare subito Racer, nonostante l'installazione.
+
+#+name: racer-path
+#+begin_src emacs-lisp
+"~/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library"
+#+end_src
+
+Quick fix per consentire ad Emacs di trovare i binari di Racer:
+
+#+begin_src emacs-lisp :tangle config.el :noweb no-export
+;; (setq racer-rust-src-path <<racer-path>>)
+#+end_src
+
+Io non uso più Racer, ma eldoc si ostina a farlo, dando sempre questo fastidiosissimo errore:
+#+begin_quote
+eldoc error: (user-error /home/cromo/.cargo/bin/racer exited with 127. ‘M-x racer-debug’ for more info)
+#+end_quote
+
+[[https://github.com/doomemacs/doomemacs/issues/2271#issuecomment-569775470][Spiega @hlissner]]:
+
+#+begin_quote
+The =:lang rust= module doesn't use =rust-mode=, it uses [[https://github.com/brotzeit/rustic][rustic-mode]], a fork of =rust-mode=.
+
+When =+lsp= is not enabled, the module uses =racer= to provide code completion, type info in the minibuffer (eldoc) and other features, but the racer package depends on =rust-mode=, so it must be installed (but doom still doesn't use it directly).
+#+end_quote
+
+Bisogna perciò evitare che Racer sia avviato tutte le volte che LSP non è attivo. Come ricordato da [[https://www.reddit.com/r/DoomEmacs/comments/slb92w/comment/hvrfkax/?utm_source=share&utm_medium=web2x&context=3][@subderisorious]], per fortuna Doom ci consente di disabilitare un pacchetto della configurazione di default semplicemente richiamando la macro =package!= in =packages.el=.
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! racer :disable t)
+#+end_src
+
+***** rust-analyzer
+Circa sei mesi dopo, è tempo di dare un'occhiata a rust-analyzer.
+Dal [[https://rust-analyzer.github.io/manual.html#installation][manuale]]:
+
+#+begin_quote
+At its core, rust-analyzer is a library for semantic analysis of Rust code as it changes over time. This manual focuses on a specific usage of the library — running it as part of a server that implements the Language Server Protocol (LSP). The LSP allows various code editors, like VS Code, Emacs or Vim, to implement semantic features like completion or goto definition by talking to an external language server process.
+#+end_quote
+
+Anche questa volta, possiamo usare =rustup=:
+
+#+begin_src bash
+rustup component add rust-src
+#+end_src
+
+Io sto su Arch, quindi installo con pacman:
+
+#+begin_src bash
+sudo pacman -S rust-analyzer
+#+end_src
+
+È il caso di specificare quale server intendiamo utilizzare, altrimenti Rustic potrebbe fraintendere o optare per Racer:
+
+#+begin_src emacs-lisp :tangle config.el
+(setq rustic-lsp-server 'rust-analyzer)
+#+end_src
+
+Questo dovrebbe essere sufficiente, ma per essere proprio sicuri:
+
+#+begin_src emacs-lisp :tangle config.el
+(after! lsp-rust
+  (setq lsp-rust-server 'rust-analyzer))
+#+end_src
+
+Lanciamo =lsp= in un buffer con Rust ed assistiamo al compiersi della magia.
+
 *** Dired
 Drag and drop to dired:
 
@@ -1337,11 +1378,11 @@ Drag and drop to dired:
 (add-hook 'dired-mode-hook 'org-download-enable)
 #+end_src
 
-*** Markdown :it:
+*** Zola :it:
 Funzioni ausiliarie che ho scritto per facilitarmi il lavoro quando scrivevo in Markdown per Zola.
 Come già spiegato sopra, ora esporto da org-mode, quindi l'utilità di queste funzioni è venuta meno, ma occasionalmente mi capita di impiegarle, quindi le lascio comunque.
 
-**** TOML frontmatter (Zola)
+**** Markdown TOML frontmatter
 Immaginate di voler generare un nuovo file Markdown per il vostro sito web.
 In base al tipo di generatore, questo potrà avere bisogno di un frontespizio in TOML o in YAML, magari. Si tratta di pochi caratteri, ma scriverli di volta in volta può risultare un po' frustrante, soprattutto se si scrivono molti pezzi.
 
@@ -1408,7 +1449,7 @@ Con la funzione =add-hook= possiamo agganciare il lancio della nostra funzione a
 
 Da ora in avanti, basterà aprire un file Markdown vuoto perché Emacs inserisca automaticamente il frontespizio.
 
-**** Shortcode (Zola)
+**** Markdown shortcode
 Con lo stesso approccio, si possono anche ottenere delle funzioni per aggiungere degli shortcode molto usati nel corpo del testo e persino associare delle combinazioni di tasti ad esse!
 
 #+begin_src emacs-lisp :tangle config.el
@@ -1427,6 +1468,60 @@ Con lo stesso approccio, si possono anche ottenere delle funzioni per aggiungere
 #+end_src
 
 Uniamoci, confratelli, nell'amore per Emacs.
+
+**** Org exporter
+L'exporter per Zola è un pacchetto che sto mantenendo io, quindi capita spesso che io debba testare delle modifiche in locale. =package!= gestisce i download, quindi in teoria non dovrebbe essere impiegato per la gestione di file in locale, ma [[https://github.com/doomemacs/doomemacs/issues/3842#issuecomment-681039894][Henrik Lissner consiglia di usare comunque la macro perché è stata adattata anche a questo genere di situazioni]].
+
+Aggiunge:
+
+#+begin_quote
+Note: with =:no-byte-compile t=, you don't have to run doom sync every time you make a change to the package.
+#+end_quote
+
+Così:
+
+#+begin_src emacs-lisp
+(package! ox-hugo :recipe (:local-repo "lisp/ox-zola"))
+#+end_src
+
+Peccato che a me dia "runtime error":
+
+#+begin_quote
+Details: ((:private . packages) "/home/cromo/.doom.d/packages.el" (wrong-type-argument listp (doom-package-error "ox-hugo" . "Keyword argument :no-byte-compile not one of (:local-repo :files :flavor :build :pre-build :post-build :includes :type :repo :host :branch :protocol :remote :nonrecursive :fork :depth :source :inherit)")))
+#+end_quote
+
+Non ho ben capito perché (che sia [[https://github.com/doomemacs/doomemacs/issues/4142#issuecomment-715532212][questo il problema]]? non mi pare...), ma ho risolto più brutalmente. Innanzitutto installo il codice dalla mia repo.
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! ox-hugo :recipe (:host github :repo "gicrisf/ox-zola"))
+#+end_src
+
+In secondo luogo, faccio le modifiche in locale e lancio =emacs-lisp-byte-compile-and-load= tutte le volte che modifico qualcosa. Finché non riavvio Emacs, è possibile testare quanto si vuole. Forse un po' più scomodo, ma è un approccio che fa il suo sporco lavoro.
+
+# Frontmatter
+Esportare da org a Hugo/Zola Markdown richiede la scrittura di un =:PROPERTIES:= frontmatter.
+Ma io sono pigro e non mi va di riscrivere ogni volta lo scaffold del frontmatter, quindi ecco una funzione ausiliaria.
+
+#+begin_src emacs-lisp :tangle config.el
+;; Generate ORG/Zola frontmatter
+;; TODO Section management
+;; MAYBE Add hook to org file IF hugo_base_dir or hugo_section is present at top
+(defun org-zola-frontmatter (slug)
+  "Insert org-mode properties under a paragraph to setup ox-hugo/zola exports"
+  (interactive "sEnter slug: ")
+  (insert ":PROPERTIES:\n"
+          (concat ":EXPORT_HUGO_SECTION: 2022/" slug "\n")
+          ":EXPORT_FILE_NAME: index\n"
+          ":END:\n"))
+#+end_src
+
+Sempre al fine di automatizzare la produzione dei metadati, meglio automatizzare l'inserimento del timestamp con questa funzione org-mode:
+
+#+begin_src emacs-lisp :tangle config.el
+;; add "CLOSED" when an item is set with DONE state
+(setq org-log-done 'time)
+#+end_src
+
 *** Twitter :it:
 Questo piccolo pacchetto (che conto di estendere presto) nasce per assolvere ad una funzione molto semplice: citare i tweet nel mio blog.
 Ne racconto qui:
@@ -1523,124 +1618,6 @@ From [[https://tecosaur.github.io/emacs-config/config.html#which-key][From tecos
 (setq which-key-idle-delay 0.5) ;; I need the help, I really do
 #+end_src
 
-*** Semantic analysis :it:
-**** Rust (Racer)
-[[https://robert.kra.hn/posts/rust-emacs-setup/][Come scrive Robert Krahn]],
-
-#+begin_quote
-Racer used to be the best option for getting IDE features (code navigation etc) into Emacs. It is a non-LSP solution which is still faster than RLS and rust-analyzer. However, the number of features especially around code completion are not up to par with rust-analyzer anymore.
-#+end_quote
-
-Il consiglio, quindi, è quello di passare direttamente al paragrafo successivo, ma chi proprio desiderasse Racer (che era piacevole), lascio qui tutte le istruzioni del caso.
-
-Dopo avere abilitato =rust= in =init.el=, Doom Emacs lamentava l'introvabilità del binario di Racer:
-
-#+begin_quote
-Please set ‘racer-rust-src-path’ or ‘RUST_SRC_PATH’
-#+end_quote
-
-Il primo problema derivava non tanto dal fatto che fosse scorretta la variabile =racer-rust-src-path=, ma che proprio non esistesse alcuna =src-path= perché bisognava prima che installarla:
-
-#+begin_src bash
-rustup component add rust-src
-#+end_src
-
-Ma si ottiene un altro errore:
-#+begin_quote
-eldoc error: (user-error /.../.cargo/bin/racer exited with 127. ‘M-x racer-debug’ for more info)
-#+end_quote
-
-Questo perché manca racer, che [[https://lib.rs/crates/racer][va installato a parte]].
-Siccome Racer risiede nella nightly toolchain, installiamo prima quella:
-#+begin_src bash
-rustup toolchain install nightly
-#+end_src
-
-Poi aggiungiamo gli strumenti da sviluppatore =rustc-dev=:
-#+begin_src bash
-rustup component add rustc-dev --toolchain=nightly
-#+end_src
-
-Assicuriamoci che anche Cargo sia già installato e lanciamo:
-#+begin_src bash
-cargo +nightly install racer
-#+end_src
-
-[[https://github.com/racer-rust/racer/issues/1181][La compilazione potrebbe fallire]], ma bisogna tenere a mente è che Racer non è al momento mantenuto:
-
-#+begin_quote
-Racer is not actively developped now. Please consider using newer software such as rust-analyzer.
-#+end_quote
-
-# Per il momento Racer funziona egregiamente, ma successivamente potrei voler dare un occhio anche a [[https://rust-analyzer.github.io/][rust-analyzer]].
-
-Emacs potrebbe non individuare subito Racer, nonostante l'installazione.
-
-#+name: racer-path
-#+begin_src emacs-lisp
-"~/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library"
-#+end_src
-
-Quick fix per consentire ad Emacs di trovare i binari di Racer:
-
-#+begin_src emacs-lisp :tangle config.el :noweb no-export
-;; (setq racer-rust-src-path <<racer-path>>)
-#+end_src
-
-Io non uso più Racer, ma eldoc si ostina a farlo, dando sempre questo fastidiosissimo errore:
-#+begin_quote
-eldoc error: (user-error /home/cromo/.cargo/bin/racer exited with 127. ‘M-x racer-debug’ for more info)
-#+end_quote
-
-[[https://github.com/doomemacs/doomemacs/issues/2271#issuecomment-569775470][Spiega @hlissner]]:
-
-#+begin_quote
-The =:lang rust= module doesn't use =rust-mode=, it uses [[https://github.com/brotzeit/rustic][rustic-mode]], a fork of =rust-mode=.
-
-When =+lsp= is not enabled, the module uses =racer= to provide code completion, type info in the minibuffer (eldoc) and other features, but the racer package depends on =rust-mode=, so it must be installed (but doom still doesn't use it directly).
-#+end_quote
-
-Bisogna perciò evitare che Racer sia avviato tutte le volte che LSP non è attivo. Come ricordato da [[https://www.reddit.com/r/DoomEmacs/comments/slb92w/comment/hvrfkax/?utm_source=share&utm_medium=web2x&context=3][@subderisorious]], per fortuna Doom ci consente di disabilitare un pacchetto della configurazione di default semplicemente richiamando la macro =package!= in =packages.el=.
-
-#+begin_src emacs-lisp :tangle packages.el
-(package! racer :disable t)
-#+end_src
-
-**** Rust (rust-analyzer)
-Circa sei mesi dopo, è tempo di dare un'occhiata a rust-analyzer.
-Dal [[https://rust-analyzer.github.io/manual.html#installation][manuale]]:
-
-#+begin_quote
-At its core, rust-analyzer is a library for semantic analysis of Rust code as it changes over time. This manual focuses on a specific usage of the library — running it as part of a server that implements the Language Server Protocol (LSP). The LSP allows various code editors, like VS Code, Emacs or Vim, to implement semantic features like completion or goto definition by talking to an external language server process.
-#+end_quote
-
-Anche questa volta, possiamo usare =rustup=:
-
-#+begin_src bash
-rustup component add rust-src
-#+end_src
-
-Io sto su Arch, quindi installo con pacman:
-
-#+begin_src bash
-sudo pacman -S rust-analyzer
-#+end_src
-
-È il caso di specificare quale server intendiamo utilizzare, altrimenti Rustic potrebbe fraintendere o optare per Racer:
-
-#+begin_src emacs-lisp :tangle config.el
-(setq rustic-lsp-server 'rust-analyzer)
-#+end_src
-
-Questo dovrebbe essere sufficiente, ma per essere proprio sicuri:
-
-#+begin_src emacs-lisp :tangle config.el
-(after! lsp-rust
-  (setq lsp-rust-server 'rust-analyzer))
-#+end_src
-
-Lanciamo =lsp= in un buffer con Rust ed assistiamo al compiersi della magia.
-
 *** Curriculum Vitae :it:
 # TODO make a literate CV
 Trovandomi costretto, ancora una volta, a scrivere un CV, mi sono detto, ancora una volta, quanto fosse necessario trovare un modo perché fosse l'ultima.
@@ -1720,21 +1697,6 @@ Qui uno screenshot catturato con il tema city-lights.
 
 #+DOWNLOADED: screenshot @ 2022-08-10 13:34:44
 [[file:Configurare_Emacs_in_Org-mode/2022-08-10_13-34-44_screenshot.png]]
-
-*** Deft
-Set directory, extension to search for and explicitly say you want to search recursively in the subfolders.
-
-# :tangle config.el
-#+begin_src emacs-lisp
-;; Not using deft rn
-(setq deft-directory "~/org"
-      deft-extensions '("org" "txt"))
-(setq deft-recursive t)
-#+end_src
-
-The main function is too heavy and I don't really need using all deft features.
-I'm detangling this block because I prefer simply using =SPC n s= for the moment (notes/search note).
-# La funzione principale per me è troppo lenta, oltre ad essere fin troppo fornita. Per ora disabilito tutto, perché preferisco usare =SPC+n+s= (notes/search note).
 
 *** Dashboard :it:
 **** Open org configuration (SPC o c)
@@ -1940,8 +1902,7 @@ A weebish example (not tangled code):
 (setq +doom-dashboard-ascii-banner-fn #'my-weebery-is-always-greater)
 #+end_src
 
-*** Zen mode
-**** Serif
+*** COMMENT Zen mode
 # Usiamo un font seriffato:
 Using a serif font for Zen mode:
 
@@ -1953,22 +1914,26 @@ Using a serif font for Zen mode:
 
 Detangled because I don't like this anymore. Maybe I should look for a totally different font with Zen mode.
 
-*** Weather :it:
-[[https://github.com/bcbcarl/emacs-wttrin/][Esiste già un frontend per Emacs]], ma è da almeno cinque anni che non dà segni di manutenzione. Quindi [[https://github.com/gicrisf/emacs-wttrin][lavorerò sul mio fork]] (tanto avevo comunque intenzione di aggiungere funzioni supplementari, avrei probabilmente forkato a prescindere).
+*** Weather
+# [[https://github.com/bcbcarl/emacs-wttrin/][Esiste già un frontend per Emacs]], ma è da almeno cinque anni che non dà segni di manutenzione. Quindi [[https://github.com/gicrisf/emacs-wttrin][lavorerò sul mio fork]] (tanto avevo comunque intenzione di aggiungere funzioni supplementari, avrei probabilmente forkato a prescindere).
+[[https://github.com/bcbcarl/emacs-wttrin/][There is already a frontend for Emacs]], but it has not shown any signs of maintenance for at least five years. Therefore, [[https://github.com/gicrisf/emacs-wttrin][I will work on my fork]] (since I intended to add additional functions anyway, I would have probably forked it regardless).
 
-Innanzitutto aggiungiamo questo pacchetto:
+# Innanzitutto aggiungiamo questo pacchetto:
+First, let's add this package:
 
 #+begin_src emacs-lisp :tangle packages.el :noweb yes
 (package! wttrin :recipe (:host github :repo "gicrisf/emacs-wttrin"))
 #+end_src
 
-Qui lo configuro secondo le mie necessità:
+# Qui lo configuro secondo le mie necessità:
+Here, I configure it according to my needs:
+
 #+begin_src emacs-lisp :tangle config.el :noweb yes
 (setq wttrin-default-cities '("Caltagirone" "Bologna" "Ferrara" "Catania"))
 (setq wttrin-default-accept-language '("Accept-Language" . "it-IT"))
 #+end_src
 
-*** COMMENT Email (detangled) :it:
+*** COMMENT Protonmail :it:
 Quando Protonmail ha rilasciato ProtonBridge mi sono chiesto se non valesse la pena di ritentare un approccio locale alle email.
 Le alternative apprezzabili per il momento mi sembrano due:
 - Mozilla Thunderbird
@@ -2230,7 +2195,7 @@ Installiamo il pacchetto:
 (package! tochemfig :recipe (:host github :repo "gicrisf/tochemfig"))
 #+end_src
 
-*** TODO orgtochemfig
+*** COMMENT orgtochemfig :it:
 Since I usually write LaTeX code from org-mode, I find annoying to wrap the code in latex exporter all the time. Let's get rid of the problem writing some lispy code.
 
 Siccome devo modificare il comportamento di una funzione preferibilmente senza inficiare il codice della libreria originale, la cosa più immediata sarebbe quella di agganciare il lavoro delle funzioni di tochemfig, per esempio di =tochemfig-default=, per iniziare con la funzione più facile da approcciare.
@@ -2296,6 +2261,50 @@ Not tangled, because it's experimental.
     (exwm-randr-enable) ; https://github.com/ch11ng/exwm/wiki
     ;; (defvar efs/polybar-process nil
     ;;  "Holds the process of the running Polybar instance, if any")
+#+end_src
+
+*** COMMENT Quick browsing
+**** Deft
+Set directory, extension to search for and explicitly say you want to search recursively in the subfolders.
+
+# :tangle config.el
+#+begin_src emacs-lisp
+;; Not using deft rn
+(setq deft-directory "~/org"
+      deft-extensions '("org" "txt"))
+(setq deft-recursive t)
+#+end_src
+
+The main function is too heavy and I don't really need using all deft features.
+I'm detangling this block because I prefer simply using =SPC n s= for the moment (notes/search note).
+# La funzione principale per me è troppo lenta, oltre ad essere fin troppo fornita. Per ora disabilito tutto, perché preferisco usare =SPC+n+s= (notes/search note).
+
+**** Rifle
+# Per il momento ne faccio a meno per lo stesso motivo per cui ho disabilitato deft (vedi più avanti).
+I'm living without right now for similar reasons on why I disabled DEFT (see later); so, I leave the line commented.
+
+#+begin_src emacs-lisp :tangle packages.el
+;; (package! helm-org-rifle)
+#+end_src
+
+*** COMMENT Backtab
+I should find an alternative way, because this one doesn't work, so I'm de-tangling it.
+
+# :tangle config.el
+#+begin_src emacs-lisp
+;; Source: [[https://stackoverflow.com/questions/23692879/emacs24-backtab-is-undefined-how-to-define-this-shortcut-key]]
+(global-set-key (kbd "<backtab>") 'un-indent-by-removing-4-spaces)
+(defun un-indent-by-removing-4-spaces ()
+  "remove 4 spaces from beginning of of line"
+  (interactive)
+  (save-excursion
+    (save-match-data
+      (beginning-of-line)
+      ;; get rid of tabs at beginning of line
+      (when (looking-s "^\\at-+")
+        (untabify (match-beginning 0) (match-end 0)))
+      (when (looking-at "^    ")
+        (replace-match "")))))
 #+end_src
 
 * Daemon
