@@ -58,6 +58,8 @@
 
 (package! catppuccin :recipe (:host github :repo "catppuccin/emacs"))
 
+(package! lambda-themes :recipe (:host github :repo "lambda-emacs/lambda-themes"))
+
 (package! org-download)
 
 (package! org-drill)

@@ -642,6 +642,11 @@ I would like to make use of Nano-Emacs' colors, but by the moment it does look h
 (package! catppuccin :recipe (:host github :repo "catppuccin/emacs"))
 #+end_src
 
+**** Lambda Themes
+#+begin_src emacs-lisp :tangle packages.el
+(package! lambda-themes :recipe (:host github :repo "lambda-emacs/lambda-themes"))
+#+end_src
+
 **** Theme ciclator
 # TODO: spiegare questo switcher.
 Some day I will write what this is about, but I hope the point is pretty easy to grasp for any lisp enthysiast like you probably are.
