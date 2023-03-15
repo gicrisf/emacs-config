@@ -565,17 +565,22 @@ Hi there, I am Giovanni Crisalfi.
 #+end_src
 
 *** Emacs UI
-Just generic UI settings.
-
+**** Line numbers
 #+begin_src emacs-lisp :tangle config.el
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
+#+end_src
 
+**** Maximize on startup
+#+begin_src emacs-lisp :tangle config.el
 ;; Maximize the window upon startup
 ;; TODO testing this one
 (setq initial-frame-alist '((top . 1) (left . 1) (width . 114) (height . 32)))
+#+end_src
 
+**** COMMENT Frame transparency
+#+begin_src emacs-lisp :tangle config.el
 ;; Transparency
 (set-frame-parameter (selected-frame)'alpha '(99 . 100))
 (add-to-list 'default-frame-alist'(alpha . (99 . 100)))
@@ -651,17 +656,27 @@ I'm emotionally attached to the Spacemacs' themes. Sometimes I make use of =spac
 (package! spacemacs-theme)
 #+end_src
 
-I would like to make use of Nano-Emacs' colors, but by the moment it does look harder then it seems. Henrik Lissner, Doom Emacs' creator, said he would have made a specific module for this integration, but of course it's not an immediate priority, so I think I'll wait with hope.
+Speaking about other distro themes, I would like to make use of Nano-Emacs' colors, but by the moment it does look harder then it seems. Henrik Lissner, Doom Emacs' creator, said he would have made a specific module for this integration, but of course it's not an immediate priority, so I think I'll wait with hope.
 # Mi piacerebbe molto avere a disposizione anche i colori di nano-emacs, ma per il momento sembra sia una cosa più complessa del previsto. Henrik Lissner ha detto un paio di volte che avrebbe intenzione di dedicare un intero modulo a questa integrazione, ma non sembra una priorità.
+
+Reaching a similar result is possible with "Lambda themes" (see below).
+
+**** Lambda themes
+From [[https://github.com/Lambda-Emacs/lambda-themes][the README]]:
+
+#+begin_quote
+In general the theme aims to use as few highly distinct colors as possible without crossing over into full “monochrome” territory. It also means that the themes use various devices other than foreground face color to capture meaningful differences in text. Different text weights are used throughout, as are subtle differences in background coloring. Colored headlines are largely avoided.
+#+end_quote
+
+Installing lambda themes:
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! lambda-themes :recipe (:host github :repo "lambda-emacs/lambda-themes"))
+#+end_src
 
 **** Catppuccin theme
 #+begin_src emacs-lisp :tangle packages.el
 (package! catppuccin :recipe (:host github :repo "catppuccin/emacs"))
-#+end_src
-
-**** Lambda themes
-#+begin_src emacs-lisp :tangle packages.el
-(package! lambda-themes :recipe (:host github :repo "lambda-emacs/lambda-themes"))
 #+end_src
 
 **** Theme ciclator
@@ -1045,7 +1060,7 @@ defendants.chesscom -> hans: 72 page report of cheating
 (require 'ox-json)
 #+end_src
 
-*** Zettelkasten
+*** Zettelkasten :it:
 Ogni volta che devo prendere un appunto, una domanda torna a pungolarmi: dove scriverlo?
 I miei org files crescono sempre di più ed a un certo punto mi sono arreso all'idea che avere un database potrebbe essere d'aiuto.
 Per fortuna, non sono il primo ad essermi posto questi problemi ed esistono già molti strumenti che coprono questa necessità.

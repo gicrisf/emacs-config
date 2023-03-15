@@ -56,9 +56,9 @@
 
 (package! spacemacs-theme)
 
-(package! catppuccin :recipe (:host github :repo "catppuccin/emacs"))
-
 (package! lambda-themes :recipe (:host github :repo "lambda-emacs/lambda-themes"))
+
+(package! catppuccin :recipe (:host github :repo "catppuccin/emacs"))
 
 (package! org-download)
 

@@ -26,10 +26,6 @@
 ;; TODO testing this one
 (setq initial-frame-alist '((top . 1) (left . 1) (width . 114) (height . 32)))
 
-;; Transparency
-(set-frame-parameter (selected-frame)'alpha '(99 . 100))
-(add-to-list 'default-frame-alist'(alpha . (99 . 100)))
-
 ;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
 ;; are the three important ones:
 ;;
