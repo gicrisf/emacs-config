@@ -1117,16 +1117,24 @@ I should find an alternative way, because this one doesn't work, so I'm de-tangl
 :EXPORT_HUGO_SECTION: software/emacs-config-feed
 :EXPORT_FILE_NAME: index.en.md
 :EXPORT_DATE: [2023-03-13 lun 21:48]
-:EXPORT_HUGO_LASTMOD: [2022-12-14 mer]
+:EXPORT_HUGO_LASTMOD: [2023-03-15]
 :END:
+
+People continuously write a viscous, non-local, scattered gargantuan text just by existing on the internet.
+Managing how to access this text can be tricky since we need to filter out the noise and focus on the content we need or are curious about. When it comes to text, Emacs is usually well-equipped to improve our life. As we will discover soon in this post, this case makes no exception.
+
+{{{more}}}
+
+To be more accurate, we should distinguish between two parts of the collective text: one we actively compose that is accessible to any of us, and another one, which is generated to track our actions on private platforms and is structured not to be readen by humans, but parsed by machines. In this post, we will focus on the first part, the public and human-oriented text, but this (apparently) simple topic has implications that cross over and touch the production of the other text, which the sociologist Shoshana Zuboff usually refers to as /shadow text/.
+Indeed, by consciously choosing how to screen our readings, we partially subtract ourselves from the aggressive tracking operated by companies like Google or Meta. To be notified when new content is published online, we can leverage a technology that solved this problem even before the advent of those companies on the scene: RSS feeds. With Elfeed, Emacs is able to read both the RSS and the newer Atom feeds.
 
 #+begin_quote
 Elfeed is an extensible web feed reader for Emacs, supporting both Atom and RSS.
 #+end_quote
 
-{{{more}}}
+On Doom Emacs, Elfeed is already integrated as a module and can be enabled in the =init.el= file.
 
-By default, adding feed URLs in this list is enough to let Elfeed work.
+By default, Elfeed needs you only to set a simple list to work: as shown below, the list is called =elfeed-feeds= and can easily be typed in the =config.el= file.
 # Di default, basta aggiungere gli URL dei feed desiderati in questa lista per avere già Elfeed operativo.
 
 # Not tangling it anymore
@@ -1137,17 +1145,20 @@ By default, adding feed URLs in this list is enough to let Elfeed work.
                      ("https://materiaimpersonale.wordpress.com/feed/" lit))))
 #+end_src
 
-I don't use this method anymore, because I find more comfortable keeping my feeds in a specific org file.
+I don't follow this method anymore, because I find more comfortable keeping my feeds in a specific org file.
 # Io non uso più questo metodo perché trovo più comodo tenere i miei feed in un file org-mode separato.
 
-To make elfeed prettier, we add =elfeed-goodies= to the packages.
+To make elfeed prettier, we can add =elfeed-goodies= to our packages in =packages.el=.
 # Per abbellire elfeed, aggiungiamo =elfeed-goodies=.
-Particularly, this adds a cool powerline and changes the layout (panels are splitten vertically, not horizontally).
+Particularly, this package adds a cool powerline and changes the layout (panels are splitten vertically, not horizontally).
 # In particolar modo, cambia il layout (apre in un altro pannello verticale, anziché orizzontale) e si guadagna una powerline.
 
 #+begin_src emacs-lisp :tangle packages.el
 (package! elfeed-goodies)
 #+end_src
+
+This package helps you to customize some aspects if you want to.
+For example, here we edit the size of the popup entry pane.
 
 #+begin_src emacs-lisp :tangle config.el
 (require 'elfeed-goodies)
@@ -1155,16 +1166,11 @@ Particularly, this adds a cool powerline and changes the layout (panels are spli
 (setq elfeed-goodies/entry-pane-size 0.5)
 #+end_src
 
+Refer to [[https://github.com/jeetelongname/elfeed-goodies][the package README]] for more.
+
 # Ora voglio assicurarmi che elfeed appaia sulla dashboard (vedi sezione dedicata alla dashboard).
-
-You can make a lot of different uses of elfeed: if you just follow some blogs, you probably have no problem with it as it out of the box. Let's say you follow 20, 30, 50 blogs and you love them all. You want to see every news, but every blog posts once a week, if they are active. In this case, elfeed is already perfect, because it shows every result in chronological order.
-
-*But*, what if you follow sources that publish a lot of content day by day?
-For example, you follow feeds of governative agencies or scientific publishers, that publish a lot of content day by day. In this case, you better filter out the posts you don't want to see and prioritize the most important ones.
-
-It would be an approach similar to what a lot of social media platforms are doing in this very moment: they let you see the posts of accounts you interact most before any other, then they proceed with others. It doesn't matter that the other are more recent: the point is to maximize the probability you see the stuff you're more interested to, in order to make you interact and stay on the platform as long as you can.
-
-Going back to Emacs, here we're facing an analogo problem: since we all know you're never going to see every single post in your feed, it's fundamental to establish priorities. We will not implement a machine learning model to learn our preference like social media do, but there's a package that keep things simple, and let you score the posts by keywords: not surprisingly, it's called =elfeed-score=.
+You can make a lot of different uses of elfeed: if you just follow some blogs, you probably have no problem with it. Let's say you follow 20, 30, or 50 blogs and you love them all. You want to see every news, but every blog post once a week if it is active. In this case, elfeed is already perfect. It shows you everything in chronological order. But what if you follow sources that publish a lot of content day by day?
+For example, let's say you follow the RSS feeds of government agencies or scientific publishers. In that case, you better filter the posts to list the most important things first. A lot of social media platforms do that: they let you see the posts of accounts you interact with the most before any other, then they proceed with others. It doesn't matter that the others are more recent: the point is to maximize the probability you see the stuff you're more interested in, to make you interact and stay on the platform as long as you can. Here we're facing a similar problem: since we all know you're never going to see every single post in your feed, it's fundamental to establish priorities. We will not implement a machine learning model to learn our preference like social media /algorithms/ do, but there's a package that keeps things simple, and let you score the posts by keywords: not surprisingly, it's called =elfeed-score=.
 
 You can see it in action in [[https://emacsconf.org/2021/talks/research/][this interesting Emacs talk, published in 2021]].
 Like said by Ahmed Khaled, the author,
@@ -1173,14 +1179,14 @@ Like said by Ahmed Khaled, the author,
 Elfeed-score enables me to assign a numerical score [...] This numerical score is very simple. It's just based on matching things.
 #+end_quote
 
-We're now fully convinced that we need =elfeed-score=, so we install it:
+We're now fully convinced that we need =elfeed-score=, so we proceed to install it:
 
 #+begin_src emacs-lisp :tangle packages.el
 (package! elfeed-score)
 #+end_src
 
-Arxiv or ChemRxiv feeds are manipulated in the org file like any other feed.
-Now, we have to configure it =elfeed-score=. From [[https://www.unwoundstack.com/doc/elfeed-score/curr#The-Score-File][the docs]]:
+Arxiv or ChemRxiv feeds are listed in the org file like any other feed.
+Now, we have to configure =elfeed-score=. From [[https://www.unwoundstack.com/doc/elfeed-score/curr#The-Score-File][the docs]]:
 
 #+begin_quote
 The rules for scoring are written down in the score file, a plain-text file containing a single Lisp form. The location of the score file is defined in =elfeed-score-serde-score-file=.
@@ -1206,15 +1212,26 @@ By default, the configuration is written in a file named =elfeed.score= in the =
  ("adjust-tags"))
 #+end_src
 
-About using regex in the =text= field and =title-or-content= as a field, I suggest to see at [[https://cundy.me/post/elfeed/][this Chris Cundy's blog post]]:
+Moving towards using regular expressions in the =text= field can minimize matching against unintended targets.
+To see regex in action, I suggest looking at [[https://cundy.me/post/elfeed/][this Chris Cundy's blog post]], of which I'm about to give a glimpse below.
+
+#+begin_src emacs-lisp
+;; An example of using regexes
+;; Source: https://cundy.me/post/elfeed/
+;; ...
+("title-or-content"
+  ("uncertainty" 50 10 s 1597198724.419375)
+  (".*[- ]ODE[- s].*" 100 20 R 1596818708.18127))
+;; ...
+#+end_src
 
 #+begin_quote
 So the field (".*[- ]ODE[- s].*" 100 20 R 1596818708.18127) is a case-sensitive (specified by the R) regexp matching against any of " ODEs”, " ODE “, " ODE-", etc. If a match occurs in the title it adds 100 to the score of the entry. If a match occurs in the content field (for us, this is the abstract of the paper) it will add 20 to the score of the entry. The scale is arbitrary, but I’m aiming for a score of 0 for papers I may want to read, 100 for papers I will probably want to read, 200 for papers I will very likely want to read, and 300 for papers I will certainly want to read. I generally put the content matches with a lower score since they may occur multiply times and e.g. I don’t want to miss an interesting paper just because one of the applications was an area I’m not interested in.
 #+end_quote
 
-With the =authors= field, you can push up specific authors' work.
+The scoring is not only based on text or content: unsurprisingly, the =authors= field lets you push up specific authors' work; by adding elements to the =tag= field you can prioritize posts with particular tags and through the =feed= field it's possible to put some feed content before others.
 
-Finally, we activate =elfeed-score= by adding these lines in the init file:
+Finally, we activate =elfeed-score= by adding these lines in the init file (=config.el=):
 
 #+begin_src emacs-lisp :tangle config.el
 (require 'elfeed-score)
