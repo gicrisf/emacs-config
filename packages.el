@@ -84,6 +84,8 @@
 
 (package! org-ref)
 
+(package! citar)
+
 (package! elfeed-goodies)
 
 (package! elfeed-score)

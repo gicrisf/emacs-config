@@ -1092,9 +1092,15 @@ defendants.chesscom -> hans: 72 page report of cheating
 (require 'ox-json)
 #+end_src
 
-*** Org ref
+*** Citations on Emacs
+Org-ref:
 #+begin_src emacs-lisp :tangle packages.el
 (package! org-ref)
+#+end_src
+
+Citar:
+#+begin_src emacs-lisp :tangle packages.el
+(package! citar)
 #+end_src
 
 *** Zettelkasten
@@ -1278,20 +1284,24 @@ Finally, we activate =elfeed-score= by adding these lines in the init file (=con
 {{{prismcss}}}
 {{{prismjs}}}
 
-*** Linguaggi :it:
+*** Web development
 **** Typescript/React
-Innanzitutto, bisogna avere aggiunto alcuni moduli: =web= e =javascript=, in particolare.
-Per farlo, basta togliere =;;= nel file di configurazione =.doom.d/init.el=, come fatto nel paragrafo sopra.
+# Innanzitutto, bisogna avere aggiunto alcuni moduli: =web= e =javascript=, in particolare.
+First of all, you need to have added some modules: =web= and =javascript=, in particular.
+This is done by uncommenting them in =.doom.d/init.el= (remove =;;= as shown in the "Doom modules" paragraph above).
 
-A questo punto, è possibile che uno voglia lavorare con file in formato =.tsx=. Il supporto per questo caso d'uso potrebbe arrivare presto, ma per il momento ci viene in soccorso una semplice riga di lisp nel file di configurazione, [[https://github.com/hlissner/doom-emacs/issues/2252#issuecomment-569059839][secondo il suggerimento di hlissner]]:
+# Per farlo, basta togliere =;;= nel file di configurazione =.doom.d/init.el=, come fatto nel paragrafo sopra.
+At this point, someone may want to work with files in the =.tsx= format. Support for this use case may be coming soon, but for the moment we can use a simple line of Lisp in the configuration file.
+
+# A questo punto, è possibile che uno voglia lavorare con file in formato =.tsx=. Il supporto per questo caso d'uso potrebbe arrivare presto, ma per il momento ci viene in soccorso una semplice riga di lisp nel file di configurazione, [[https://github.com/hlissner/doom-emacs/issues/2252#issuecomment-569059839][secondo il suggerimento di hlissner]]:
 
 #+begin_src emacs-lisp :tangle config.el
 ;; Support for Typescript/React
 (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode))
 #+end_src
 
-***** Vanilla Emacs
-In caso foste in cerca di una soluzione per Vanilla Emacs o Spacemacs, quest'altra soluzione potrebbe fare al caso vostro:
+# In caso foste in cerca di una soluzione per Vanilla Emacs o Spacemacs, quest'altra soluzione potrebbe fare al caso vostro:
+If you are looking for a solution for Vanilla Emacs or Spacemacs, this other one may be suitable for you:
 
 #+begin_src emacs-lisp
 (use-package typescript-mode
@@ -1303,15 +1313,18 @@ In caso foste in cerca di una soluzione per Vanilla Emacs o Spacemacs, quest'alt
 
 Praticamente dichiariamo una modalità derivata dalla =typescript-mode= e le assegniamo anche i file con estensione =.tsx=. Per maggiori dettagli, [[https://github.com/emacs-typescript/typescript.el/issues/4#issuecomment-849355222][fate riferimento a questo issue su Github]].
 
-**** Vala
-Il supporto per Vala è largamente ereditato dalla mode per C#.
+*** Vala
+# Il supporto per Vala è largamente ereditato dalla mode per C#.
+The support for Vala is largely inherited from the C# mode.
 
 #+begin_src emacs-lisp :tangle packages.el
 (package! vala-mode)
 #+end_src
 
-**** Python
-Supporto per virtualenv.
+*** Python
+**** Virtualenv
+# Supporto per virtualenv.
+Virtualenv support.
 
 #+begin_src emacs-lisp :tangle packages.el
 (package! pyvenv)
@@ -1675,15 +1688,18 @@ Sulla base di queste premesse,
     (ox-extras-activate '(latex-header-blocks ignore-headlines))))
 #+end_src
 
-*** Manuali :it:
-Le pagine dei manuali su Emacs mancano spesso di colore, cosa che le rende più difficili da leggere delle loro controparti web.
-Il seguente pacchetto corregge questa mancanza:
+*** Manual pages
+# Le pagine dei manuali su Emacs mancano spesso di colore, cosa che le rende più difficili da leggere delle loro controparti web.
+# Il seguente pacchetto corregge questa mancanza:
+The manual pages on Emacs often lack color, which makes them harder to read than their web counterparts.
+The following package corrects this deficiency:
 
 #+begin_src emacs-lisp :tangle packages.el
 (package! info-colors)
 #+end_src
 
-[[https://github.com/ubolonton/info-colors][Come illustrato nel README]], per abilitarlo bisogna aggiungere un hook in =config.el=.
+[[https://github.com/ubolonton/info-colors][As shown in the README]], to enable it you have to add a hook in =config.el=.
+# per abilitarlo bisogna aggiungere un hook in =config.el=.
 
 #+begin_src emacs-lisp :tangle config.el
 (add-hook 'Info-selection-hook 'info-colors-fontify-node)
