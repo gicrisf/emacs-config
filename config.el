@@ -18,6 +18,30 @@
 (setq user-full-name "gicrisf"
       user-mail-address "giovanni.crisalfi@protonmail.com")
 
+;; Thanks to
+;; https://stackoverflow.com/a/30568768
+(defun eval-file (file)
+  "Execute FILE and return the result of the last expression."
+  (load-file file)
+  (with-temp-buffer
+    (insert-file-contents file)
+    (emacs-lisp-mode)
+    (goto-char (point-max))
+    (backward-sexp)
+    (eval (sexp-at-point))))
+
+;; This file could be placed anywhere
+(setq env-vars-file-path "~/.envvars")
+
+(defun load-env-vars ()
+  (let ((env-var-list (eval-file env-vars-file-path)))
+    (mapc (lambda (cons-cell)
+            (setenv (car cons-cell) (car (cdr cons-cell)))) env-var-list)))
+
+;; As suggested here
+;; https://emacs.stackexchange.com/a/15099/39328
+(add-hook 'after-init-hook #'load-env-vars)
+
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
@@ -146,7 +170,7 @@ A nil value implies no custom theme should be enabled.")
 
 (require 'ox-json)
 
-(setq org-roam-directory "~/roam")
+(setq org-roam-directory "~/Dropbox/roam")
 
 (require 'elfeed-goodies)
 (elfeed-goodies/setup)
@@ -345,3 +369,12 @@ by using nxml's indentation rules."
 (setq tochemfig-default-relative-angles t)
 (setq tochemfig-default-fancy-bonds t)
 (setq tochemfig-default-wrap-chemfig t)
+
+(setq openai-key (getenv "OPENAI_KEY"))
+
+(setq chatgpt-repo-path "~/Projects/ChatGPT.el/")
+
+(setq gptel-api-key (getenv "OPENAI_KEY"))
+
+(setq llamacs-model-path "~/ggml-alpaca-7b-q4.bin")
+(setq llamacs-repo-path "~/Projects/llamacs/")

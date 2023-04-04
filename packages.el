@@ -92,7 +92,8 @@
 
 (package! racer :disable t)
 
-(package! ox-hugo :recipe (:host github :repo "gicrisf/ox-zola"))
+;; (package! ox-hugo :recipe (:host github :repo "gicrisf/ox-zola"))
+(package! ox-hugo)
 
 (package! eltweet :recipe (:host github :repo "gicrisf/eltweet"))
 
@@ -103,3 +104,17 @@
 (package! wttrin :recipe (:host github :repo "gicrisf/emacs-wttrin"))
 
 (package! tochemfig :recipe (:host github :repo "gicrisf/tochemfig"))
+
+(package! openai :recipe (:host github :repo "emacs-openai/openai"))
+(package! chatgpt :recipe (:host github :repo "emacs-openai/chatgpt"))
+
+;; (setq chatgpt-spinner-type 'rotating-line)
+(setq chatgpt-spinner-type 'minibox)
+
+;; (package! chatgptel :recipe (:host github :repo "joshcho/ChatGPT.el"))
+
+(package! gptel :recipe (:host github :repo "karthink/gptel"))
+
+(package! deferred)
+
+(package! epc :recipe (:host github :repo "kiwanami/emacs-epc"))

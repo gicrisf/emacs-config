@@ -564,6 +564,226 @@ Hi there, I am Giovanni Crisalfi.
       user-mail-address "giovanni.crisalfi@protonmail.com")
 #+end_src
 
+*** Environment variables on Emacs
+:PROPERTIES:
+:EXPORT_HUGO_SECTION: software/environment-variables-on-emacs
+:EXPORT_FILE_NAME: index
+:EXPORT_DATE: [2023-04-04 mar]
+:END:
+
+An environment variable is a key-value pair that is declared and stored in the operating system. They can be referenced by different programs or scripts running on the same system.
+Clearly, the program must have access to the environment to use the variable: that's the whole point of *environment* variables.
+
+{{{more}}}
+
+Traditional examples of environment variables include =PATH=, =HOME=, and =USER=.
+
+In most linux distributions, you can launch an =echo= command like this to check your =HOME= var:
+
+#+begin_src bash :exports value :wrap SRC
+echo $HOME
+#+end_src
+
+In my case, that's the result.
+
+#+RESULTS:
+#+begin_SRC
+/home/cromo
+#+end_SRC
+
+Maybe, you need a different environment variable ("env var" from now on).
+How do you set it?
+
+**** The traditional way
+If you have bash as a shell, you can simply set it the traditional way:
+
+#+begin_src bash
+#~/.bashrc
+export VARNAME="var string"
+#+end_src
+
+Maybe, you need the said env var *inside Emacs*, because a package requires it.
+Emacs has you covered, since emacs-lisp has a function to access env vars.
+
+#+begin_src emacs-lisp
+(getenv "VARNAME")
+#+end_src
+
+I used to to export my env vars from =.bashrc= like showed above and it was fine, especially if the variables didn't require extra caution (it's the case of a token you use for running a bot, for example). In most cases, you should be fine with a similar setup.
+But most cases are not "all cases" and I encountered the problematic case.
+Was I surprised? Of course not, it's never so simple.
+
+**** The problem
+If you run Emacs from a Daemon, your =getenv= functions start returning =nil=.
+Why's that?
+
+That's because *Emacs is not running from within the shell, so it does not have access to the environment in which the variables exist*. In fact, if you launch it from the terminal emulator, =getenv= is going to work again. When you set up the Emacs' daemon, it's launched by systemd.
+
+So, how can you maintain the daemon while not giving up on environment variables?
+As for every technical problem, there are a lot of ways to solve it.
+It depends on the case what is the most appropriate solution.
+
+**** The "Emacs as OS" way
+# Questo ed i prossimi due paragrafi sono stati pubblicati per la prima volta il 2022.03.16
+Xahlee solved the problem in the most emacs-y way possible: [[http://xahlee.info/emacs/emacs/emacs_env_var_paths.html][setting everything from inside Emacs]]. He must have thought "why should I ever leave Emacs?". That's the classical thought process of any emacser, so it shouldn't surprise anybody.
+
+Emacs let you set environment variables with =setenv=.
+
+#+begin_src emacs-lisp
+(setenv "VARNAME" "var string")
+#+end_src
+
+I was searching for something different, since I have other scripts that run outside of Emacs and they need access to env vars too. I could duplicate the env vars, but I refuse: it feels hacky and it's difficult to maintain.
+
+**** The Systemd way
+A member of the Arch community "[[https://bbs.archlinux.org/viewtopic.php?id=163436][found a good way to export environment variables using systemctl so that they are available to systemd spawned processes]]". This could be exactly what I was looking for, but I don't like the idea of converting the other scripts and messing with systemd, so I kept looking for a different solution.
+
+**** The diffy way
+In my quest for a balanced way to manage this problem, I found [[https://unix.stackexchange.com/a/285257][an interesting answer on unix stackexchange]] that links a [[https://gist.github.com/ffevotte/9345586][gist]] which presents a
+
+#+begin_quote
+nice piece of Emacs lisp that uses diff to compare outputs of export command before and after sourcing, and then calls setenv function accordingly.
+#+end_quote
+
+The idea is to maintain a shell file as a source and getting the environment variables from there, while diffing it with the ones that are loaded already:
+
+#+begin_src emacs-lisp
+(defun source (filename)
+  "Update environment variables from a shell source file."
+  (interactive "fSource file: ")
+
+  (message "Sourcing environment from `%s'..." filename)
+  (with-temp-buffer
+
+    (shell-command (format "diff -u <(true; export) <(source %s; export)" filename) '(4))
+
+    (let ((envvar-re "declare -x \\([^=]+\\)=\\(.*\\)$"))
+      ;; Remove environment variables
+      (while (search-forward-regexp (concat "^-" envvar-re) nil t)
+        (let ((var (match-string 1)))
+          (message "%s" (prin1-to-string `(setenv ,var nil)))
+          (setenv var nil)))
+
+      ;; Update environment variables
+      (goto-char (point-min))
+      (while (search-forward-regexp (concat "^+" envvar-re) nil t)
+        (let ((var (match-string 1))
+              (value (read (match-string 2))))
+          (message "%s" (prin1-to-string `(setenv ,var ,value)))
+          (setenv var value)))))
+  (message "Sourcing environment from `%s'... done." filename))
+#+end_src
+
+I think it's kind of an overenginereed solution, but I like the spirit of leaving the source of variables *outside* Emacs and accessible to the shell. So, I came out with a simpler method that works for me.
+
+# In 2022-03-16 I wrote:
+# "Now I must do other things in my life, but I promise that I will update this post soon, hopefully with a reasonable and elegant solution. Better: with a working solution. A working solution would be just fine."
+# Well, now I'm fucking back
+
+**** My lispy way
+# As it was rightly explored in [[https://github.com/syl20bnr/spacemacs/issues/12451][this Spacemacs' Github issue]], if you load Emacs as Daemon, it doesn't have any access to your usual environment variables.
+If you keep the environment variables in a single "lisp-y" file (I mean a valid lisp list stored as simple text), it's possible to import the values both in Emacs and in Bash with a minimal effort. I present an example of such text here below:
+
+#+begin_src lisp
+'(("EXAMPLE_OF_KEY" "example-of-pwd")
+  ("ANOTHER_EXAMPLE_OF_KEY" "another-example-of-pwd"))
+#+end_src
+
+# Assicuriamoci che le variabili d'ambiente siano correttamente importate.
+# Nel mio caso, le variabili sono innanzitutto conservate in un piccolo file, da cui poi vengono riportate sia nella shell che qui su Emacs.
+# Come possiamo importarle?
+
+# Su Emacs, la funzione per creare una variabile d'ambiente è =setenv=, così come quella per leggere una variabile d'ambiente è =getenv=.
+# Molto semplice. Allora noi prendiamo questa lista ed applichiamo =setenv= ad ogni elemento.
+
+# Let's make sure that the environment variables are correctly imported.
+Now, how can we import them in Emacs?
+
+As we saw before, the function to create an environment variable is =setenv=, just as the function to read an environment variable is =getenv=. Very simple.
+So, we take the list in the file and apply =setenv= to each element.
+
+Since applying a function to every element in a list is what functional programmers call "mapping", we can rephrase by saying that we need to map the list.
+
+# I made this one to watch how to remember how one should use a map function, in order to personally write the next example
+# Here's an example Emacs Lisp function that maps a list of cons cells against another function:
+
+#+begin_comment emacs-lisp
+(defun mapcons (fn lst)
+  "Apply FN to each element of LST, which is a list of cons cells."
+  (mapcar (lambda (cons-cell)
+            (cons (funcall fn (car cons-cell))
+                  (funcall fn (cdr cons-cell))))
+          lst))
+#+end_comment
+
+# This function takes two arguments: =fn=, which is the function that should be applied to each element of the cons cell; and =lst=, which is the list of cons cells to be mapped over. The =mapcar= function applies the anonymous lambda function provided to each element of the list, using =funcall= to call the =fn= function on both the =car= and =cdr= of each cons cell. The result is a new list of cons cells, with the original contents mapped to the result of applying =fn=.
+
+In the next example, the previous list is called =example-list-of-api-keys=; a =mapc= function call is called on it, and every =cons-cell= in the list has its car bound as the key of the environment variable, while its cdr is bound as its value.
+
+#+begin_src emacs-lisp
+;; List of `cons-cells` to bind to shell variables.
+(setq example-list-of-api-keys '(("EXAMPLE_OF_KEY" "example-of-pwd")
+                                 ("ANOTHER_EXAMPLE_OF_KEY" "another-example-of-pwd")))
+
+;; Binds the contents of the `cdr` branch of each `cons-cell` in `example-list-of-api-keys` as environment variables, using the `car` branch as the variable name.
+(mapc (lambda (cons-cell)
+        (setenv (car cons-cell) (car (cdr cons-cell)))) example-list-of-api-keys)
+#+end_src
+
+From the example to the reality: we now need a function to retrieve the variables from the file. Since the content of the file should be a valid lisp string, we better evaluate it directly with this function.
+
+#+begin_src emacs-lisp :tangle config.el
+;; Thanks to
+;; https://stackoverflow.com/a/30568768
+(defun eval-file (file)
+  "Execute FILE and return the result of the last expression."
+  (load-file file)
+  (with-temp-buffer
+    (insert-file-contents file)
+    (emacs-lisp-mode)
+    (goto-char (point-max))
+    (backward-sexp)
+    (eval (sexp-at-point))))
+#+end_src
+
+# Adesso carichiamo le variabili vere e proprie.
+# Now, this is how we could actually load the secret env vars in =./envvars= file.
+#+begin_comment emacs-lisp
+;; Set the actual env vars with the function used in the example above
+(mapc (lambda (cons-cell)
+        (setenv (car cons-cell) (car (cdr cons-cell)))) (eval-file "~/.envvars"))
+#+end_comment
+
+# Instead of leaving all condensed in a single =mapc=, naming the process under a single function it's useful because it's better to hooks it at Emacs' startup.
+Moreover, we can decouple the file path in a proper variable, which makes everything more readable and editable in the long run.
+
+**** Conclusion
+Finally, we create:
+- a variable that stores the path of the file with the env vars
+- a function that executes all the needed steps
+- a hook that runs the function on startup
+
+#+begin_src emacs-lisp :tangle config.el
+;; This file could be placed anywhere
+(setq env-vars-file-path "~/.envvars")
+
+(defun load-env-vars ()
+  (let ((env-var-list (eval-file env-vars-file-path)))
+    (mapc (lambda (cons-cell)
+            (setenv (car cons-cell) (car (cdr cons-cell)))) env-var-list)))
+
+;; As suggested here
+;; https://emacs.stackexchange.com/a/15099/39328
+(add-hook 'after-init-hook #'load-env-vars)
+#+end_src
+
+Well, we made it.
+
+To the next adventure!
+
+{{{prismcss}}}
+{{{prismjs}}}
+
 *** Emacs UI
 **** Line numbers
 #+begin_src emacs-lisp :tangle config.el
@@ -1060,7 +1280,7 @@ defendants.chesscom -> hans: 72 page report of cheating
 (require 'ox-json)
 #+end_src
 
-*** Zettelkasten :it:
+*** Zettelkasten (Roam) :it:
 Ogni volta che devo prendere un appunto, una domanda torna a pungolarmi: dove scriverlo?
 I miei org files crescono sempre di più ed a un certo punto mi sono arreso all'idea che avere un database potrebbe essere d'aiuto.
 Per fortuna, non sono il primo ad essermi posto questi problemi ed esistono già molti strumenti che coprono questa necessità.
@@ -1084,12 +1304,21 @@ A questo punto, bisogna passare alla configurazione.
 In pratica, grazie a Doom abbiamo già una preconfigurazione, ma dobbiamo comunicare almeno la directory in cui vogliamo tenere i file.
 
 #+begin_src emacs-lisp :tangle config.el
-(setq org-roam-directory "~/roam")
+(setq org-roam-directory "~/Dropbox/roam")
 #+end_src
 
 Non resta che seguire i comandi di Doom Emacs per creare la prima nota: =SPC+n+r+i= per inserire una nota.
 Mentre stiamo scrivendo la nota, con la stessa combinazione si può inserire un link ad una nota.
 Questa risulterà connessa alla prima nel buffer.
+
+Ora sorge un altro problema. Come eseguo il backup della mia org roam directory?
+Potrei usare Dropbox, ma odio l'idea che possa darmi problemi per carenza di spazio.
+L'evidente alternativa sarebbe usare git.
+
+Una delle cose per cui potrei usare lo zettelkasten è memorizzare tweet o toots. Questo sarebbe facilitato dalle API, ma per quanto riguarda Twitter è difficile capire se valga la pena spendere del tempo, visto che hanno già annunciato cambiamenti. I thread sono difficili da immagazzinare tweet per tweet, quindi non se ne parla.
+
+Altro punto importante: *non è bene mescolare la propria produzione scritta con le citazioni altrui*.
+Per organizzare il roam, meglio seguire un approccio simile a [[https://jethrokuan.github.io/org-roam-guide/][quello descritto in questo post da Jehtro Kuan]] (autore di org-roam).
 
 *** Emacs Feed Configuration
 :PROPERTIES:
@@ -1104,7 +1333,7 @@ Managing how to access this text can be tricky since we need to filter out the n
 
 {{{more}}}
 
-To be more accurate, we should distinguish between two parts of the collective text: one we actively compose that is accessible to any of us, and another one, which is generated to track our actions on private platforms and is structured not to be readen by humans, but parsed by machines. In this post, we will focus on the first part, the public and human-oriented text, but this (apparently) simple topic has implications that cross over and touch the production of the other text, which the sociologist Shoshana Zuboff usually refers to as /shadow text/.
+To be more accurate, we should distinguish between two parts of the collective text: one we actively compose that is accessible to any of us, and another one, which is generated to track our actions on private platforms and is structured not to be read by humans, but parsed by machines. In this post, we will focus on the first part, the public and human-oriented text, but this (apparently) simple topic has implications that cross over and touch the production of the other text, which the sociologist Shoshana Zuboff usually refers to as /shadow text/.
 Indeed, by consciously choosing how to screen our readings, we partially subtract ourselves from the aggressive tracking operated by companies like Google or Meta. To be notified when new content is published online, we can leverage a technology that solved this problem even before the advent of those companies on the scene: RSS feeds. With Elfeed, Emacs is able to read both the RSS and the newer Atom feeds.
 
 #+begin_quote
@@ -1113,7 +1342,7 @@ Elfeed is an extensible web feed reader for Emacs, supporting both Atom and RSS.
 
 On Doom Emacs, Elfeed is already integrated as a module and can be enabled in the =init.el= file.
 
-By default, Elfeed needs you only to set a simple list to work: as shown below, the list is called =elfeed-feeds= and can easily be typed in the =config.el= file.
+By default, Elfeed only needs you to set a simple list to work: as shown below, the list is called =elfeed-feeds= and can easily be typed in the =config.el= file.
 # Di default, basta aggiungere gli URL dei feed desiderati in questa lista per avere già Elfeed operativo.
 
 # Not tangling it anymore
@@ -1124,12 +1353,12 @@ By default, Elfeed needs you only to set a simple list to work: as shown below, 
                      ("https://materiaimpersonale.wordpress.com/feed/" lit))))
 #+end_src
 
-I don't follow this method anymore, because I find more comfortable keeping my feeds in a specific org file.
+I don't follow this method anymore, because I find more comfortable to keep my feeds in a specific org file.
 # Io non uso più questo metodo perché trovo più comodo tenere i miei feed in un file org-mode separato.
 
 To make elfeed prettier, we can add =elfeed-goodies= to our packages in =packages.el=.
 # Per abbellire elfeed, aggiungiamo =elfeed-goodies=.
-Particularly, this package adds a cool powerline and changes the layout (panels are splitten vertically, not horizontally).
+Particularly, this package adds a cool powerline and changes the layout (panels are split vertically, not horizontally).
 # In particolar modo, cambia il layout (apre in un altro pannello verticale, anziché orizzontale) e si guadagna una powerline.
 
 #+begin_src emacs-lisp :tangle packages.el
@@ -1396,6 +1625,7 @@ Drag and drop to dired:
 *** Zola :it:
 Funzioni ausiliarie che ho scritto per facilitarmi il lavoro quando scrivevo in Markdown per Zola.
 Come già spiegato sopra, ora esporto da org-mode, quindi l'utilità di queste funzioni è venuta meno, ma occasionalmente mi capita di impiegarle, quindi le lascio comunque.
+(TODO dovrei controllare Yasnippet per questi casi)
 
 **** Markdown TOML frontmatter
 Immaginate di voler generare un nuovo file Markdown per il vostro sito web.
@@ -1508,7 +1738,8 @@ Details: ((:private . packages) "/home/cromo/.doom.d/packages.el" (wrong-type-ar
 Non ho ben capito perché (che sia [[https://github.com/doomemacs/doomemacs/issues/4142#issuecomment-715532212][questo il problema]]? non mi pare...), ma ho risolto più brutalmente. Innanzitutto installo il codice dalla mia repo.
 
 #+begin_src emacs-lisp :tangle packages.el
-(package! ox-hugo :recipe (:host github :repo "gicrisf/ox-zola"))
+;; (package! ox-hugo :recipe (:host github :repo "gicrisf/ox-zola"))
+(package! ox-hugo)
 #+end_src
 
 In secondo luogo, faccio le modifiche in locale e lancio =emacs-lisp-byte-compile-and-load= tutte le volte che modifico qualcosa. Finché non riavvio Emacs, è possibile testare quanto si vuole. Forse un po' più scomodo, ma è un approccio che fa il suo sporco lavoro.
@@ -2322,7 +2553,131 @@ I should find an alternative way, because this one doesn't work, so I'm de-tangl
         (replace-match "")))))
 #+end_src
 
-* Daemon
+*** ChatGPT
+Pacchetti di OpenAI:
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! openai :recipe (:host github :repo "emacs-openai/openai"))
+(package! chatgpt :recipe (:host github :repo "emacs-openai/chatgpt"))
+#+end_src
+
+Recuperiamo l'API key da variabile d'ambiente:
+
+#+begin_src emacs-lisp :tangle config.el
+(setq openai-key (getenv "OPENAI_KEY"))
+#+end_src
+
+Una dipendenza cosmetica di questi pacchetti è spinner.
+Selezioniamo lo spinner preferito:
+
+#+begin_src emacs-lisp :tangle packages.el
+;; (setq chatgpt-spinner-type 'rotating-line)
+(setq chatgpt-spinner-type 'minibox)
+#+end_src
+
+Questo viene più comodo per selezionare del testo ed elaborarlo direttamente, ma non usa le API:
+
+#+begin_src emacs-lisp :tangle packages.el
+;; (package! chatgptel :recipe (:host github :repo "joshcho/ChatGPT.el"))
+#+end_src
+
+Diamo il path della repo perché ha bisogno di richiamare un file Python che agisce da server:
+
+#+begin_src emacs-lisp :tangle config.el
+(setq chatgpt-repo-path "~/Projects/ChatGPT.el/")
+#+end_src
+
+La funzione =chatgpt--query= non va a causa dell'impiego di una macro anaforica che coinvolge due =eval=; potrei semplificarla in questo modo:
+
+#+begin_src emacs-lisp
+(defun chatgpt--query (query)
+  "Send QUERY to the ChatGPT process."
+  (unless chatgpt-process
+    (chatgpt-init))
+  (let ((saved-id (cl-incf chatgpt-id)))
+    (chatgpt--insert-query query saved-id)
+    (when chatgpt-enable-loading-ellipsis
+      (chatgpt--add-timer saved-id))
+    (when chatgpt-display-on-query
+      (chatgpt-display))
+    (deferred:$
+     (deferred:$
+      (epc:call-deferred chatgpt-process 'query (list query))
+      (deferred:nextc it
+               (lambda (response)
+                 (chatgpt--stop-wait ,saved-id)
+                 (chatgpt--insert-response response ,saved-id)
+                 (when chatgpt-display-on-response
+                   (chatgpt-display))))))))
+#+end_src
+
+Volendo, potrei usare qualche advice per sovrascriverla temporaneamente.
+Il problema è che questa libreria nello specifico non usa le API di ChatGPT ed io ne preferirei una che le usa. Quindi, per arrivare ad un risultato che mi piaccia, dovrei modificare pure le funzioni nel server, cosa che mi porterebbe a gestire un fork.
+Non so se ho voglia di mantenere un fork. Vediamo se ci sono alternative.
+
+[[https://github.com/karthink/gptel][Questo, invece, si chiama gptel]] e usa le API:
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! gptel :recipe (:host github :repo "karthink/gptel"))
+#+end_src
+
+Anche qui, recuperiamo la key:
+
+#+begin_src emacs-lisp :tangle config.el
+(setq gptel-api-key (getenv "OPENAI_KEY"))
+#+end_src
+
+Proviamo il seguente prompt con gptel:
+
+#+begin_quote
+Tell me about the geography of Taiwan.
+#+end_quote
+
+Questo è il risultato:
+
+#+begin_quote
+Taiwan is an island located off the southeastern coast of China. It has rugged, mountainous terrain, with more than half of its land area covered in forest. The western side of the island is more densely populated and urbanized, while the eastern side is more rural and less developed. Taiwan also has several small offshore islands.
+#+end_quote
+
+Looks fine.
+
+*** Llama
+Sfruttando la CLI fornita da [[https://github.com/rustformers/llama-rs][=llama-rs=/=llama-cli=]], è possibile passare un prompt da emacs e restituire i risultati direttamente nel browser.
+
+# :tangle config.el
+#+begin_src emacs-lisp
+(defun llama-prompt (prompt)
+  "Get a PROMTP for Llama and return the response."
+  (interactive "sEnter PROMPT: ")
+  (setq comd (concat "llama-cli --model-path ~/ggml-alpaca-7b-q4.bin -p \'" prompt "\'"))
+  (insert (shell-command-to-string comd))
+  (message "The Llama has spoken."))
+#+end_src
+
+Voglio evitare che questo processo faccia laggare l'intera piattaforma.
+Mi serve un RPC stack per Emacs.
+
+Prima installo =deferred=...
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! deferred)
+#+end_src
+
+poi =epc=:
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! epc :recipe (:host github :repo "kiwanami/emacs-epc"))
+#+end_src
+
+Scrivo =llamacs= e ne faccio un pacchetto.
+A questo punto, devo configurarlo.
+
+#+begin_src emacs-lisp :tangle config.el
+(setq llamacs-model-path "~/ggml-alpaca-7b-q4.bin")
+(setq llamacs-repo-path "~/Projects/llamacs/")
+#+end_src
+
+* Daemon :it:
 Si tratta di una possibilità introdotta con Emacs 23.1 per ridurre i (già bassi) tempi di avvio di ogni finestra. Ottimo se, come me, utilizzate Emacs anche per modificare piccoli file di testo per cui andrebbe benissimo vim o nano.
 
 Per lanciare il daemon da terminale, basta scrivere:
