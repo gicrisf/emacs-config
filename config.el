@@ -38,9 +38,7 @@
     (mapc (lambda (cons-cell)
             (setenv (car cons-cell) (car (cdr cons-cell)))) env-var-list)))
 
-;; As suggested here
-;; https://emacs.stackexchange.com/a/15099/39328
-(add-hook 'after-init-hook #'load-env-vars)
+(load-env-vars)
 
 (defun bash-load-env-vars ()
   (let* ((env-var-list (eval-file env-vars-file-path))

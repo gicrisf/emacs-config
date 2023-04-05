@@ -929,7 +929,9 @@ Moreover, we can decouple the file path in a proper variable, which makes everyt
 Finally, we create:
 - a variable that stores the path of the file with the env vars
 - a function that executes all the needed steps
-- a hook that runs the function on startup
+# - a hook that runs the function on startup
+
+Then, we run it right away.
 
 #+begin_src emacs-lisp :tangle config.el
 ;; This file could be placed anywhere
@@ -940,10 +942,12 @@ Finally, we create:
     (mapc (lambda (cons-cell)
             (setenv (car cons-cell) (car (cdr cons-cell)))) env-var-list)))
 
-;; As suggested here
-;; https://emacs.stackexchange.com/a/15099/39328
-(add-hook 'after-init-hook #'load-env-vars)
+(load-env-vars)
 #+end_src
+
+# As suggested here
+# https://emacs.stackexchange.com/a/15099/39328
+# (add-hook 'after-init-hook #'load-env-vars)
 
 **** Back in Bash
 How to print strings in a file with emacs lisp?
@@ -976,13 +980,15 @@ Now I can call this function from =.bashrc= or similar files to have the desired
 # ~/.bashrc
 
 # generate or regenerate .bashvars
-emacsclient -e '(bash-load-env-vars)'
+emacsclient -e '(bash-load-env-vars)' > /dev/null 2>&1
 
 # load or reload .bashvars
 if [ -f ~/.bashvars ]; then
 . ~/.bashvars
 fi
 #+end_src
+
+Since we don't need the output of =bash-load-env-vars=, we redirect it to =/dev/null= ([[https://unix.stackexchange.com/a/459404][like shown here]]).
 
 **** Conclusions
 Ultimately, the environment variables are managed by three components:
