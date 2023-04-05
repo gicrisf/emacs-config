@@ -42,6 +42,14 @@
 ;; https://emacs.stackexchange.com/a/15099/39328
 (add-hook 'after-init-hook #'load-env-vars)
 
+(defun bash-load-env-vars ()
+  (let* ((env-var-list (eval-file env-vars-file-path))
+         (bash-strings (mapcar (lambda (cons-cell)
+                                 (concat "export " (car cons-cell) "=" (concat "'" (car (cdr cons-cell)) "'"))) env-var-list)))
+    (with-temp-file "~/.bashvars"
+      (mapc (lambda (exp_string)
+              (insert (concat exp_string "\n"))) bash-strings))))
+
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)

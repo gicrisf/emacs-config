@@ -564,6 +564,70 @@ Hi there, I am Giovanni Crisalfi.
       user-mail-address "giovanni.crisalfi@protonmail.com")
 #+end_src
 
+*** Emacs as Daemon
+:PROPERTIES:
+:EXPORT_HUGO_SECTION: software/emacs-as-daemon
+:EXPORT_FILE_NAME: index
+:EXPORT_DATE: [2023-04-05 mer]
+:END:
+
+Running Emacs as a daemon allows you to start Emacs once and then use it in multiple sessions or on different terminals without the overhead of starting up Emacs anew each time.
+This translates to faster startup times and more efficient use of system resources.
+
+{{{more}}}
+
+# Si tratta di una possibilità introdotta con Emacs 23.1 per ridurre i (già bassi) tempi di avvio di ogni finestra. Ottimo se, come me, utilizzate Emacs anche per modificare piccoli file di testo per cui andrebbe benissimo vim o nano.
+This is a feature introduced with Emacs 23.1 to reduce the (already low) startup times of each window. It's great if, like me, you also use Emacs to edit small text files for which vim or nano would be just fine.
+
+Launching the daemon is simple as running a simple command:
+
+#+begin_src bash
+emacs --daemon
+#+end_src
+
+# Per lanciarlo all'avvio, si può aggiungere il comando qui sopra nella sezione opportuna fornita dal DE o, meglio ancora, perdere mezzo minuto per impostare systemd (utile soprattutto per chi usa un tiling manager anziché un DE "fatto e finito").
+To launch it at startup, you can add the above command in the appropriate section provided by your DE, or better yet, spend half a minute setting up systemd (especially useful for those who use a tiling manager instead of a "ready-made" DE).
+
+#+begin_src txt :tangle tangled/.config/systemd/user/emacs.service
+[Unit]
+Description=Emacs text editor
+Documentation=info:emacs man:emacs(1) https://gnu.org/software/emacs/
+
+[Service]
+Type=forking
+ExecStart=/usr/bin/emacs --daemon
+ExecStop=/usr/bin/emacsclient --eval "(kill-emacs)"
+Environment=SSH_AUTH_SOCK=%t/keyring/ssh
+Restart=on-failure
+
+[Install]
+WantedBy=default.target
+#+end_src
+
+Systemd needs you to enable and start the process:
+
+#+begin_src bash
+systemctl enable --user emacs
+systemctl start --user emacs
+#+end_src
+
+# Ovviamente non mi sono inventato nulla, sto solo riprendendo la [[https://www.emacswiki.org/emacs/EmacsAsDaemon][documentazione]]. L'approccio qui sopra non funziona se usate CentOS o, chiaramente, se non usate [[https://wiki.archlinux.org/title/Systemd][systemd]]. Ma, solitamente, chi non usa systemd non ha bisogno che glielo dica io, perché se l'è andata a cercare.
+Obviously I'm not making anything up, I'm just referring to the [[https://www.emacswiki.org/emacs/EmacsAsDaemon][documentation]]. The approach above doesn't work if you use CentOS or, clearly, if you don't use [[https://wiki.archlinux.org/title/Systemd][systemd]]. But usually, those who don't use systemd don't need me to tell them that, because they went looking for it themselves.
+
+# Fatto ciò, non è sufficiente avviare Emacs con il consueto comando =emacs=, perché quello continuerebbe ad avviare un'istanza per ogni finestra.
+# È necessario specificare che vogliamo solo [[https://www.emacswiki.org/emacs/EmacsClient][lanciare un client]].
+# After doing this, it is not enough to start Emacs with the usual command "emacs", because that would still start an instance for each window. It is necessary to specify that we only want to launch a client.
+
+To launch Emacs as a client instead of starting a new instance for each window, specifying a special =emacsclient= command (instead of just =emacs=) is necessary.
+# Al posto di =emacs=, scriveremo:
+
+#+begin_src bash
+emacsclient --create-frame --alternate-editor=""
+#+end_src
+
+# Chiaramente, scrivere di volta in volta questo comando è a dir poco noioso, quindi ci conviene aggiungere degli alias su =.bashrc= o lanciarlo con una scorciatoia da tastiera, a seconda del nostro ambiente.
+Writing this command everytime is boring, so it would be best to add some aliases to =.bashrc= or launch it with a keyboard shortcut, depending on our environment.
+
 *** Environment variables on Emacs
 :PROPERTIES:
 :EXPORT_HUGO_SECTION: software/environment-variables-on-emacs
@@ -618,6 +682,32 @@ If you run Emacs from a Daemon, your =getenv= functions start returning =nil=.
 Why's that?
 
 That's because *Emacs is not running from within the shell, so it does not have access to the environment in which the variables exist*. In fact, if you launch it from the terminal emulator, =getenv= is going to work again. When you set up the Emacs' daemon, it's launched by systemd.
+
+#+begin_comment d2
+hardware: Hardware {
+  # CPU
+  # Memory
+  # Devices
+  os: OS/Kernel {
+    user: User space {
+      direction: right
+
+      shell: Shell {
+        utilities: Utilities, shared libraries
+        programs: User programs
+
+        programs -> utilities -> programs
+      }
+      init: systemd
+      daemons: Daemons, servers, other applications
+
+      init -> shell: starts and supervises
+      init -> daemons: starts and supervises
+      daemons -> shell.programs -> daemons
+    }
+  }
+}
+#+end_comment
 
 So, how can you maintain the daemon while not giving up on environment variables?
 As for every technical problem, there are a lot of ways to solve it.
@@ -783,6 +873,34 @@ To the next adventure!
 
 {{{prismcss}}}
 {{{prismjs}}}
+
+**** Addendum: export in bash
+How to print strings in a file with emacs lisp?
+
+You can use the =write-region= function to write a string to a file in Emacs Lisp. Here's an example:
+
+#+begin_src emacs-lisp
+(with-temp-file "filename.txt"
+  (insert "Hello, world!"))
+#+end_src
+
+This will create a new file called "filename.txt" in the current directory and write the string "Hello, world!" to it.
+
+#+begin_src emacs-lisp :tangle config.el
+(defun bash-load-env-vars ()
+  (let* ((env-var-list (eval-file env-vars-file-path))
+         (bash-strings (mapcar (lambda (cons-cell)
+                                 (concat "export " (car cons-cell) "=" (concat "'" (car (cdr cons-cell)) "'"))) env-var-list)))
+    (with-temp-file "~/.bashvars"
+      (mapc (lambda (exp_string)
+              (insert (concat exp_string "\n"))) bash-strings))))
+#+end_src
+
+Now I can call this function from =.bashrc= or similar files to have the desired variable exported in the shell.
+
+#+begin_src bash
+emacsclient -e '(bash-load-env-vars)'
+#+end_src
 
 *** Emacs UI
 **** Line numbers
@@ -2677,72 +2795,9 @@ A questo punto, devo configurarlo.
 (setq llamacs-repo-path "~/Projects/llamacs/")
 #+end_src
 
-* Daemon :it:
-Si tratta di una possibilità introdotta con Emacs 23.1 per ridurre i (già bassi) tempi di avvio di ogni finestra. Ottimo se, come me, utilizzate Emacs anche per modificare piccoli file di testo per cui andrebbe benissimo vim o nano.
-
-Per lanciare il daemon da terminale, basta scrivere:
-
-#+begin_src bash
-emacs --daemon
-#+end_src
-
-Facile, no?
-Per lanciarlo all'avvio, si può aggiungere il comando qui sopra nella sezione opportuna fornita dal DE o, meglio ancora, perdere mezzo minuto per impostare systemd (utile soprattutto per chi usa un tiling manager anziché un DE "fatto e finito").
-
-#+begin_src txt :tangle tangled/.config/systemd/user/emacs.service
-[Unit]
-Description=Emacs text editor
-Documentation=info:emacs man:emacs(1) https://gnu.org/software/emacs/
-
-[Service]
-Type=forking
-ExecStart=/usr/bin/emacs --daemon
-ExecStop=/usr/bin/emacsclient --eval "(kill-emacs)"
-Environment=SSH_AUTH_SOCK=%t/keyring/ssh
-Restart=on-failure
-
-[Install]
-WantedBy=default.target
-#+end_src
-
-Per abilitare, lanciare due comandi:
-#+begin_src bash
-systemctl enable --user emacs
-systemctl start --user emacs
-#+end_src
-
-Ovviamente non mi sono inventato nulla, sto solo riprendendo la [[https://www.emacswiki.org/emacs/EmacsAsDaemon][documentazione]].
-L'approccio qui sopra non funziona se usate CentOS o, chiaramente, se non usate [[https://wiki.archlinux.org/title/Systemd][systemd]].
-Ma, solitamente, chi non usa systemd non ha bisogno che glielo dica io, perché se l'è andata a cercare.
-
-Fatto ciò, non è sufficiente avviare Emacs con il consueto comando =emacs=, perché quello continuerebbe ad avviare un'istanza per ogni finestra.
-È necessario specificare che vogliamo solo [[https://www.emacswiki.org/emacs/EmacsClient][lanciare un client]].
-
-Al posto di =emacs=, scriveremo:
-
-#+begin_src bash
-emacsclient --create-frame --alternate-editor=""
-#+end_src
-
-Chiaramente, scrivere di volta in volta questo comando è a dir poco noioso, quindi ci conviene aggiungere degli alias su =.bashrc= o lanciarlo con una scorciatoia da tastiera, a seconda del nostro ambiente.
-
-Intendo pubblicare a breve i miei bash dots, /stay tuned/.
-
-# TODO
-# Per approfondire, rimando ai miei bash dots.
-
 * Conclusions
-# ** In conclusione
 # Questo file è in continua trasformazione.
-
-This is file is in constant change: more like a partially molded amorphous substance than like a liquid, but still in constant change.
-
-TODOs:
-- [X] Riportare sotto org tutte le funzioni relative (per ora mantenuto quanto più vicino possibile all'originale per evitare casini)
-# - [ ] Scrivi una conclusione decente
-- [ ] Write a decent conclusion
-# - [ ] Tradurre l'intero post in inglese ed esportare la traduzione
-- [ ] Translate everything in english and export the translated file to the blog.
+This file is in constant change: more like a partially molded amorphous substance than like a liquid, but still in constant change.
 
 # Esporto prism.js perché per il momento Zola ha un bug che non mi consente di colorare la sintassi.
 {{{prismcss}}}
