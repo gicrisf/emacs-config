@@ -1055,6 +1055,12 @@ To the next adventure!
 #+end_src
 
 **** COMMENT Frame transparency
+Transparency in UI can add a visually interesting layer to the design of an application like Emacs.
+Transparency can create depth and dimensionality, making the UI feel more immersive and interactive.
+Therefore, making transparencies in UI is a cool thing to do.
+
+# Transparency in UI can add a visually interesting layer to the design of an application or website. It can enhance the overall aesthetics by allowing elements to blend together in a subtle and harmonious way. Additionally, transparency can create depth and dimensionality, making the UI feel more immersive and interactive. Overall, transparency can help to elevate the design of a UI and make it more engaging for users.
+
 #+begin_src emacs-lisp :tangle config.el
 ;; Transparency
 (set-frame-parameter (selected-frame)'alpha '(99 . 100))
@@ -1062,6 +1068,10 @@ To the next adventure!
 #+end_src
 
 **** Fonts
+Fonts are a core element in a text editor.
+Overall, the right font can greatly enhance the user experience.
+
+# Fonts are an important element in a text editor because they affect the visual appearance of text, making it easier for users to read and understand. Different fonts have varying weights, sizes, and styles, which can be used to emphasize certain words, headings, or sections. Additionally, some fonts are designed for specific use cases, such as coding fonts that are optimized for ease of use and readability when coding.
 
 #+begin_src emacs-lisp :tangle config.el
 ;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
@@ -1091,7 +1101,7 @@ First of all, let's select a default theme.
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the
 ;; `load-theme' function. This is the default:
-(setq doom-theme 'lambda-dark)
+(setq doom-theme 'doom-city-lights)
 #+end_src
 
 I'm loving City Lights right now and [[https://github.com/gicrisf/qute-city-lights][I realized a City Lights theme for qutebrowser]] too because I wanted to keep everything so uniform and polished.
@@ -1150,13 +1160,17 @@ Installing lambda themes:
 #+end_src
 
 **** Catppuccin theme
+#+begin_quote
+[[https://github.com/catppuccin/catppuccin][Catppuccin]] is a community-driven pastel theme that aims to be the middle ground between low and high contrast themes. It consists of 4 soothing warm flavors with 26 eye-candy colors each, perfect for coding, designing, and much more!
+#+end_quote
+
 #+begin_src emacs-lisp :tangle packages.el
 (package! catppuccin :recipe (:host github :repo "catppuccin/emacs"))
 #+end_src
 
 **** Theme ciclator
-# TODO: spiegare questo switcher.
-Some day I will write what this is about, but I hope the point is pretty easy to grasp for any lisp enthysiast like you probably are.
+# Some day I will write what this is about, but I hope the point is pretty easy to grasp for any lisp enthysiast like you probably are.
+This Emacs Lisp code defines a circular list of themes (=quick-switch-themes=) and a function (=toggle-theme=) to switch between these themes with a single command. The function will enable the next theme in the list or disable all themes if the end of the list is reached. It also includes a keybinding (=SPC t t=) to quickly toggle between themes. This code could be useful for anyone who frequently switches between different color themes in Emacs.
 
 #+begin_src emacs-lisp :tangle config.el
 ;; Theme switcher functions
@@ -2183,7 +2197,7 @@ The following package corrects this deficiency:
 (add-hook 'Info-selection-hook 'info-colors-fontify-node)
 #+end_src
 
-**** TODO Screenshots :noexport:
+**** COMMENT Screenshots
 #+begin_quote
 non esporto finché non supporto le immagini in ox-zola
 #+end_quote
