@@ -45,7 +45,10 @@
 (defun bash-load-env-vars ()
   (let* ((env-var-list (eval-file env-vars-file-path))
          (bash-strings (mapcar (lambda (cons-cell)
-                                 (concat "export " (car cons-cell) "=" (concat "'" (car (cdr cons-cell)) "'"))) env-var-list)))
+                                 (concat "export "
+                                         (car cons-cell) "="
+                                         (concat "'" (car (cdr cons-cell)) "'")))
+                               env-var-list)))
     (with-temp-file "~/.bashvars"
       (mapc (lambda (exp_string)
               (insert (concat exp_string "\n"))) bash-strings))))

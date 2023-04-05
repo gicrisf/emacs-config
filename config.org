@@ -588,7 +588,7 @@ emacs --daemon
 # Per lanciarlo all'avvio, si può aggiungere il comando qui sopra nella sezione opportuna fornita dal DE o, meglio ancora, perdere mezzo minuto per impostare systemd (utile soprattutto per chi usa un tiling manager anziché un DE "fatto e finito").
 To launch it at startup, you can add the above command in the appropriate section provided by your DE, or better yet, spend half a minute setting up systemd (especially useful for those who use a tiling manager instead of a "ready-made" DE).
 
-#+begin_src txt :tangle tangled/.config/systemd/user/emacs.service
+#+begin_src :tangle tangled/.config/systemd/user/emacs.service
 [Unit]
 Description=Emacs text editor
 Documentation=info:emacs man:emacs(1) https://gnu.org/software/emacs/
@@ -631,7 +631,7 @@ Writing this command everytime is boring, so it would be best to add some aliase
 *** Environment variables on Emacs
 :PROPERTIES:
 :EXPORT_HUGO_SECTION: software/environment-variables-on-emacs
-:EXPORT_FILE_NAME: index
+:EXPORT_FILE_NAME: index.en.md
 :EXPORT_DATE: [2023-04-04 mar]
 :END:
 
@@ -658,7 +658,7 @@ In my case, that's the result.
 Maybe, you need a different environment variable ("env var" from now on).
 How do you set it?
 
-**** The traditional way
+**** The traditional approach
 If you have bash as a shell, you can simply set it the traditional way:
 
 #+begin_src bash
@@ -677,18 +677,19 @@ I used to to export my env vars from =.bashrc= like showed above and it was fine
 But most cases are not "all cases" and I encountered the problematic case.
 Was I surprised? Of course not, it's never so simple.
 
-**** The problem
+**** The problem with the daemon
 If you run Emacs from a Daemon, your =getenv= functions start returning =nil=.
 Why's that?
 
-That's because *Emacs is not running from within the shell, so it does not have access to the environment in which the variables exist*. In fact, if you launch it from the terminal emulator, =getenv= is going to work again. When you set up the Emacs' daemon, it's launched by systemd.
+To answer this question, we need to understand how processes are managed in a typical Linux system.
+The following diagram represents a high-level overview of the architecture of an operating system.
 
 #+begin_comment d2
 hardware: Hardware {
   # CPU
   # Memory
   # Devices
-  os: OS/Kernel {
+  os: OS/Kernel space {
     user: User space {
       direction: right
 
@@ -699,7 +700,7 @@ hardware: Hardware {
         programs -> utilities -> programs
       }
       init: systemd
-      daemons: Daemons, servers, other applications
+      daemons: Daemons, servers, glibc, other applications
 
       init -> shell: starts and supervises
       init -> daemons: starts and supervises
@@ -709,11 +710,76 @@ hardware: Hardware {
 }
 #+end_comment
 
+#+Caption: This diagram shows the hardware layer (CPU, memory, and devices are implicit) and the software layer on top, which includes the OS/kernel space and the user space. The image was made with D2. Released by Giovanni Crisalfi under CC BY-NC-SA.
+[[file:os-overview.png]]
+
+Within the user space, there are various components such as the shell (which includes utilities and user programs), systemd (which starts and supervises the shell and daemons), daemons (servers and other applications), and shared libraries.
+
+#+begin_comment d2 :file user-space-emacs-daemon-diagram.png
+user: User space {
+  direction: right
+
+  shell: Shell {
+    utilities: Utilities, shared libraries
+
+    envvars: Env vars are here! {
+      shape: stored_data
+      style: {
+        font-color: white
+        font-size: 28
+        fill: red
+      }
+    }
+
+    programs: User programs
+    programs -> utilities -> programs
+
+    # emacsf: Emacs frame
+  }
+  init: systemd
+  daemons: Daemons {
+    emacs: Emacs daemon {
+      style: {
+        fill: "#41208b"
+        font-color: white
+        font-size: 28
+        stroke: "#6045a1"
+        stroke-width: 5
+      }
+    }
+  }
+
+  # daemons.emacs -> shell.emacsf -> daemons.emacs
+
+  servers: Servers
+  glibc: GNU C library
+  apps: other applications
+
+  init -> servers
+  init -> glibc
+  init -> apps
+  init -> shell
+  init -> daemons
+
+  servers -> shell -> servers
+  glibc -> shell -> glibc
+  apps -> shell -> apps
+
+  daemons -> shell.programs -> daemons
+}
+#+end_comment
+
+#+Caption: This diagram shows the relationships between the components inside the user space (for example, how systemd supervises both the shell and daemons). The image was made with D2. Released by Giovanni Crisalfi under CC BY-NC-SA.
+[[file:user-space.png]]
+
+By focusing on the user space, we can observe that *Emacs is not running within the shell and therefore does not have access to the environment variables*. However, if Emacs is launched from the terminal emulator, the =getenv= command will work again.
+# When setting up the Emacs daemon, it is launched *directly* by systemd.
+
 So, how can you maintain the daemon while not giving up on environment variables?
 As for every technical problem, there are a lot of ways to solve it.
 It depends on the case what is the most appropriate solution.
 
-**** The "Emacs as OS" way
+**** The "Emacs as OS" approach
 # Questo ed i prossimi due paragrafi sono stati pubblicati per la prima volta il 2022.03.16
 Xahlee solved the problem in the most emacs-y way possible: [[http://xahlee.info/emacs/emacs/emacs_env_var_paths.html][setting everything from inside Emacs]]. He must have thought "why should I ever leave Emacs?". That's the classical thought process of any emacser, so it shouldn't surprise anybody.
 
@@ -725,10 +791,10 @@ Emacs let you set environment variables with =setenv=.
 
 I was searching for something different, since I have other scripts that run outside of Emacs and they need access to env vars too. I could duplicate the env vars, but I refuse: it feels hacky and it's difficult to maintain.
 
-**** The Systemd way
+**** The Systemd approach
 A member of the Arch community "[[https://bbs.archlinux.org/viewtopic.php?id=163436][found a good way to export environment variables using systemctl so that they are available to systemd spawned processes]]". This could be exactly what I was looking for, but I don't like the idea of converting the other scripts and messing with systemd, so I kept looking for a different solution.
 
-**** The diffy way
+**** The diffy approach
 In my quest for a balanced way to manage this problem, I found [[https://unix.stackexchange.com/a/285257][an interesting answer on unix stackexchange]] that links a [[https://gist.github.com/ffevotte/9345586][gist]] which presents a
 
 #+begin_quote
@@ -770,7 +836,7 @@ I think it's kind of an overenginereed solution, but I like the spirit of leavin
 # "Now I must do other things in my life, but I promise that I will update this post soon, hopefully with a reasonable and elegant solution. Better: with a working solution. A working solution would be just fine."
 # Well, now I'm fucking back
 
-**** My lispy way
+**** The lispy approach
 # As it was rightly explored in [[https://github.com/syl20bnr/spacemacs/issues/12451][this Spacemacs' Github issue]], if you load Emacs as Daemon, it doesn't have any access to your usual environment variables.
 If you keep the environment variables in a single "lisp-y" file (I mean a valid lisp list stored as simple text), it's possible to import the values both in Emacs and in Bash with a minimal effort. I present an example of such text here below:
 
@@ -812,12 +878,16 @@ In the next example, the previous list is called =example-list-of-api-keys=; a =
 
 #+begin_src emacs-lisp
 ;; List of `cons-cells` to bind to shell variables.
-(setq example-list-of-api-keys '(("EXAMPLE_OF_KEY" "example-of-pwd")
-                                 ("ANOTHER_EXAMPLE_OF_KEY" "another-example-of-pwd")))
+(setq example-list-of-api-keys
+      '(("EXAMPLE_OF_KEY" "example-of-pwd")
+        ("ANOTHER_EXAMPLE_OF_KEY" "another-example-of-pwd")))
 
-;; Binds the contents of the `cdr` branch of each `cons-cell` in `example-list-of-api-keys` as environment variables, using the `car` branch as the variable name.
+;; Binds the contents of the `cdr` branch of each `cons-cell`
+;; in `example-list-of-api-keys` as environment variables,
+;; using the `car` branch as the variable name.
 (mapc (lambda (cons-cell)
-        (setenv (car cons-cell) (car (cdr cons-cell)))) example-list-of-api-keys)
+        (setenv (car cons-cell) (car (cdr cons-cell))))
+      example-list-of-api-keys)
 #+end_src
 
 From the example to the reality: we now need a function to retrieve the variables from the file. Since the content of the file should be a valid lisp string, we better evaluate it directly with this function.
@@ -847,7 +917,6 @@ From the example to the reality: we now need a function to retrieve the variable
 # Instead of leaving all condensed in a single =mapc=, naming the process under a single function it's useful because it's better to hooks it at Emacs' startup.
 Moreover, we can decouple the file path in a proper variable, which makes everything more readable and editable in the long run.
 
-**** Conclusion
 Finally, we create:
 - a variable that stores the path of the file with the env vars
 - a function that executes all the needed steps
@@ -867,14 +936,7 @@ Finally, we create:
 (add-hook 'after-init-hook #'load-env-vars)
 #+end_src
 
-Well, we made it.
-
-To the next adventure!
-
-{{{prismcss}}}
-{{{prismjs}}}
-
-**** Addendum: export in bash
+**** Back in Bash
 How to print strings in a file with emacs lisp?
 
 You can use the =write-region= function to write a string to a file in Emacs Lisp. Here's an example:
@@ -890,7 +952,10 @@ This will create a new file called "filename.txt" in the current directory and w
 (defun bash-load-env-vars ()
   (let* ((env-var-list (eval-file env-vars-file-path))
          (bash-strings (mapcar (lambda (cons-cell)
-                                 (concat "export " (car cons-cell) "=" (concat "'" (car (cdr cons-cell)) "'"))) env-var-list)))
+                                 (concat "export "
+                                         (car cons-cell) "="
+                                         (concat "'" (car (cdr cons-cell)) "'")))
+                               env-var-list)))
     (with-temp-file "~/.bashvars"
       (mapc (lambda (exp_string)
               (insert (concat exp_string "\n"))) bash-strings))))
@@ -899,8 +964,65 @@ This will create a new file called "filename.txt" in the current directory and w
 Now I can call this function from =.bashrc= or similar files to have the desired variable exported in the shell.
 
 #+begin_src bash
+# ~/.bashrc
+
+# generate or regenerate .bashvars
 emacsclient -e '(bash-load-env-vars)'
+
+# load or reload .bashvars
+if [ -f ~/.bashvars ]; then
+. ~/.bashvars
+fi
 #+end_src
+
+**** Conclusions
+Ultimately, the environment variables are managed by three components:
+- Lisp variables are loaded into Emacs by calling the function =load-env-vars()=;
+- You can sync the variables stored locally with a password manager (e.g. Bitwarden);
+- Bash variables are exported from Emacs by calling the function =bash-export-env-vars()= to a local directory.
+
+#+Caption: The diagram represents a system with three components: "Local storage", "Password manager" and "Emacs". The arrows indicate the flow of data and commands between these components. The image was made with D2. Released by Giovanni Crisalfi under CC BY-NC-SA.
+[[file:conclusion.png]]
+
+#+begin_comment d2
+direction: right
+
+Comment and explain what this d2 diagram represents:
+
+dir: Local storage {
+  lispy: Lispy vars {
+    shape: stored_data
+  }
+
+  bashy: Bash vars {
+    shape: stored_data
+  }
+}
+
+bitwarden: Password manager {
+  shape: cloud
+}
+
+emacs: Emacs {
+  style: {
+    fill: "#41208b"
+    font-color: white
+    stroke: "#6045a1"
+    stroke-width: 5
+  }
+}
+
+dir.lispy -> emacs: load-env-vars()
+bitwarden -> dir.lispy -> bitwarden
+emacs -> dir.bashy: bash-export-env-vars()
+#+end_comment
+
+Well, we made it.
+
+To the next adventure!
+
+{{{prismcss}}}
+{{{prismjs}}}
 
 *** Emacs UI
 **** Line numbers
