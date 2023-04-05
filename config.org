@@ -46,13 +46,22 @@ Io, ad esempio, uso quotidianamente Emacs per:
 
 Per qualche tempo l'ho usato anche come emulatore di terminale, ora capita solo in circostanze particolari, ad esempio per compilare del codice che sto scrivendo nel buffer a fianco.
 
-* Distribuzioni Emacs :it:
+* Emacs distributions
+
+#+begin_comment it
 La barriera di ingresso, in verità, può essere parzialmente abbattuta per mezzo di distribuzioni Emacs pre-configurate, tra cui ne cito qualcuna, pescando tra le più famose:
 - [[https://www.spacemacs.org/][Spacemacs]] è stata la mia prima distribuzione: è particolarmente indicata per i neofiti in arrivo da vim, come ero io. Non solo è efficace nell'emulare vim (grazie ad [[https://github.com/emacs-evil/evil][Evil]]), ma dispone anche di miriadi di funzioni ausiliarie richiamabili con un semplice tocco sulla barra spaziatrice (space-emacs, non a caso).
 - [[https://github.com/rougier/nano-emacs][NANO Emacs]]: dipendenze minime, eccezionalmente elegante, funzionalmente molto vicina a Vanilla Emacs;
 - [[https://github.com/doomemacs/doomemacs][**Doom Emacs**]] è la mia distribuzione attuale, e quindi quella con cui sto scrivendo questo documento; anche questa (come Spacemacs) è molto bene integrata con Evil e si presta bene alle esigenze di ogni ex-vimmer. Inoltre, l'impiego di svariate strategie di lazy-loading e, in generale, una meditata selezione dei pacchetti rendono questa distribuzione estremamente scattante.
+#+end_comment
 
-La configurazione riportata in questo file può, potenzialmente, essere adattata anche ad altre distribuzioni Emacs, ma presa com'è funziona solo su Doom Emacs.
+The entry barrier, truthfully, can be partially broken down through pre-configured Emacs distributions, of which I mention a few of the most famous:
+- [[https://www.spacemacs.org/][Spacemacs]] was my first distribution: it is particularly indicated for newcomers coming from vim, like I was. Not only is it effective in emulating vim (thanks to [[https://github.com/emacs-evil/evil][Evil]]), but it also has countless auxiliary functions callable with a simple touch on the space bar (space-emacs, not surprisingly).
+- [[https://github.com/rougier/nano-emacs][NANO Emacs]]: minimal dependencies, exceptionally elegant, functionally very close to Vanilla Emacs;
+- [[https://github.com/doomemacs/doomemacs][Doom Emacs]] is my current distribution, and therefore the one I am using to write this document; also this one (like Spacemacs) is very well integrated with Evil and lends itself well to the needs of any ex-vimmer. In addition, the use of various lazy-loading strategies and, in general, a thoughtful selection of packages make this distribution extremely responsive.
+
+# La configurazione riportata in questo file può, potenzialmente, essere adattata anche ad altre distribuzioni Emacs, ma presa com'è funziona solo su Doom Emacs.
+The configuration reported in this file could potentially be adapted to other Emacs distributions, but as it is, it only works for Doom Emacs.
 
 * Emacs Lisp :it:
 Come dicevo, Emacs è un interpreter di lisp, ma per essere più corretti dovremmo fare riferimento ad Emacs Lisp, un dialetto della famiglia di linguaggi di programmazione che rientra sotto la denominazione "Lisp" (LISt Processor).
