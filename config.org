@@ -1894,8 +1894,16 @@ Drag and drop to dired:
 #+end_src
 
 *** Kindle
-**** Send EBOOKS to Kindle
+**** Send ebooks to Kindle with Emacs
+:PROPERTIES:
+:EXPORT_HUGO_SECTION: software/send-ebooks-to-kindle
+:EXPORT_FILE_NAME: index.en.md
+:EXPORT_DATE: [2023-04-06 gio]
+:END:
+
 Since I often stockpile text to read in the form of ebooks, I usually prefer to read them on my Kindle.
+
+{{{more}}}
 
 Essentially, there are two practical ways for loading new ebooks on a Kindle:
 - USB
@@ -1909,6 +1917,7 @@ In order to send something to your personal Kindle, the first step is to enable 
 
 To facilitate the sending of emails containing ebooks to Kindle, Calibre provides specific functions. However, I am too lazy to even open the Calibre GUI and, usually, if an ebook is on my computer, it means that sooner or later I will want to read it. Therefore, I have decided to automate the task by entrusting it to a single function.
 
+***** The strategy
 # Questa è la strategia:
 My strategy is pretty simple:
 - The code iterates over all files that have the =.epub= extension in a specific directory.
@@ -1916,9 +1925,11 @@ My strategy is pretty simple:
 - The mail is sent with autentication using a given mail server port and login credentials.
 - Once the mail is sent, the =.mobi= files can be moved in another directory or deleted. The same applies to the =.epub= files.
 
-We have the blueprint, it's time to proceed in order.
+We have the blueprint, it's time to proceed in order, imagining a function.
 
-Translate this text in english, using a technical style and precision:
+# TODO diagram
+
+# Translate this text in english, using a technical style and precision:
 # Prima di tutto, scegliamo la directory in cui vanno cercati i file che vogliamo inviare sul Kindle.
 Firstly, we set the =epub-path=, the directory in which to search for the files we want to send to the Kindle.
 
@@ -1942,32 +1953,30 @@ If we convert the epub into mobi, we may want to manage the mobi files too in a 
 
 Finally, we can write the function, here called =send-to-kindle=.
 
-#+begin_src emacs-lisp :tangle config.el :noweb no-export
+#+begin_src emacs-lisp
 (defun send-to-kindle ()
   (dolist (file (directory-files tokindle-epub-path 'full (rx ".epub" eos) 'nosort))
     (let ((filename (file-name-sans-extension file))
           (ext (file-name-extension file)))
 
       ;; Manage conversion between formats
-      <<convert-in-mobi-sync>>
+      ;; ...
 
       ;; Send the mobi files with calibre
-      <<send-ebook-sync>>
+      ;; ...
 
       ;; now you can move the ebook files into the proper directories
-      <<clean-up>>
+      ;; ...
       ))
   ;; congratulations *clap clap*, the files were sent to your kindle
   (message "All available ebooks are being sent to your Kindle."))
-
-;; try me!
-(send-to-kindle)
 #+end_src
 
 - We start iterating over every epub file in =tokindle-epub-path=.
 - We give =full= and =nosort= optional arguments as non-nils to =directory-files= because we like the absolute path of files and we don't need any sorting; making the function sort the files would be a waste of time.
 - Expanding the path is not necessary, because =directory-files= is able to do it by itself.
 
+***** Epub to mobi
 It would be convenient having a function to convert any epub file to mobi format.
 Calibre has [[https://manual.calibre-ebook.com/generated/en/ebook-convert.html][a CLI command for solving this problem]]:
 
@@ -1987,7 +1996,7 @@ We could run it as a subprocess with =shell-command= and having good results, bu
 # TODO riscrivi dicendo se c'è magit fai una cosa, sennò fai l'altra
 Thanks to =magit-shell-command= we can monitor the process in a dedicated buffer.
 
-We can run the async function if Magit is installed, or run the previous one if Magit is missing. This way, Magit is not an hard requirement for this code to run correctly.
+We can run the async function if Magit is installed, or run the previous one if Magit is missing. This way, Magit is not a hard requirement for this code to run correctly.
 # You can use the =if= statement and the =featurep= function to achieve this.
 
 # #+name: convert-in-mobi
@@ -2012,6 +2021,7 @@ Since the mobi conversion its done in the same directory of epub files, some fil
 
 # Per mandare via mail usiamo un altro comando reso disponibile da Calibre. Potremmo anche non usarlo, ma visto che già dipendiamo da Calibre per la funzione precedente (ed è quindi necessariamente installato), perché non usarlo?
 
+***** Sending emails
 To send via email, we use [[https://manual.calibre-ebook.com/it/generated/it/calibre-smtp.html][another command made available by Calibre]].
 We could also choose another tool, but since we are already dependent on Calibre for the previous function (and it is therefore necessarily installed), why not use it?
 
@@ -2039,8 +2049,10 @@ To build the SMTP command, we need to set up SMTP and credentials; the simpler w
           "\"\""))
 #+end_src
 
-We run this command for each mobi file available. The question is: asynchronously or synchronously?
+We run this command for each mobi file available.
+The question is: asynchronously or synchronously?
 
+***** The sync approach
 The problem with async is that we have to make sure that the commands in the second block (email) doesn't start before the commands in the first block (conversion). Since the "rate determining step" is the first one (the conversion is the slower block), we have to be particularly careful. At this point, it's clear that we cannot write another block like the previous one; not like the following:
 
 # #+name: send-ebook
@@ -2095,6 +2107,31 @@ In emacs lisp, you can move files from one directory to another using =rename-fi
                                (file-name-nondirectory (concat file ".mobi"))))
 #+end_src
 
+# Prima di passare ad altro, prendiamo un momento per osservare la funzione nella sua interezza.
+Before moving on to something else, let's take a moment to observe the function as a whole.
+
+#+begin_src emacs-lisp :tangle config.el :noweb yes
+(defun send-to-kindle ()
+  (dolist (file (directory-files tokindle-epub-path 'full (rx ".epub" eos) 'nosort))
+    (let ((filename (file-name-sans-extension file))
+          (ext (file-name-extension file)))
+
+      ;; Manage conversion between formats
+      <<convert-in-mobi-sync>>
+
+      ;; Send the mobi files with calibre
+      <<send-ebook-sync>>
+
+      ;; now you can move the ebook files into the proper directories
+      <<clean-up>>
+      ))
+  ;; congratulations *clap clap*, the files were sent to your kindle
+  (message "All available ebooks are being sent to your Kindle."))
+
+;; try me!
+;; (send-to-kindle)
+#+end_src
+
 The sync function takes time but works fine.
 It could be especially useful to be called from the shell:
 
@@ -2105,10 +2142,20 @@ emacsclient -e '(send-to-kindle)'
 # How can I write two async blocks in emacs lisp, being careful that the first one is being finished before the second block runs?
 # You can use the =async-start= function with the =:sync= option set to =t= for the first block. This will cause it to run synchronously and not return until it has finished. Then use =async-start= again for the second block without setting =:sync= to ensure it runs asynchronously.
 
+***** COMMENT The async approach
+Now, let's go back to the asynchronous version.
+
 How can I write asynchronously functions in emacs lisp?
 
 You can write asynchronous functions in Emacs Lisp by using the built-in =async-start= and =async-start-process= functions to execute a function in the background.
 You can also use the =deferred= library or the newer =async= library which provides more advanced functionality for writing asynchronous code.
+
+***** Conclusions
+
+[...]
+
+{{{prismcss}}}
+{{{prismjs}}}
 
 **** Get NOTES from Kindle
 # TODO

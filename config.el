@@ -207,6 +207,24 @@ A nil value implies no custom theme should be enabled.")
 
 (setq tokindle-mobi-path-sent "~/Scaricati/mobi_sent")
 
+(defun ebook-convert-epub-to-mobi (file)
+  (format "ebook-convert \"%s\" \"%s\".mobi" file file))
+
+(defun tokindle-calibre-smtp-cmd (filename)
+  (concat "calibre-smtp "
+          ;; attachment
+          (format "-a \"%s.mobi\" " filename)
+          ;; subject
+          (format "-s \"%s\" " (file-name-nondirectory filename))
+          (format "-r \"%s\" " (getenv "TOKINDLE_SMTP"))
+          (format "--port \"%s\" " (getenv "TOKINDLE_PORT"))
+          (format "-u \"%s\" " (getenv "TOKINDLE_USERNAME"))
+          (format "-p \"%s\" " (getenv "TOKINDLE_PASSWORD"))
+          (format "\"%s\" " (getenv "TOKINDLE_MY_MAIL"))
+          (format "\"%s\" " (getenv "TOKINDLE_KINDLE_MAIL"))
+          ;; text
+          "\"\""))
+
 (defun send-to-kindle ()
   (dolist (file (directory-files tokindle-epub-path 'full (rx ".epub" eos) 'nosort))
     (let ((filename (file-name-sans-extension file))
@@ -239,25 +257,7 @@ A nil value implies no custom theme should be enabled.")
   (message "All available ebooks are being sent to your Kindle."))
 
 ;; try me!
-(send-to-kindle)
-
-(defun ebook-convert-epub-to-mobi (file)
-  (format "ebook-convert \"%s\" \"%s\".mobi" file file))
-
-(defun tokindle-calibre-smtp-cmd (filename)
-  (concat "calibre-smtp "
-          ;; attachment
-          (format "-a \"%s.mobi\" " filename)
-          ;; subject
-          (format "-s \"%s\" " (file-name-nondirectory filename))
-          (format "-r \"%s\" " (getenv "TOKINDLE_SMTP"))
-          (format "--port \"%s\" " (getenv "TOKINDLE_PORT"))
-          (format "-u \"%s\" " (getenv "TOKINDLE_USERNAME"))
-          (format "-p \"%s\" " (getenv "TOKINDLE_PASSWORD"))
-          (format "\"%s\" " (getenv "TOKINDLE_MY_MAIL"))
-          (format "\"%s\" " (getenv "TOKINDLE_KINDLE_MAIL"))
-          ;; text
-          "\"\""))
+;; (send-to-kindle)
 
 ;; Generate TOML frontmatter
 (defun new-toml-frontmatter ()
