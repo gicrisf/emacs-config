@@ -1549,7 +1549,7 @@ defendants.chesscom -> hans: 72 page report of cheating
 (require 'ox-json)
 #+end_src
 
-*** Zettelkasten (Roam) :it:
+*** Org Roam :it:
 Ogni volta che devo prendere un appunto, una domanda torna a pungolarmi: dove scriverlo?
 I miei org files crescono sempre di più ed a un certo punto mi sono arreso all'idea che avere un database potrebbe essere d'aiuto.
 Per fortuna, non sono il primo ad essermi posto questi problemi ed esistono già molti strumenti che coprono questa necessità.
@@ -1719,19 +1719,19 @@ Finally, we activate =elfeed-score= by adding these lines in the init file (=con
 {{{prismcss}}}
 {{{prismjs}}}
 
-*** Web development
-**** Typescript/React
+*** Typescript
 # Innanzitutto, bisogna avere aggiunto alcuni moduli: =web= e =javascript=, in particolare.
 First of all, you need to have added some modules: =web= and =javascript=, in particular.
 This is done by uncommenting them in =.doom.d/init.el= (remove =;;= as shown in the "Doom modules" paragraph above).
 
 # Per farlo, basta togliere =;;= nel file di configurazione =.doom.d/init.el=, come fatto nel paragrafo sopra.
-At this point, someone may want to work with files in the =.tsx= format. Support for this use case may be coming soon, but for the moment we can use a simple line of Lisp in the configuration file.
+At this point, someone may want to work with files in the =.tsx= format.
+Support for this use case may be coming soon, but for the moment we can use a simple line of Lisp in the configuration file.
 
 # A questo punto, è possibile che uno voglia lavorare con file in formato =.tsx=. Il supporto per questo caso d'uso potrebbe arrivare presto, ma per il momento ci viene in soccorso una semplice riga di lisp nel file di configurazione, [[https://github.com/hlissner/doom-emacs/issues/2252#issuecomment-569059839][secondo il suggerimento di hlissner]]:
 
 #+begin_src emacs-lisp :tangle config.el
-;; Support for Typescript/React
+;; Support for React
 (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode))
 #+end_src
 
@@ -1746,7 +1746,9 @@ If you are looking for a solution for Vanilla Emacs or Spacemacs, this other one
   (add-to-list 'auto-mode-alist (cons (rx ".tsx" string-end) #'typescript-tsx-mode)))
 #+end_src
 
-Praticamente dichiariamo una modalità derivata dalla =typescript-mode= e le assegniamo anche i file con estensione =.tsx=. Per maggiori dettagli, [[https://github.com/emacs-typescript/typescript.el/issues/4#issuecomment-849355222][fate riferimento a questo issue su Github]].
+# Praticamente dichiariamo una modalità derivata dalla =typescript-mode= e le assegniamo anche i file con estensione =.tsx=. Per maggiori dettagli, [[https://github.com/emacs-typescript/typescript.el/issues/4#issuecomment-849355222][fate riferimento a questo issue su Github]].
+Basically, we make a new mode derived from =typescript-mode= and we assign it the =.tsx= extension too.
+For more details, refer to [[https://github.com/emacs-typescript/typescript.el/issues/4#issuecomment-849355222][this Github issue]].
 
 *** Vala
 # Il supporto per Vala è largamente ereditato dalla mode per C#.
@@ -1891,6 +1893,226 @@ Drag and drop to dired:
 (add-hook 'dired-mode-hook 'org-download-enable)
 #+end_src
 
+*** Kindle
+**** Send EBOOKS to Kindle
+Since I often stockpile text to read in the form of ebooks, I usually prefer to read them on my Kindle.
+
+Essentially, there are two practical ways for loading new ebooks on a Kindle:
+- USB
+- Mail
+
+# Per inviare qualcosa sul tuo Kindle personale, prima di tutto bisogna abilitare l'indirizzo email da cui gli ebook saranno inviati, altrimenti Amazon rifiuterà il file (per ragioni di sicurezza). Dopo avere abilitato la mail sul portale di Amazon, disporremo non solo di una mail a cui inviare l'epub, ma anche di un username ed una password, in modo non dissimile da quello che solitamente vale per il bearer token nelle API di servizi simili.
+
+In order to send something to your personal Kindle, the first step is to enable the email address from which the eBooks will be sent, otherwise Amazon will reject the file (for security reasons). After having enabled the email on the Amazon portal, we will have not only an email to send the epub to but also a username and password, similar to what usually applies to the bearer token in the APIs of similar services.
+
+# Per agevolare l'invio di email contenenti ebook al Kindle, Calibre ha disposto delle funzioni specifiche. Io, però, sono troppo pigro pure per aprire la GUI di Calibre e, generalmente, se un ebook è in giro per il mio computer, significa che prima o poi vorrò leggerlo. Quindi ho pensato di automatizzare il lavoro, affidandolo ad un singolo comando.
+
+To facilitate the sending of emails containing ebooks to Kindle, Calibre provides specific functions. However, I am too lazy to even open the Calibre GUI and, usually, if an ebook is on my computer, it means that sooner or later I will want to read it. Therefore, I have decided to automate the task by entrusting it to a single function.
+
+# Questa è la strategia:
+My strategy is pretty simple:
+- The code iterates over all files that have the =.epub= extension in a specific directory.
+- Every =.epub= file can be converted to the =.mobi= format and sent as an email attachment to the Kindle email address using =calibre-smtp= (Calibre must be installed).
+- The mail is sent with autentication using a given mail server port and login credentials.
+- Once the mail is sent, the =.mobi= files can be moved in another directory or deleted. The same applies to the =.epub= files.
+
+We have the blueprint, it's time to proceed in order.
+
+Translate this text in english, using a technical style and precision:
+# Prima di tutto, scegliamo la directory in cui vanno cercati i file che vogliamo inviare sul Kindle.
+Firstly, we set the =epub-path=, the directory in which to search for the files we want to send to the Kindle.
+
+#+begin_src emacs-lisp :tangle config.el
+(setq tokindle-epub-path "~/Scaricati/epub")
+#+end_src
+
+What will we do with the original files after conversion?
+We set directories for archiviation:
+
+#+begin_src emacs-lisp :tangle config.el
+(setq tokindle-epub-path-sent "~/Scaricati/epub_sent")
+#+end_src
+
+# Check if the following line is expressed in a correct english:
+If we convert the epub into mobi, we may want to manage the mobi files too in a similar fashion:
+
+#+begin_src emacs-lisp :tangle config.el
+(setq tokindle-mobi-path-sent "~/Scaricati/mobi_sent")
+#+end_src
+
+Finally, we can write the function, here called =send-to-kindle=.
+
+#+begin_src emacs-lisp :tangle config.el :noweb no-export
+(defun send-to-kindle ()
+  (dolist (file (directory-files tokindle-epub-path 'full (rx ".epub" eos) 'nosort))
+    (let ((filename (file-name-sans-extension file))
+          (ext (file-name-extension file)))
+
+      ;; Manage conversion between formats
+      <<convert-in-mobi-sync>>
+
+      ;; Send the mobi files with calibre
+      <<send-ebook-sync>>
+
+      ;; now you can move the ebook files into the proper directories
+      <<clean-up>>
+      ))
+  ;; congratulations *clap clap*, the files were sent to your kindle
+  (message "All available ebooks are being sent to your Kindle."))
+
+;; try me!
+(send-to-kindle)
+#+end_src
+
+- We start iterating over every epub file in =tokindle-epub-path=.
+- We give =full= and =nosort= optional arguments as non-nils to =directory-files= because we like the absolute path of files and we don't need any sorting; making the function sort the files would be a waste of time.
+- Expanding the path is not necessary, because =directory-files= is able to do it by itself.
+
+It would be convenient having a function to convert any epub file to mobi format.
+Calibre has [[https://manual.calibre-ebook.com/generated/en/ebook-convert.html][a CLI command for solving this problem]]:
+
+#+begin_src
+ebook-convert input_file output_file [options]
+#+end_src
+
+Formatting the command in emacs lisp, we got:
+
+#+begin_src emacs-lisp :tangle config.el
+(defun ebook-convert-epub-to-mobi (file)
+  (format "ebook-convert \"%s\" \"%s\".mobi" file file))
+#+end_src
+
+We could run it as a subprocess with =shell-command= and having good results, but the problem is that Emacs hangs on the process and stays blocked until it's finished. Making the function async would be better. Instead of using =shell-command= directly, we can implement it with Emacs' async libraries or directly using a function provided by =magit=.
+
+# TODO riscrivi dicendo se c'è magit fai una cosa, sennò fai l'altra
+Thanks to =magit-shell-command= we can monitor the process in a dedicated buffer.
+
+We can run the async function if Magit is installed, or run the previous one if Magit is missing. This way, Magit is not an hard requirement for this code to run correctly.
+# You can use the =if= statement and the =featurep= function to achieve this.
+
+# #+name: convert-in-mobi
+#+begin_src emacs-lisp
+;; if the mobi counterpart already exists, go on
+(if (not (file-exists-p (concat file ".mobi")))
+    ;; else convert the epub file in mobi
+    (if (featurep 'magit)
+        ;; function to run if Magit is installed
+        (magit-shell-command (ebook-convert-epub-to-mobi file))
+      ;; function to run if Magit is missing
+      (shell-command (ebook-convert-epub-to-mobi file))))
+#+end_src
+
+Before converting the epub file into mobi, we better check if the conversion wasn't already done.
+
+# How to check if a file already exists in emacs lisp?
+We can check if a file already exists in Emacs Lisp using the =file-exists-p= function.
+# It takes a file path as its argument and returns =t= if the file exists, or =nil= if it does not. Here's an example:
+
+Since the mobi conversion its done in the same directory of epub files, some files with the =mobi= extension could be left there from a previous failed process. This shouldn' happen and never happened to me, but being safe doesn't costs.
+
+# Per mandare via mail usiamo un altro comando reso disponibile da Calibre. Potremmo anche non usarlo, ma visto che già dipendiamo da Calibre per la funzione precedente (ed è quindi necessariamente installato), perché non usarlo?
+
+To send via email, we use [[https://manual.calibre-ebook.com/it/generated/it/calibre-smtp.html][another command made available by Calibre]].
+We could also choose another tool, but since we are already dependent on Calibre for the previous function (and it is therefore necessarily installed), why not use it?
+
+#+begin_src
+calibre-smtp [options] [from to text]
+#+end_src
+
+Again, we realize a function that maps it to a string that we can launch as subprocess.
+To build the SMTP command, we need to set up SMTP and credentials; the simpler way to store this informations is as environment variables. So, retrieving them is a matter of few =getenv= commands.
+
+#+begin_src emacs-lisp :tangle config.el
+(defun tokindle-calibre-smtp-cmd (filename)
+  (concat "calibre-smtp "
+          ;; attachment
+          (format "-a \"%s.mobi\" " filename)
+          ;; subject
+          (format "-s \"%s\" " (file-name-nondirectory filename))
+          (format "-r \"%s\" " (getenv "TOKINDLE_SMTP"))
+          (format "--port \"%s\" " (getenv "TOKINDLE_PORT"))
+          (format "-u \"%s\" " (getenv "TOKINDLE_USERNAME"))
+          (format "-p \"%s\" " (getenv "TOKINDLE_PASSWORD"))
+          (format "\"%s\" " (getenv "TOKINDLE_MY_MAIL"))
+          (format "\"%s\" " (getenv "TOKINDLE_KINDLE_MAIL"))
+          ;; text
+          "\"\""))
+#+end_src
+
+We run this command for each mobi file available. The question is: asynchronously or synchronously?
+
+The problem with async is that we have to make sure that the commands in the second block (email) doesn't start before the commands in the first block (conversion). Since the "rate determining step" is the first one (the conversion is the slower block), we have to be particularly careful. At this point, it's clear that we cannot write another block like the previous one; not like the following:
+
+# #+name: send-ebook
+#+begin_src emacs-lisp
+(if (file-exists-p (concat file ".mobi"))
+    (if (featurep 'magit)
+        (magit-shell-command (tokindle-calibre-smtp-cmd file))
+      (shell-command (tokindle-calibre-smtp-cmd file))))
+#+end_src
+
+This is a traditional problem in asynchronous programming: the asynchronous flow and the synchronous one must be considered separately or the code gets messy.
+The simple way to do this is just having two different functions.
+That's why we will rewrite the blocks before to work synchronously, then we will write the fully asynchronous functions in a second moment.
+
+To convert in mobi synchronously:
+
+#+name: convert-in-mobi-sync
+#+begin_src emacs-lisp
+(if (not (file-exists-p (concat file ".mobi")))
+    (progn
+      (message (concat "Converting " file "to mobi..."))
+      (shell-command (ebook-convert-epub-to-mobi file))
+      (message "Converted.")))
+#+end_src
+
+To send ebooks synchronously:
+
+#+name: send-ebook-sync
+#+begin_src emacs-lisp
+(if (file-exists-p (concat file ".mobi"))
+    (progn
+      (message (concat "Sending " (concat file ".mobi") "to your Kindle..."))
+      (shell-command (tokindle-calibre-smtp-cmd file))
+      (message "File sent.")))
+#+end_src
+
+# Non ci resta che scrivere una funzione che faccia piazza pulita dei file non più necessari. Poi potremo considerare la funzione conclusa.
+We just have to write a function that cleans up unnecessary files. Then we can consider this function finished.
+
+# How can I move files from a directory to another with Emacs lisp?
+In emacs lisp, you can move files from one directory to another using =rename-file= function.
+# Replace the file paths with your own and run this code in Emacs Lisp.
+
+#+name: clean-up
+#+begin_src emacs-lisp
+;; archive the epub
+(rename-file file (file-name-concat tokindle-epub-path-sent
+                                    (file-name-nondirectory file)))
+;; archive the mobi
+(rename-file (concat file ".mobi")
+             (file-name-concat tokindle-mobi-path-sent
+                               (file-name-nondirectory (concat file ".mobi"))))
+#+end_src
+
+The sync function takes time but works fine.
+It could be especially useful to be called from the shell:
+
+#+begin_src sh
+emacsclient -e '(send-to-kindle)'
+#+end_src
+
+# How can I write two async blocks in emacs lisp, being careful that the first one is being finished before the second block runs?
+# You can use the =async-start= function with the =:sync= option set to =t= for the first block. This will cause it to run synchronously and not return until it has finished. Then use =async-start= again for the second block without setting =:sync= to ensure it runs asynchronously.
+
+How can I write asynchronously functions in emacs lisp?
+
+You can write asynchronous functions in Emacs Lisp by using the built-in =async-start= and =async-start-process= functions to execute a function in the background.
+You can also use the =deferred= library or the newer =async= library which provides more advanced functionality for writing asynchronous code.
+
+**** Get NOTES from Kindle
+# TODO
+
 *** Zola :it:
 Funzioni ausiliarie che ho scritto per facilitarmi il lavoro quando scrivevo in Markdown per Zola.
 Come già spiegato sopra, ora esporto da org-mode, quindi l'utilità di queste funzioni è venuta meno, ma occasionalmente mi capita di impiegarle, quindi le lascio comunque.
@@ -2020,6 +2242,7 @@ Ma io sono pigro e non mi va di riscrivere ogni volta lo scaffold del frontmatte
 #+begin_src emacs-lisp :tangle config.el
 ;; Generate ORG/Zola frontmatter
 ;; TODO Section management
+;; Update the directory
 ;; MAYBE Add hook to org file IF hugo_base_dir or hugo_section is present at top
 (defun org-zola-frontmatter (slug)
   "Insert org-mode properties under a paragraph to setup ox-hugo/zola exports"

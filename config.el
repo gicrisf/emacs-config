@@ -189,7 +189,7 @@ A nil value implies no custom theme should be enabled.")
 (elfeed-score-enable)
 (define-key elfeed-search-mode-map "=" elfeed-score-map)
 
-;; Support for Typescript/React
+;; Support for React
 (add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode))
 
 ;; (setq racer-rust-src-path "~/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library")
@@ -200,6 +200,64 @@ A nil value implies no custom theme should be enabled.")
   (setq lsp-rust-server 'rust-analyzer))
 
 (add-hook 'dired-mode-hook 'org-download-enable)
+
+(setq tokindle-epub-path "~/Scaricati/epub")
+
+(setq tokindle-epub-path-sent "~/Scaricati/epub_sent")
+
+(setq tokindle-mobi-path-sent "~/Scaricati/mobi_sent")
+
+(defun send-to-kindle ()
+  (dolist (file (directory-files tokindle-epub-path 'full (rx ".epub" eos) 'nosort))
+    (let ((filename (file-name-sans-extension file))
+          (ext (file-name-extension file)))
+
+      ;; Manage conversion between formats
+      (if (not (file-exists-p (concat file ".mobi")))
+          (progn
+            (message (concat "Converting " file "to mobi..."))
+            (shell-command (ebook-convert-epub-to-mobi file))
+            (message "Converted.")))
+
+      ;; Send the mobi files with calibre
+      (if (file-exists-p (concat file ".mobi"))
+          (progn
+            (message (concat "Sending " (concat file ".mobi") "to your Kindle..."))
+            (shell-command (tokindle-calibre-smtp-cmd file))
+            (message "File sent.")))
+
+      ;; now you can move the ebook files into the proper directories
+      ;; archive the epub
+      (rename-file file (file-name-concat tokindle-epub-path-sent
+                                          (file-name-nondirectory file)))
+      ;; archive the mobi
+      (rename-file (concat file ".mobi")
+                   (file-name-concat tokindle-mobi-path-sent
+                                     (file-name-nondirectory (concat file ".mobi"))))
+      ))
+  ;; congratulations *clap clap*, the files were sent to your kindle
+  (message "All available ebooks are being sent to your Kindle."))
+
+;; try me!
+(send-to-kindle)
+
+(defun ebook-convert-epub-to-mobi (file)
+  (format "ebook-convert \"%s\" \"%s\".mobi" file file))
+
+(defun tokindle-calibre-smtp-cmd (filename)
+  (concat "calibre-smtp "
+          ;; attachment
+          (format "-a \"%s.mobi\" " filename)
+          ;; subject
+          (format "-s \"%s\" " (file-name-nondirectory filename))
+          (format "-r \"%s\" " (getenv "TOKINDLE_SMTP"))
+          (format "--port \"%s\" " (getenv "TOKINDLE_PORT"))
+          (format "-u \"%s\" " (getenv "TOKINDLE_USERNAME"))
+          (format "-p \"%s\" " (getenv "TOKINDLE_PASSWORD"))
+          (format "\"%s\" " (getenv "TOKINDLE_MY_MAIL"))
+          (format "\"%s\" " (getenv "TOKINDLE_KINDLE_MAIL"))
+          ;; text
+          "\"\""))
 
 ;; Generate TOML frontmatter
 (defun new-toml-frontmatter ()
@@ -237,6 +295,7 @@ A nil value implies no custom theme should be enabled.")
 
 ;; Generate ORG/Zola frontmatter
 ;; TODO Section management
+;; Update the directory
 ;; MAYBE Add hook to org file IF hugo_base_dir or hugo_section is present at top
 (defun org-zola-frontmatter (slug)
   "Insert org-mode properties under a paragraph to setup ox-hugo/zola exports"
