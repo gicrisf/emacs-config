@@ -1910,11 +1910,9 @@ Essentially, there are two practical ways for loading new ebooks on a Kindle:
 - Mail
 
 # Per inviare qualcosa sul tuo Kindle personale, prima di tutto bisogna abilitare l'indirizzo email da cui gli ebook saranno inviati, altrimenti Amazon rifiuterà il file (per ragioni di sicurezza). Dopo avere abilitato la mail sul portale di Amazon, disporremo non solo di una mail a cui inviare l'epub, ma anche di un username ed una password, in modo non dissimile da quello che solitamente vale per il bearer token nelle API di servizi simili.
-
 In order to send something to your personal Kindle, the first step is to enable the email address from which the eBooks will be sent, otherwise Amazon will reject the file (for security reasons). After having enabled the email on the Amazon portal, we will have not only an email to send the epub to but also a username and password, similar to what usually applies to the bearer token in the APIs of similar services.
 
 # Per agevolare l'invio di email contenenti ebook al Kindle, Calibre ha disposto delle funzioni specifiche. Io, però, sono troppo pigro pure per aprire la GUI di Calibre e, generalmente, se un ebook è in giro per il mio computer, significa che prima o poi vorrò leggerlo. Quindi ho pensato di automatizzare il lavoro, affidandolo ad un singolo comando.
-
 To facilitate the sending of emails containing ebooks to Kindle, Calibre provides specific functions. However, I am too lazy to even open the Calibre GUI and, usually, if an ebook is on my computer, it means that sooner or later I will want to read it. Therefore, I have decided to automate the task by entrusting it to a single function.
 
 ***** The strategy
@@ -2142,13 +2140,195 @@ emacsclient -e '(send-to-kindle)'
 # How can I write two async blocks in emacs lisp, being careful that the first one is being finished before the second block runs?
 # You can use the =async-start= function with the =:sync= option set to =t= for the first block. This will cause it to run synchronously and not return until it has finished. Then use =async-start= again for the second block without setting =:sync= to ensure it runs asynchronously.
 
-***** COMMENT The async approach
+***** COMMENT Async excursus
 Now, let's go back to the asynchronous version.
 
 How can I write asynchronously functions in emacs lisp?
 
 You can write asynchronous functions in Emacs Lisp by using the built-in =async-start= and =async-start-process= functions to execute a function in the background.
 You can also use the =deferred= library or the newer =async= library which provides more advanced functionality for writing asynchronous code.
+
+Write and explain a simple example of using deferred library in emacs lisp
+
+Here is a simple example of using the deferred library in Emacs Lisp:
+
+#+begin_src emacs-lisp
+(require 'deferred)
+
+(defvar my-deferred-result nil)
+
+(deferred:$
+  (deferred:next (lambda () 42))
+  (deferred:nextc it (lambda (x) (* x 2)))
+  (deferred:nextc it (lambda (x) (concat "The answer is " (number-to-string x))))
+  (deferred:nextc it (lambda (result) (setq my-deferred-result result))))
+
+;; Wait for the deferred operation to complete and print the result
+(deferred:wait my-deferred-result
+  (lambda (result) (message result)))
+#+end_src
+
+In this example, we use =deferred:$= to chain a sequence of deferred operations together. We start with a lambda function that returns the value 42. We then use =deferred:nextc= to chain two additional lambda functions that double the result and convert it to a string. Finally, we use =deferred:nextc= again to set the value of the =my-deferred-result= variable to the final result.
+
+To wait for the deferred operation to complete, we use =deferred:await= to specify the deferred result (=my-deferred-result=) and the function to call when the result is available (a lambda function that prints the result using =message=).
+
+#+begin_src emacs-lisp
+(require 'deferred)
+
+(deferred:$
+  (deferred:process "ls" "-l")
+  (deferred:nextc it
+    (lambda (process)
+      (message "Process output: %s" (buffer-string (process-buffer process))))))
+
+#+end_src
+
+In this example, we use the =deferred:process= function to run a process that lists the contents of the current directory (using the =ls -l= command). This function returns a deferred object that represents the result of the process.
+
+We then use the =deferred:nextc= function to schedule a callback that will be run when the deferred object is resolved. The callback takes the process object as its argument, and logs the output of the process to the minibuffer using the =message= function.
+
+By using =deferred=, we are able to run the process asynchronously, without blocking the Emacs UI, and handle the result of the process in a separate callback function. =deferred= also provides other useful functions for dealing with asynchronous operations, such as =deferred:map= and =deferred:wait=.
+
+Show how can I store a lambda to a variable in emacs lisp
+
+You can store a lambda to a variable in Emacs Lisp using the =defvar= or =setq= functions. Here's an example:
+
+#+begin_src emacs-lisp
+(defvar my-lambda (lambda (x) (+ x 1)))
+(funcall my-lambda 3)
+#+end_src
+
+In this example, we define a variable =my-lambda= and set it equal to a lambda function that takes one argument =x= and returns the value of =x + 1=.
+
+Now, I want to define a list of lambdas.
+
+You can use dolist in Emacs Lisp to iterate over a list and execute a body of code for each element in the list. Here is an example:
+
+#+begin_src emacs-lisp
+(dolist (elem list) (print elem))
+#+end_src
+
+In this example, =list= is the list you want to iterate over and =elem= is the variable that represents each element in the list.
+
+Going to the serious stuff, let's store a list of lambdas.
+
+#+begin_src emacs-lisp
+(defvar my-lambdas '((lambda (x) (+ x 1))
+                     (lambda (x) (- x 1))))
+
+(dolist (my-lambda my-lambdas) (message (number-to-string (funcall my-lambda 3))))
+#+end_src
+
+My point is those lambda can be procedurally generated from another list, then passed to be runned in parallel.
+
+Riscriviamo popolando una lista. Non si sa mai, meglio testare.
+
+#+begin_src emacs-lisp
+(defvar my-lambdas '())
+
+(defvar list-example '((lambda (x) (+ x 1))
+                     (lambda (x) (- x 1))))
+
+(dolist (example list-example) (add-to-list 'my-lambdas example))
+(add-to-list 'my-lambdas (lambda (x) (- x 3)))
+
+(print my-lambdas)
+#+end_src
+
+Ok, si può fare.
+
+#+RESULTS:
+
+***** The async approach
+# Translate this italian text in english:
+# Non avrei bisogno nemmeno di scrivere questa funzione, visto che ora Amazon ha annunciato che supporterà epub come formato, ma lo faccio giusto perché mi va di vedere come funzionano le chiamate asincrone su Emacs.
+
+# Potrei scriverla così, ma c'è un problema. Nel momento in cui lancio =add-to-list=, quel che viene dopo non viene valutato, solo trascritto. A me questo piace, ma voglio selettivamente valutare la variabile =file=.
+
+I could write it like this, but there's a problem. At the moment I launch 'add-to-list', what comes after is not evaluated, but only transcribed. I like it this way, but I want to selectively evaluate the 'file' variable.
+
+#+begin_src emacs-lisp :results output
+(defun send-to-kindle-async ()
+  ;; collect the lambdas you want to execute in parallel
+  (setq conversion-lambdas '())
+  (dolist (file (directory-files tokindle-epub-path 'full (rx ".epub" eos) 'nosort))
+    (add-to-list 'conversion-lambdas (lambda ()
+                                       (if (not (file-exists-p (concat file ".mobi")))
+                                           (progn
+                                             (message (concat "Converting " file "to mobi..."))
+                                             (shell-command (ebook-convert-epub-to-mobi file))
+                                             (message "Converted."))))))
+
+  (print conversion-lambdas))
+
+;; try me!
+(send-to-kindle-async)
+#+end_src
+
+#+RESULTS:
+:
+: ((lambda nil (if (not (file-exists-p (concat file ".mobi"))) (progn (message (concat "Converting " `file "to mobi...")) (shell-command (ebook-convert-epub-to-mobi file)) (message "Converted.")))))
+
+Qua subentra il [[https://www.gnu.org/software/emacs/manual/html_node/elisp/Backquote.html][backquoting]].
+
+Ne parlano anche su [[https://emacs.stackexchange.com/questions/7481/how-to-evaluate-the-variables-before-adding-them-to-a-list][Stack Exchange]].
+"How to evaluate the variables before adding them to list?"
+
+Il problema credo sia che =add-to-list= a sua volta fa uso di questi metodi, quindi backquoting dentro =add-to-list= non funziona.
+Mi conviene usare un metodo più semplice per aggiungere elementi alla lista.
+
+=cons= è il metodo più semplice.
+Non controlla niente, non fa verifiche strane.
+
+#+begin_quote
+=cons= is often used to add a single element to the front of a list. This is called /consing/ the element onto the list. 5 For example:
+#+end_quote
+
+#+begin_src emacs-lisp :results output
+(defun send-to-kindle-async ()
+  ;; collect the lambdas you want to execute in parallel
+  (setq conversion-lambdas '())
+  (dolist (file (directory-files tokindle-epub-path 'full (rx ".epub" eos) 'nosort))
+    (setq conversion-lambdas (cons `(lambda ()
+                                      (if (not (file-exists-p (concat ,file ".mobi")))
+                                          (progn
+                                            (message (concat "Converting " ,file "to mobi..."))
+                                            (shell-command-to-string (ebook-convert-epub-to-mobi ,file))
+                                            (message "Converted.")))) conversion-lambdas)))
+
+  (print conversion-lambdas))
+
+;; try me!
+(send-to-kindle-async)
+
+;; (deferred:$
+;;    (deferred:parallel
+;;      ()
+;;      ))
+
+(mapc #'funcall conversion-lambdas)
+
+;; espanso
+;; perché non arriva mai al secondo?
+(mapc #'funcall '((lambda nil (if (not (file-exists-p (concat "/home/cromo/Scaricati/epub/wsw.epub" ".mobi"))) (progn (message (concat "Converting " "/home/cromo/Scaricati/epub/wsw.epub" "to mobi...")) (shell-command (ebook-convert-epub-to-mobi "/home/cromo/Scaricati/epub/wsw.epub")) (message "Converted.")))) (lambda nil (if (not (file-exists-p (concat "/home/cromo/Scaricati/epub/boh.epub" ".mobi"))) (progn (message (concat "Converting " "/home/cromo/Scaricati/epub/boh.epub" "to mobi...")) (shell-command (ebook-convert-epub-to-mobi "/home/cromo/Scaricati/epub/boh.epub")) (message "Converted."))))))
+
+;; non va bene
+;; si aspetta stringp
+;; trova 0
+;; dopo aver fatto la prima generazione, quindi il primo comando
+;; prima di scrivere converted
+;; ma non è converted
+;; è questo il problema
+;; viene restituito da ebook-convert-epub-to-mobi
+;; 0 (#o0, #x0, ?\C-@)
+;; perché?
+;; la funzione si aspetta che sia restituito qualcosa
+;; una stringa
+;; invece non restituisce nulla
+;; dobbiamo usare il comando "shell-command-to-string"
+
+;; (funcall (car conversion-lambdas))
+#+end_src
 
 ***** Conclusions
 
@@ -2482,6 +2662,40 @@ Qui uno screenshot catturato con il tema city-lights.
 
 #+DOWNLOADED: screenshot @ 2022-08-10 13:34:44
 [[file:Configurare_Emacs_in_Org-mode/2022-08-10_13-34-44_screenshot.png]]
+*** Games
+**** Textual adventures
+# GPT
+# What is a text-based adventure game?
+A text-based adventure game is a computer game in which the player interacts with the game world through text commands inputted by the player, rather than through graphical interfaces. The game typically presents the player with a narrative or puzzle to solve, and the player navigates the game world by typing in commands to perform actions or interact with objects.
+
+# GPT
+# Why they relied so much on player's imagination? (or something)
+Text-based adventure games relied heavily on players' imagination because the game's interactive fiction format was limited to text descriptions of the game's environment and the player's actions. The player had to use their imagination to visualize the game's setting and their character's surroundings as they explored and interacted with the game world. This made text-based adventure games challenging and engaging, as the player's imagination played a crucial role in bringing the game to life.
+
+With [[https://github.com/speedenator/malyon][Malyon]], you can play your favourite text adventure inside Emacs.
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! malyon)
+#+end_src
+
+# Why Emacs works well with text-based adventure games?
+Emacs works well with text-based adventure games because it is designed to be customizable and extensible, making it easy to create and run interactive command-line programs within the editor. Additionally, Emacs has built-in support for navigating and manipulating text, which is critical for playing text-based adventure games.
+
+#+begin_quote
+Malyon is a [[http://ifwiki.org/index.php/Interpreter][Z-machine interpreter]] for playing text-based adventure games such as Zork.
+#+end_quote
+
+# GPT
+# Tell me about Zork, the textual game
+Zork is a classic interactive fiction game that was popular in the 1980s. It was developed by MIT students in the late 1970s and was originally called Dungeon. Zork was a text-based adventure game where players typed commands to explore a fantasy world and solve puzzles. The game was known for its sense of humor and imaginative world-building. It has since inspired many other similar text-based adventure games.
+
+Download games from:
+- [[http://www.ifarchive.org/indexes/if-archiveXgamesXzcode.html][Iteractive Fiction Archive]],
+- [[https://ifdb.org/][Interactive Fiction Database]],
+
+or make your own with [[https://www.emacswiki.org/emacs/InformMode][InformMode]].
+
+# Check [[https://github.com/lmintmate/malyon][this fork]] if you encounter some problem.
 
 *** Dashboard :it:
 **** Open org configuration (SPC o c)

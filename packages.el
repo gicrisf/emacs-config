@@ -101,6 +101,8 @@
 
 (package! info-colors)
 
+(package! malyon)
+
 (package! wttrin :recipe (:host github :repo "gicrisf/emacs-wttrin"))
 
 (package! tochemfig :recipe (:host github :repo "gicrisf/tochemfig"))
