@@ -1549,26 +1549,49 @@ defendants.chesscom -> hans: 72 page report of cheating
 (require 'ox-json)
 #+end_src
 
-*** Org Roam :it:
-Ogni volta che devo prendere un appunto, una domanda torna a pungolarmi: dove scriverlo?
-I miei org files crescono sempre di più ed a un certo punto mi sono arreso all'idea che avere un database potrebbe essere d'aiuto.
-Per fortuna, non sono il primo ad essermi posto questi problemi ed esistono già molti strumenti che coprono questa necessità.
-Tipicamente, sono associati al metodo dello zettelkasten.
-Software web-based sono sempre più usati, ma io non voglio abbandonare org-mode. Logseq fornisce supporto per org-mode, ma si tratta di una versione di org-mode con modifiche che la rendono dipendente dalla piattaforma stessa. Non possono essere lette (così come sono) su Emacs. A quel punto, tanto vale usare una versione modificata di Markdown, la portabilità è uguale, i limiti sono gli stessi.
-No, a me piacerebbe sfruttare org-mode al suo meglio, senza sottrarmi alle piacevolezze di una web UI di tanto in tanto.
-Org-roam sembra venirmi incontro perché:
-- Sfrutta SQLite3, che comunque è un database con molti pregi, tra cui una portabilità più elevata rispetto ad altri
-- È già alla seconda versione ed il codice è stato riscritto superando le difficoltà presenti in fase iniziale
-- Ha una community estesa (relativamente a quanto possa essere estesa per uno zettelkasten basato su org-mode)
-- Supporto nativo per delle UI web onde visualizzare i nodi
+*** Org Roam
+# Translate the following line from italian in english:
+# Ogni volta che devo prendere un appunto, una domanda torna a pungolarmi: dove scriverlo?
+Every time I have to take a note, a question keeps nagging me: where should I write it?
 
-Essendo il mio primo approccio, sicuramente sto trascurando fattori che emergeranno in seguito, ma mi sembrano buone basi.
-Ho anche letto delle [[https://karl-voit.at/2020/06/14/Zettelkasten-concerns/][critiche]], ad esempio relative al fatto che risulterebbe scomodo mantenere contemporaneamente differenti domini.
-Non mi importa molto, anzi, la mia idea è proprio quella di avere un database per tutto; non mi spiego nemmeno da dove nasca l'esigenza di differenziare. Le performance, forse?
-Installare è stato molto semplice:
-- Bisogna assicurarsi che sia installato SQLite3
-- Su Doom basta aggiungere il modulo =(org +roam2)=
+Until this very moment, my approach consisted of me collecting notes in "notebooks", which means I had a folder with a lot of org-mode files, named with some kind of topic. For example, I had a file for Python, a file for Linux, a file for Organic chemistry and so on. But my files kept growing and the themes kept mixing: what if I want to take a note about writing organic molecule in emacs? Should I store it in the "Emacs notebook" or the "Organic chemistry notebook"? Every single time a similar but quite different dilemma.
+That's why I searched for a less hierarchized method and I remembered of the zettelkasten method.
 
+**** What is a zettelkasten?
+A zettelkasten is a personal knowledge management system popularized by Niklas Luhman, a German sociologist. As the (german) term suggest, it consists of a collection of small notes. The small notes are often called "slips" and each of them must contain a single idea or topic.
+
+The point is that these slips can be organized and linked together in various ways and traditionally they required a lot of paper and storage tools to aid in the retrieval of the informations. Today, the zettelkasten can be totally virtual. Of course, this doesn't exclude the usefulness of the analogical one, we have just more options.
+
+To be honest, I didn't need to follow the zettelkasten method zealously; as I said, I was in search of a less hierarchized tool and that's what I found in Org-roam.
+
+**** What is org-roam?
+When it comes to note-taking software, Notion and Obsidian comes to mind. Web-based software is used more and more, but I don't want to live Org-mode, plain text and open-source software.
+# Logseq looks like a wonderful project, since it supports org-mode files and is open-source; I'm interested in Logseq too, but we will talk about it later.
+# Software web-based sono sempre più usati, ma io non voglio abbandonare org-mode. Logseq fornisce supporto per org-mode, ma si tratta di una versione di org-mode con modifiche che la rendono dipendente dalla piattaforma stessa. Non possono essere lette (così come sono) su Emacs. A quel punto, tanto vale usare una versione modificata di Markdown, la portabilità è uguale, i limiti sono gli stessi.
+# Since I like to stay in Emacs as much as I can, I want to talk about Org-roam first.
+
+# What is org-roam?
+Org-roam is an Emacs package that leverages Org-mode for note-taking and knowledge management based on the principles of Roam Research.
+It allows you to create and link notes in plain text files and provides navigation and search features for exploring your notes graph.
+
+# Are the following lines written in correct english? Verify the grammar and the tone.
+Org-roam employ a SQLite3 database to deliver the content faster when you search for it, but the *real* archive it's the plain text one.
+This means you can easily synchronize your content across devices and the archive remains extremely resilient, not dependent on any service, not even Emacs itself.
+Org-roam seems to provide the tool I was searching for.
+# The sentence is grammatically correct and has a positive tone.
+
+# Are the following line written in correct english?
+Moreover, Org-roam is a solid piece of software with a large community and has reached a second version, that is the one I will refer to from now on.
+# Yes, the given line is written in correct English.
+
+# Essendo il mio primo approccio, sicuramente sto trascurando fattori che emergeranno in seguito, ma mi sembrano buone basi.
+# Ho anche letto delle [[https://karl-voit.at/2020/06/14/Zettelkasten-concerns/][critiche]], ad esempio relative al fatto che risulterebbe scomodo mantenere contemporaneamente differenti domini.
+**** Installation
+The installation is very easy:
+- You must have SQLite3 on your system (and you probably already have);
+- On Doom Emacs you have to uncomment the =org= module, while adding =roam2= like this: =(org +roam2)=.
+
+**** Basic configuration :it:
 A questo punto, bisogna passare alla configurazione.
 In pratica, grazie a Doom abbiamo già una preconfigurazione, ma dobbiamo comunicare almeno la directory in cui vogliamo tenere i file.
 
@@ -1589,11 +1612,14 @@ Una delle cose per cui potrei usare lo zettelkasten è memorizzare tweet o toots
 Altro punto importante: *non è bene mescolare la propria produzione scritta con le citazioni altrui*.
 Per organizzare il roam, meglio seguire un approccio simile a [[https://jethrokuan.github.io/org-roam-guide/][quello descritto in questo post da Jehtro Kuan]] (autore di org-roam).
 
-Mi serve una UI:
+**** Web UI
+I need a UI to explore the nodes:
 
 #+begin_src emacs-lisp :tangle packages.el
 (package! org-roam-ui)
 #+end_src
+
+# In questo modo posso vedere i nodi in maniera molto piacevole all'interno del browser.
 
 *** Emacs Feed Configuration
 :PROPERTIES:
