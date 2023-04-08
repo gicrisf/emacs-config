@@ -82,6 +82,8 @@
 
 (package! ox-json)
 
+(package! org-roam-ui)
+
 (package! elfeed-goodies)
 
 (package! elfeed-score)

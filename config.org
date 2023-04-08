@@ -1589,6 +1589,12 @@ Una delle cose per cui potrei usare lo zettelkasten è memorizzare tweet o toots
 Altro punto importante: *non è bene mescolare la propria produzione scritta con le citazioni altrui*.
 Per organizzare il roam, meglio seguire un approccio simile a [[https://jethrokuan.github.io/org-roam-guide/][quello descritto in questo post da Jehtro Kuan]] (autore di org-roam).
 
+Mi serve una UI:
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! org-roam-ui)
+#+end_src
+
 *** Emacs Feed Configuration
 :PROPERTIES:
 :EXPORT_HUGO_SECTION: software/emacs-config-feed
@@ -2689,12 +2695,15 @@ Malyon is a [[http://ifwiki.org/index.php/Interpreter][Z-machine interpreter]] f
 # Tell me about Zork, the textual game
 Zork is a classic interactive fiction game that was popular in the 1980s. It was developed by MIT students in the late 1970s and was originally called Dungeon. Zork was a text-based adventure game where players typed commands to explore a fantasy world and solve puzzles. The game was known for its sense of humor and imaginative world-building. It has since inspired many other similar text-based adventure games.
 
-Download games from:
+Download Zork and other games from:
 - [[http://www.ifarchive.org/indexes/if-archiveXgamesXzcode.html][Iteractive Fiction Archive]],
 - [[https://ifdb.org/][Interactive Fiction Database]],
 
 or make your own with [[https://www.emacswiki.org/emacs/InformMode][InformMode]].
 
+# Secondo me si potrebbe sviluppare un gioco con org-mode
+# Prima di convertire Inform mode per il literate approach sarebbe meglio studiare bene Inform
+# Non ho tempo al momento, ma si tratta di un progettino potenzialmente interessante
 # Check [[https://github.com/lmintmate/malyon][this fork]] if you encounter some problem.
 
 *** Dashboard :it:
