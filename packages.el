@@ -99,8 +99,6 @@
 
 (package! eltweet :recipe (:host github :repo "gicrisf/eltweet"))
 
-(package! mastodon)
-
 (package! info-colors)
 
 (package! malyon)

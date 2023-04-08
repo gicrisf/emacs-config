@@ -132,8 +132,10 @@ Per entrambe trovate anche i mirrors su Github (che renderizza piacevolmente anc
 
 Ci sono vari modi per consentire ad Emacs di leggere la configurazione attraverso un org file; come tanti altri, io qui mi limito a generare i file di configurazione a partire dal file org, per mezzo di una pratica che Donald Knuth ha chiamato "tangling" (aggrovigliare).
 
-** Frontmatters :it:
-Cominciamo dalla testa dei nostri file di configurazione, cioè da tutti i commenti che troviamo di norma nelle prime 10-20 righe. C'è solo una modifica che è il caso di fare in questo punto: aggiungere un piccolo commento che ricordi all'eventuale lettore che il file in uscita è un file generato e che non va modificato direttamente.
+** Frontmatters
+# Translate the following line from italian to english:
+# Cominciamo dalla testa dei nostri file di configurazione, cioè da tutti i commenti che troviamo di norma nelle prime 10-20 righe. C'è solo una modifica che è il caso di fare in questo punto: aggiungere un piccolo commento che ricordi all'eventuale lettore che il file in uscita è un file generato e che non va modificato direttamente.
+Let's start from the head of our configuration files, that is, from all the comments that we usually find in the first 10-20 lines. There is only one modification that needs to be made at this point: adding a small comment that reminds the potential reader that the output file is a generated file and should not be directly modified.
 
 # Aggiungere questo pezzo con una macro:
 
@@ -147,7 +149,8 @@ Cominciamo dalla testa dei nostri file di configurazione, cioè da tutti i comme
 #+end_src
 
 
-Frontespizio di =init.el=.
+# Frontespizio di =init.el=.
+Frontmatter of =init.el=.
 
 #+begin_src emacs-lisp :tangle init.el :noweb no-export
 ;;; init.el -*- lexical-binding: t; -*-
@@ -169,7 +172,9 @@ Frontespizio di =init.el=.
 ;;      directory (for easy access to its source code).
 #+end_src
 
-Frontespizio di =packages.el=.
+# Frontespizio di =packages.el=.
+Frontmatter of =packages.el=.
+
 #+begin_src emacs-lisp :tangle packages.el :noweb no-export
 ;; -*- no-byte-compile: t; -*-
 ;;; $DOOMDIR/packages.el
@@ -185,7 +190,9 @@ Frontespizio di =packages.el=.
 ;(package! some-package)
 #+end_src
 
-Frontespizio di =config.el=.
+# Frontespizio di =config.el=.
+Frontmatter of =config.el=.
+
 #+begin_src emacs-lisp :tangle config.el :noweb no-export
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
 
@@ -493,7 +500,6 @@ Like before, I keep original comments of =packages.el= here, but the file will b
 # Manteniamo i commenti originali di =packages.el= all'interno del file.
 
 *** Recipe
-
 #+name: packages-recipe
 #+begin_src emacs-lisp :tangle packages.el
 ;; To install a package directly from a remote git repo, you must specify a
@@ -2562,7 +2568,9 @@ If you speak italian, [[https://zwitterio.it/coding/2022/quote-tweets-properly-w
 Firstly, let's install "mastodon.el":
 # Prima di tutto, installiamo mastodon.el:
 
-#+begin_src emacs-lisp :tangle packages.el
+# now *Untangled*
+# :tangle packages.el
+#+begin_src emacs-lisp
 (package! mastodon)
 #+end_src
 
