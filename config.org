@@ -1558,11 +1558,10 @@ Until this very moment, my approach consisted of me collecting notes in "noteboo
 That's why I searched for a less hierarchized method and I remembered of the zettelkasten method.
 
 **** What is a zettelkasten?
-A zettelkasten is a personal knowledge management system popularized by Niklas Luhman, a German sociologist. As the (german) term suggest, it consists of a collection of small notes. The small notes are often called "slips" and each of them must contain a single idea or topic.
-
+A zettelkasten is a personal knowledge management system popularized by Niklas Luhman, a German sociologist. As the (German) term suggests, it consists of a collection of small notes; the small notes are often called "slips" and each of them must contain a single idea or topic.
 The point is that these slips can be organized and linked together in various ways and traditionally they required a lot of paper and storage tools to aid in the retrieval of the informations. Today, the zettelkasten can be totally virtual. Of course, this doesn't exclude the usefulness of the analogical one, we have just more options.
 
-To be honest, I didn't need to follow the zettelkasten method zealously; as I said, I was in search of a less hierarchized tool and that's what I found in Org-roam.
+The zettelkasten method comes with a series of rules and peculiarities but, to be honest, I don't think I will follow the zettelkasten method zealously; as I said, I was searching for a less hierarchized tool and that's what I found in Org-roam.
 
 **** What is org-roam?
 When it comes to note-taking software, Notion and Obsidian comes to mind. Web-based software is used more and more, but I don't want to live Org-mode, plain text and open-source software.
@@ -1591,35 +1590,53 @@ The installation is very easy:
 - You must have SQLite3 on your system (and you probably already have);
 - On Doom Emacs you have to uncomment the =org= module, while adding =roam2= like this: =(org +roam2)=.
 
-**** Basic configuration :it:
-A questo punto, bisogna passare alla configurazione.
+**** Basic configuration
+Now, the configuration.
+# A questo punto, bisogna passare alla configurazione.
 In pratica, grazie a Doom abbiamo già una preconfigurazione, ma dobbiamo comunicare almeno la directory in cui vogliamo tenere i file.
+
+In the following directory, I will keep the plain-text files. I want to be clear about this point: if you have the file, you can always retrieve the full content you wrote.
 
 #+begin_src emacs-lisp :tangle config.el
 (setq org-roam-directory "~/Dropbox/roam")
 #+end_src
 
-Non resta che seguire i comandi di Doom Emacs per creare la prima nota: =SPC+n+r+i= per inserire una nota.
-Mentre stiamo scrivendo la nota, con la stessa combinazione si può inserire un link ad una nota.
-Questa risulterà connessa alla prima nel buffer.
+# Ora sorge un altro problema. Come eseguo il backup della mia org roam directory?
+# Potrei usare Dropbox, ma odio l'idea che possa darmi problemi per carenza di spazio.
+# L'evidente alternativa sarebbe usare git.
+I sync everything in my Dropbox by storing the files, not the database.
 
-Ora sorge un altro problema. Come eseguo il backup della mia org roam directory?
-Potrei usare Dropbox, ma odio l'idea che possa darmi problemi per carenza di spazio.
-L'evidente alternativa sarebbe usare git.
+**** The first note
+I use Evil on Doom Emacs, hence the keybinding I use for creating a note is =SPC+n+r+i= (action -> notes -> roam -> insert).
+# Non resta che seguire i comandi di Doom Emacs per creare la prima nota: =SPC+n+r+i= per inserire una nota.
 
-Una delle cose per cui potrei usare lo zettelkasten è memorizzare tweet o toots. Questo sarebbe facilitato dalle API, ma per quanto riguarda Twitter è difficile capire se valga la pena spendere del tempo, visto che hanno già annunciato cambiamenti. I thread sono difficili da immagazzinare tweet per tweet, quindi non se ne parla.
+The command will leave a link to the note on the underlying buffer. This behaviour can be useful in a lot of situations, for example you can easily chain more notes together.
+# Mentre stiamo scrivendo la nota, con la stessa combinazione si può inserire un link ad una nota.
+# Questa risulterà connessa alla prima nel buffer.
 
-Altro punto importante: *non è bene mescolare la propria produzione scritta con le citazioni altrui*.
-Per organizzare il roam, meglio seguire un approccio simile a [[https://jethrokuan.github.io/org-roam-guide/][quello descritto in questo post da Jehtro Kuan]] (autore di org-roam).
+**** Backlinks
+# Explain why backlinks are one of the most relevant strenghts in Org-roam
+# Raw output
+Backlinks in Org-roam are one of the most relevant strengths because they allow for easy navigation and organization of information. Just by adding a link to another note, all notes that link to it are automatically generated, providing a web of related information. This helps in discovering and exploring relationships between pieces of information, making it easier to create connections and draw meaningful insights. Additionally, backlinks allow for a more flexible and non-linear way of organizing information, as notes can be linked in multiple locations without duplicating them.
 
 **** Web UI
-I need a UI to explore the nodes:
+This UI helps exploring the nodes and the backlinks.
+# I need a UI to explore the nodes:
 
 #+begin_src emacs-lisp :tangle packages.el
 (package! org-roam-ui)
 #+end_src
 
 # In questo modo posso vedere i nodi in maniera molto piacevole all'interno del browser.
+
+**** References
+# Una delle cose per cui potrei usare lo zettelkasten è memorizzare tweet o toots. Questo sarebbe facilitato dalle API, ma per quanto riguarda Twitter è difficile capire se valga la pena spendere del tempo, visto che hanno già annunciato cambiamenti. I thread sono difficili da immagazzinare tweet per tweet, quindi non se ne parla.
+
+It's better to not mix your own written production with others' written productions. In other words, don't fill your notes with citations.
+# Altro punto importante: *non è bene mescolare la propria produzione scritta con le citazioni altrui*.
+
+How to reference others' work, then? I looked at [[https://jethrokuan.github.io/org-roam-guide/][the approach of Jehtro Kuan (org-roam author)]].
+# Per organizzare il roam, meglio seguire un approccio simile a [[https://jethrokuan.github.io/org-roam-guide/][quello descritto in questo post da Jehtro Kuan]] (autore di org-roam).
 
 *** Emacs Feed Configuration
 :PROPERTIES:
