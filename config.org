@@ -15,6 +15,8 @@
 # Temporary macros for prism support
 #+MACRO: prismcss @@html:<link href="/assets/prism/prism.css" rel="stylesheet" />@@
 #+MACRO: prismjs @@html:<script src="/assets/prism/prism.js"></script>@@
+# Macro for backlinks in exported posts
+#+MACRO: exportedfrom @@html:<hr><p>This post was exported from <a href="https://github.com/gicrisf/emacs-config">my literate configuration for Emacs</a></p>@@
 
 # Questo file mostra come gestire la configurazione di Emacs direttamente all'interno di org-mode.
 # Questo stesso file è anche la mia personale configurazione per Doom Emacs.
@@ -1550,6 +1552,12 @@ defendants.chesscom -> hans: 72 page report of cheating
 #+end_src
 
 *** Org Roam
+:PROPERTIES:
+:EXPORT_HUGO_SECTION: software/org-roam
+:EXPORT_FILE_NAME: index.en.md
+:EXPORT_DATE: [2023-04-08 sab]
+:END:
+
 # Translate the following line from italian in english:
 # Ogni volta che devo prendere un appunto, una domanda torna a pungolarmi: dove scriverlo?
 Every time I have to take a note, a question keeps nagging me: where should I write it?
@@ -1593,7 +1601,7 @@ The installation is very easy:
 **** Basic configuration
 Now, the configuration.
 # A questo punto, bisogna passare alla configurazione.
-In pratica, grazie a Doom abbiamo già una preconfigurazione, ma dobbiamo comunicare almeno la directory in cui vogliamo tenere i file.
+# In pratica, grazie a Doom abbiamo già una preconfigurazione, ma dobbiamo comunicare almeno la directory in cui vogliamo tenere i file.
 
 In the following directory, I will keep the plain-text files. I want to be clear about this point: if you have the file, you can always retrieve the full content you wrote.
 
@@ -1637,6 +1645,10 @@ It's better to not mix your own written production with others' written producti
 
 How to reference others' work, then? I looked at [[https://jethrokuan.github.io/org-roam-guide/][the approach of Jehtro Kuan (org-roam author)]].
 # Per organizzare il roam, meglio seguire un approccio simile a [[https://jethrokuan.github.io/org-roam-guide/][quello descritto in questo post da Jehtro Kuan]] (autore di org-roam).
+
+{{{exportedfrom}}}
+{{{prismcss}}}
+{{{prismjs}}}
 
 *** Emacs Feed Configuration
 :PROPERTIES:
@@ -2536,32 +2548,38 @@ Sempre al fine di automatizzare la produzione dei metadati, meglio automatizzare
 (setq org-log-done 'time)
 #+end_src
 
-*** Twitter :it:
-Questo piccolo pacchetto (che conto di estendere presto) nasce per assolvere ad una funzione molto semplice: citare i tweet nel mio blog.
-Ne racconto qui:
-- [[https://zwitterio.it/coding/2022/quote-tweets-properly-with-emacs-lisp/][Come citare un tweet in emacs lisp]];
+*** Twitter
+# Questo piccolo pacchetto (che conto di estendere presto) nasce per assolvere ad una funzione molto semplice: citare i tweet nel mio blog.
+A small package (which I plan to extend soon) designed to fulfill a very simple function: to cite tweets on my blog.
 
 #+begin_src emacs-lisp :tangle packages.el
 (package! eltweet :recipe (:host github :repo "gicrisf/eltweet"))
 #+end_src
 
-*** Mastodon :it:
-Prima di tutto, installiamo mastodon.el:
+If you speak italian, [[https://zwitterio.it/coding/2022/quote-tweets-properly-with-emacs-lisp/][at this link I narrate how it was written, commenting the code line-by-line from a perspective of a lisp beginner]];
+
+*** Mastodon
+Firstly, let's install "mastodon.el":
+# Prima di tutto, installiamo mastodon.el:
 
 #+begin_src emacs-lisp :tangle packages.el
 (package! mastodon)
 #+end_src
 
-Io sono su "@gicrisf@fosstodon.org", quindi:
+You can find me on "@gicrisf@fosstodon.org", so:
+# Io sono su "@gicrisf@fosstodon.org", quindi:
 
 #+begin_src emacs-lisp :tangle config.el
 (setq mastodon-instance-url "https://fosstodon.org"
       mastodon-active-user "gicrisf")
 #+end_src
 
-Sono meravigliato da quanto facile sia stato arrivare alla propria TL da Emacs grazie a mastodon.el, ma il layout di default è veramente insostenibile.
-Fortunatamente, Nicolas Rougier ha già [[https://gist.github.com/rougier/e92d446600dfe350b9ec9d7cabaca211][pubblicato un gist in cui rielabora il layout per adeguarlo alla propria configurazione]].
-Io non uso NANO, quindi servirà qualche ritocco sicuramente.
+I'm amazed by how easy it was to read the TL on Emacs, thanks to this package.
+The weak spot is the layout, but fortunately [[https://gist.github.com/rougier/e92d446600dfe350b9ec9d7cabaca211][Nicolas Rougier is working on it]].
+
+# Sono meravigliato da quanto facile sia stato arrivare alla propria TL da Emacs grazie a mastodon.el, ma il layout di default è veramente insostenibile.
+# Fortunatamente, Nicolas Rougier ha già [[https://gist.github.com/rougier/e92d446600dfe350b9ec9d7cabaca211][pubblicato un gist in cui rielabora il layout per adeguarlo alla propria configurazione]].
+# Io non uso NANO, quindi servirà qualche ritocco sicuramente.
 
 *** Music
 # Di questa parte ho già parlato in [[https://www.zwitterio.it/coding/2022/how-do-i-play-my-lofi-music/][un post dedicato]].
