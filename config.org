@@ -8,7 +8,8 @@
 #+hugo_categories: software posts notes
 #+hugo_publishdate: 2022-08-10
 #+hugo_auto_set_lastmod: t
-#+hugo_section: software/emacs-config/index.md
+#+hugo_date: [2023-04-09 dom]
+#+hugo_section: software/emacs-config/index.en.md
 
 # Zola specific divider
 #+MACRO: more @@html:<!-- more -->@@
@@ -18,46 +19,31 @@
 # Macro for backlinks in exported posts
 #+MACRO: exportedfrom @@html:<hr><p>This post was exported from <a href="https://github.com/gicrisf/emacs-config">my literate configuration for Emacs</a></p>@@
 
-# Questo file mostra come gestire la configurazione di Emacs direttamente all'interno di org-mode.
-# Questo stesso file è anche la mia personale configurazione per Doom Emacs.
-Welcome to my Emacs configuration, written in Org-mode.
-Being this a /literate configuration/, most of the choices I made are extensively documented here.
+Hello, and welcome to my Emacs configuration!
+It's written in Org-mode and designed to be /literate/, meaning that I've documented many of the choices I made throughout the process.
 
 {{{more}}}
 
-#+begin_quote
-*Keep in mind* that not evey part is translated in English.
-It happens to me writing stuff down in Italian, my mother language, so some sections are published as they are. It can take some time before I translate everyhting in English.
-#+end_quote
+* Intro
+** What is Emacs
+# What is Emacs?
+# developed by Richard Stallman in the 1970s, known for its extensibility and productivity features.
 
-* Emacs :it:
-Innanzitutto, cos'è Emacs?
+- Emacs is a highly customizable text editor.
+- Emacs is a lisp interpreter.
+- Emacs is a text manipulation application, known for its extensibility.
+- Emacs, like water, adapts to any container, flows around any obstacle, erodes mountains (of data), transforms into different phases (or modes) depending on circumstances.
 
-#+begin_quote
-Emacs is not a text editor, this is a common misnomer. It is far more apt to describe Emacs as a Lisp machine providing a generic user-centric text manipulation environment. That’s quite a mouthful. In simpler terms one can think of Emacs as a platform for text-related applications. It’s a vague and generic definition because Emacs itself is generic. ([[https://tecosaur.github.io/emacs-config/config.html#why-emacs][@tecosaur]])
-#+end_quote
+# Describing Emacs is not easy, because Emacs it's a moldable environment.
 
-Se solitamente Emacs è conosciuto come editor di testo, in verità sotto la scocca si tratta di qualcosa di molto più complesso: Emacs è una lisp machine, ovvero un sistema integrato capace di interpretare ed eseguire codice lisp e, con esso, una miriade di programmi pure molto articolati, tipicamente legati alla manipolazione del testo. Considerata la versatilità della piattaforma, mi sarebbe impossibile descriverla senza disseminare avverbi come "solitamente" o "tipicamente".
+Describing Emacs isn't easy, because Emacs is many things, and different ones to different people.
+To me, Emacs is the place where I write code, I write prose, I manage files, I read feeds, I think.
+In the next sections, I will show how.
 
-Io, ad esempio, uso quotidianamente Emacs per:
-- Scrivere codice
-- Scrivere prosa (via [[https://orgmode.org/][Org-mode]])
-- Gestire i file (via [[https://www.emacswiki.org/emacs/DiredMode][Dired]])
-- Git (grazie a [[https://magit.vc/][Magit]], Emacs è probabilmente [[https://news.ycombinator.com/item?id=28954058][il miglior git client in circolazione]])
-- RSS (via [[https://github.com/skeeto/elfeed][Elfeed]])
+Being Emacs so generic and powerful, it can be difficult to approach it and learn how to work with it. That's why Emacs distributions exist.
 
-Per qualche tempo l'ho usato anche come emulatore di terminale, ora capita solo in circostanze particolari, ad esempio per compilare del codice che sto scrivendo nel buffer a fianco.
-
-* Emacs distributions
-
-#+begin_comment it
-La barriera di ingresso, in verità, può essere parzialmente abbattuta per mezzo di distribuzioni Emacs pre-configurate, tra cui ne cito qualcuna, pescando tra le più famose:
-- [[https://www.spacemacs.org/][Spacemacs]] è stata la mia prima distribuzione: è particolarmente indicata per i neofiti in arrivo da vim, come ero io. Non solo è efficace nell'emulare vim (grazie ad [[https://github.com/emacs-evil/evil][Evil]]), ma dispone anche di miriadi di funzioni ausiliarie richiamabili con un semplice tocco sulla barra spaziatrice (space-emacs, non a caso).
-- [[https://github.com/rougier/nano-emacs][NANO Emacs]]: dipendenze minime, eccezionalmente elegante, funzionalmente molto vicina a Vanilla Emacs;
-- [[https://github.com/doomemacs/doomemacs][**Doom Emacs**]] è la mia distribuzione attuale, e quindi quella con cui sto scrivendo questo documento; anche questa (come Spacemacs) è molto bene integrata con Evil e si presta bene alle esigenze di ogni ex-vimmer. Inoltre, l'impiego di svariate strategie di lazy-loading e, in generale, una meditata selezione dei pacchetti rendono questa distribuzione estremamente scattante.
-#+end_comment
-
-The entry barrier, truthfully, can be partially broken down through pre-configured Emacs distributions, of which I mention a few of the most famous:
+** Emacs distributions
+The entry barrier can be partially broken down through pre-configured Emacs distributions, of which I mention a few of the most famous:
 - [[https://www.spacemacs.org/][Spacemacs]] was my first distribution: it is particularly indicated for newcomers coming from vim, like I was. Not only is it effective in emulating vim (thanks to [[https://github.com/emacs-evil/evil][Evil]]), but it also has countless auxiliary functions callable with a simple touch on the space bar (space-emacs, not surprisingly).
 - [[https://github.com/rougier/nano-emacs][NANO Emacs]]: minimal dependencies, exceptionally elegant, functionally very close to Vanilla Emacs;
 - [[https://github.com/doomemacs/doomemacs][Doom Emacs]] is my current distribution, and therefore the one I am using to write this document; also this one (like Spacemacs) is very well integrated with Evil and lends itself well to the needs of any ex-vimmer. In addition, the use of various lazy-loading strategies and, in general, a thoughtful selection of packages make this distribution extremely responsive.
@@ -65,72 +51,101 @@ The entry barrier, truthfully, can be partially broken down through pre-configur
 # La configurazione riportata in questo file può, potenzialmente, essere adattata anche ad altre distribuzioni Emacs, ma presa com'è funziona solo su Doom Emacs.
 The configuration reported in this file could potentially be adapted to other Emacs distributions, but as it is, it only works for Doom Emacs.
 
-* Emacs Lisp :it:
-Come dicevo, Emacs è un interpreter di lisp, ma per essere più corretti dovremmo fare riferimento ad Emacs Lisp, un dialetto della famiglia di linguaggi di programmazione che rientra sotto la denominazione "Lisp" (LISt Processor).
+** Emacs Lisp
+As I was saying, Emacs is a Lisp interpreter, but to be more precise we should refer to Emacs Lisp, a dialect of the programming language family that falls under the name "Lisp" (LISt Processor).
 
-Come già detto altrove [fn::da init file di Doom Emacs], "visto un dialetto di lisp, visti tutti":
+Lisp is a functional programming language known for its simple syntax and powerful macro system.
+Lisp's monomorphism demands bare-bones syntax (enough to scare lots of C-like coders), but this also gives flexibility that allows for easy prototyping and experimentation.
+Its versatility is illustrated by its use in artificial intelligence, theorem proving and web development, among other areas.
+
+# Non voglio dilungarmi in questa sede nella descrizione del linguaggio. Per un assaggio della sintassi e di qualche funzione base, piuttosto, rimando [[https://www.zwitterio.it/software/elisp-intro/][a questo post che ho scritto sul blog come breve introduzione]].
+
+# I don't want to go into detail about the language in this forum. For a taste of the syntax and some basic functions, instead, I refer you to [this post I wrote on the blog as a brief introduction]."# [[https://www.zwitterio.it/coding/2022/elisp-intro/][Ho scritto sul blog un'introduzione ad Emacs Lisp]], ma è in effetti più un mucchietto di appunti personali, un riassunto di funzioni utili.
+# Avendo iniziato solo da poco tempo a navigare nell'oceano di meraviglie e parentesi lispiane, non sono certo la fonte più autorevole per scendere più nel dettaglio.
+
+For a quick guide to Emacs Lisp, I recommend taking a look at [[https://github.com/chrisdone/elisp-guide][this repo]].
+For a less quick but more in-depth guide, refer to [[https://github.com/hypernumbers/learn_elisp_the_hard_way][Learn elisp the hard way]].
+
+# Per essere ancora più precisi, Emacs fa largo uso di CL e altro con adeguate interfacce
+
+** Literate programming
+CLOSED:
+:PROPERTIES:
+:EXPORT_HUGO_SECTION: software/literate-programming
+:EXPORT_FILE_NAME: index.en.md
+:EXPORT_DATE: [2023-04-10 lun]
+:END:
+
+What is /literate programming/? Is it not just another way of describing code?
+
+{{{more}}}
+
+Literate programming is a programming paradigm that emphasizes the organization of code for human understanding, rather than computer execution. It involves embedding documentation and explanatory text alongside code in a single document, allowing for clearer communication of the code's intent and functionality.
+
+# Mia vecchia introduzione
+# Il literate programming è un paradigma di programmazione ideato da Donald Knuth che prevede l'alternarsi di testo e di codice, in un modo che sono sicuro sia noto a chiunque si sia mai trovato a maneggiare un Jupiter Notebook.
+
+In short, everything is written in a single file and the editor is taught how to assemble the code at a later time. The practice of writing the source is called /weaving/, while the moment of exporting is called /tangling/.
+
+This approach has numerous advantages, but I will mention just two of the most evident:
+- First of all, the code is very readable even after a long time, but this is a result that could be achieved by commenting a source code properly in the traditional way. Certainly, it is much simpler to associate simplified code blocks or examples from the manual just before writing the code that will then be part of the exported file. In org-mode, it is also possible to combine various languages and run them on the spot with org-babel;
+- Secondly, the act of writing does not necessarily have to conform to the order that the text should have for the compiler to understand it, but rather it is expected to follow the developer's reasoning.
+
+To quote Donald Knuth, who was the first to conceive of this approach,
 
 #+begin_quote
-if you've seen one lisp, you've seen them all
+The WEB language allows a person to express programs in a "stream of consciousness" order. TANGLE is able to scramble everything up into the arrangement that a PASCAL compiler demands. This feature of WEB is perhaps its greatest asset; it makes a WEB-written program much more readable than the same program written purely in PASCAL, even if the latter program is well commented. And the fact that there's no need to be hung up on the question of top-down versus bottom-up, since a programmer can now view a large program as a web, to be explored in a psychologically correct order is perhaps the greatest lesson I have learned from my recent experiences.
+
+– Donald Knuth ([[https://academic.oup.com/comjnl/article/27/2/97/343244?login=false][Literate Programming, 1984]])
 #+end_quote
 
-# Questo accade perché il peculiare monomorfismo di lisp determina necessariamente l'impiego di una sintassi ridotta all'osso, che è facile intimorisca chiunque arrivi da linguaggi C-like. Al di là delle prime impressioni, la sintassi di Lisp è in verità una delle più semplici, leggibile a patto che il codice sia scritto da mani capaci. Questo è certamente vero con qualunque linguaggio di programmazione, ma con i lisp in maniera particolare, perché di suo la sintassi non costringe lo sviluppatore a tipizzare le variabili o a gerarchizzare i dati in maniere specifiche: sono i nomi dati alle funzioni ed alle liste a dovere essere eloquenti.
+To generate the compilable, it is sufficient to call the blocks in the right order with very easy-to-create and easy-to-manage macros, all within the same file. After naming a block of code with its own name, for example =patate=, using the /noweb/ syntax it is sufficient to write =<<patate>>= in another block to see it reappear in the right place.
 
-# Come Emacs è tra i più antichi editor di testo ancora in circolazione, così lisp è tra i più antichi linguaggi, eppure anche lisp è tuttora vivo e vegeto ed è "parlato" quotidianamente da migliaia di sviluppatori.
+I don't mean this is the best way to code always. Often it's better to stick to clear and concise code. But sometimes, /weaving/ a few extra characters ahead of time can make processing a lot smoother in the long run. This is especially true with infrequently modified configuration files.
 
-Non voglio dilungarmi in questa sede nella descrizione del linguaggio. Per un assaggio della sintassi e di qualche funzione base, piuttosto, rimando [[https://www.zwitterio.it/software/elisp-intro/][a questo post che ho scritto sul blog come breve introduzione]].
+By doing so, it can be easier to explain code to folks. Moreover, there is nothing to prevent writing the more self-evident parts in a classical way and extensively commenting only the small notable pieces. Literate programming extends the freedoms of intervention on the text without imposing limitations in any way, except for adding layers of abstraction that the developer must learn to manage.
 
-# [[https://www.zwitterio.it/coding/2022/elisp-intro/][Ho scritto sul blog un'introduzione ad Emacs Lisp]], ma è in effetti più un mucchietto di appunti personali, un riassunto di funzioni utili.
-
-In caso voleste spingervi lievemente oltre, rimando a questi altri post (in ordine di difficoltà):
-- [[https://zwitterio.it/software/how-do-i-play-my-lofi-music/][Come riproduco la mia musica Lo-fi]];
-- [[https://zwitterio.it/software/quote-tweets-properly-with-emacs-lisp/][Come citare un tweet in emacs lisp]];
-- [[https://zwitterio.it/software/apis-on-emacs/][Come usare le API di twitter in Emacs Lisp]].
-
-Avendo iniziato solo da poco tempo a navigare nell'oceano di meraviglie e parentesi lispiane, non sono certo la fonte più autorevole per scendere più nel dettaglio.
-Per una guida rapida ad Emacs Lisp, consiglio di dare un'occhiata [[https://github.com/chrisdone/elisp-guide][a questa repo]].
-Per una guida meno rapida, ma più approfondita, fate riferimento a [[https://github.com/hypernumbers/learn_elisp_the_hard_way][Learn elisp the hard way]].
-
-* Literate configuration :it:
-Tradizionalmente, la configurazione di Doom Emacs è raccolta in 3 file fondamentali, a loro volta contenuti in una apposita directory nella home, =.doom.d=.
-Questi file sono:
-- =config.el=;
-- =init.el=;
-- =packages.el=.
-
-Altre distribuzioni hanno gerarchie più semplici (Vanilla Emacs prevede sia tutto in =.emacs=) o più caotiche o più stratificate (es. layer in Spacemacs).
-
-# TODO: eltweet import as org shortcode
-# @@html:<blockquote class="twitter-tweet"><p lang="en" dir="ltr">OH: I now officially work with people younger than my .emacs file</p>&mdash; â¨ Phil CalÃ§ado (@pcalcado) <a href="https://twitter.com/pcalcado/status/871810979180556292?ref_src=twsrc%5Etfw">June 5, 2017</a></blockquote>@@
-
-Doom, di suo, mantiene secondo me una piacevole via di mezzo.
-
-Anziché intervenire su questi file direttamente, possiamo scrivere la nostra configurazione su un file =.org=, da cui generare in seconda battuta i 3 file di configurazione principali.
+The tools of literate programming can be useful to any developer, but they can also become the nucleus of a new way of conceiving programming.
 
 #+begin_quote
 Let us change our traditional attitude to the construction of programs: Instead of imagining that our main task is to instruct a computer what to do, let us concentrate rather on explaining to human beings what we want a computer to do.
 
-The practitioner of literate programming can be regarded as an essayist, whose main concern is with exposition and excellence of style. Such an author, with thesaurus in hand, chooses the names of variables carefully and explains what each variable means. He or she strives for a program that is comprehensible because its concepts have been introduced in an order that is best for human understanding, using a mixture of formal and informal methods that reinforce each other. — Donald Knuth
+*The practitioner of literate programming can be regarded as an essayist*, whose main concern is with exposition and excellence of style. Such an author, with thesaurus in hand, chooses the names of variables carefully and explains what each variable means. He or she strives for a program that is comprehensible because its concepts have been introduced in an order that is best for human understanding, using a mixture of formal and informal methods that reinforce each other.
+
+– Donald Knuth
 #+end_quote
 
-Come accennavo in una parentesi sopra, questa prassi si rifa' ai principi della programmazione letteraria (/literate programming/), un paradigma proposto per la prima volta da Donald Knuth, che ne dimostrò le potenzialità scrivendo così il compilatore di TeX.
+For those who seek a deeper dive, behold I leave some additional readings:
+- [[https://www.cs.upc.edu/~eipec/pdf/p583-van_wyk.pdf][Communication of the ACM, 1987]]
+- [[https://orgmode.org/worg/org-contrib/babel/intro.html#literate-programming][Literate programming in org-mode]]
+
+* Literate configuration
+How can we make the Emacs configuration /literate/?
+# As the winds of Emacs blow, one can refine the art of configuring it, much like a master observes and learns from the tricks of others.
+
+First, we need to know the usual configuration of Emacs.
+Traditionally, Emacs expects the configuration to be all contained in =.emacs=, so the approach is very simple and straightforward.
+# TODO: eltweet import as org shortcode
+# @@html:<blockquote class="twitter-tweet"><p lang="en" dir="ltr">OH: I now officially work with people younger than my .emacs file</p>&mdash; â¨ Phil CalÃ§ado (@pcalcado) <a href="https://twitter.com/pcalcado/status/871810979180556292?ref_src=twsrc%5Etfw">June 5, 2017</a></blockquote>@@
+
+Distributions instead provide for a hierarchy of contents in different files.
+Doom Emacs, for example, collects the configuration in three fundamental files:
+- =config.el=;
+- =init.el=;
+- =packages.el=.
+
+These are contained in a special directory in the home directory, =.doom.d=.
+Other distributions have more chaotic or more layered hierarchies (e.g. Spacemacs with its layers).
+
+In my opinion, Doom maintains a pleasant middle ground.
+
+Instead of directly modifying these files, we can write our configuration in an =.org= file, from which we can then generate the 3 main configuration files. This practice is based on the principles of literate programming, a paradigm first proposed by Donald Knuth, who demonstrated its potential by writing the TeX compiler in this way.
+
+The art of configuring Emacs (like many others) is refined by studying the tricks of others.
+Interesting literary configurations: [[https://gitlab.com/zzamboni/dot-doom][Zamboni's]] and [[https://git.tecosaur.net/tec/emacs-config][Tecosaur's]].
 
 # Grazie ad org-mode è possibile abbracciare il literate programming per mezzo di una libreria detta "babel".
-
-Per maggiori dettagli sul literate programming in org-mode [[https://orgmode.org/worg/org-contrib/babel/intro.html#literate-programming][vedi la documentazione ufficiale]].
-
 # [[https://blog.thomasheartman.com/posts/configuring-emacs-with-org-mode-and-literate-programming][Come scrive Thomas Heartman sul suo blog]], nelle versioni più recenti di Emacs bastano poche righe di codice per incorporare in org-mode la propria configurazione, grazie ad una funzione speciale di org-babel che supporta proprio questo scopo (sempre più diffuso nella comunità di utenti).
-
-Diego Zamboni, [[https://gitlab.com/zzamboni/dot-doom][nella propria configurazione]] scrive:
- #+BEGIN_QUOTE
-Emacs config is an art, and I have learned a lot by reading through other people’s config files, and from many other resources.
-#+END_QUOTE
-
-Insomma, l'arte di configurare Emacs (come tante altre) si affina studiando i trucchetti altrui.
-Tra le configurazioni org più illuminanti, segnalo anche [[https://git.tecosaur.net/tec/emacs-config][la configurazione di tecosaur]].
-Per entrambe trovate anche i mirrors su Github (che renderizza piacevolmente anche i file org).
-
-Ci sono vari modi per consentire ad Emacs di leggere la configurazione attraverso un org file; come tanti altri, io qui mi limito a generare i file di configurazione a partire dal file org, per mezzo di una pratica che Donald Knuth ha chiamato "tangling" (aggrovigliare).
 
 ** Frontmatters
 # Translate the following line from italian to english:
@@ -567,8 +582,12 @@ Like before, I keep original comments of =packages.el= here, but the file will b
 #+end_src
 
 ** Configuration
-# Infine, veniamo alla configurazione vera e propria.
 In the end, we get to the actual configuration.
+
+#+begin_quote
+*Keep in mind that not every part is translated into English*.
+Since Italian is my mother language, I sometimes write sections in Italian and publish them as is. It may take some time before I can translate everything into English.
+#+end_quote
 
 *** Who am I?
 # *** Chi sono?
@@ -1212,17 +1231,28 @@ A nil value implies no custom theme should be enabled.")
       :desc "Quick toggle theme" "t t" #'toggle-theme)
 #+end_src
 
-*** Org-mode essentials
+*** Org-mode
+[[https://orgmode.org/][Org-mode]] is a major mode for Emacs that provides a powerful system for organizing and managing information.
+Another vague definition, isn't it? It is certainly not a coincidence.
+The truth is that org-mode is often described as a markup language, but aspires to a much higher goal.
+
 #+begin_quote
 Your life in plain text
 #+end_quote
 
-[[https://orgmode.org/][Org-mode]] is one of the most loved major mode on Emacs and one of the better piece of software I happened to met in my life.
-# [[https://orgmode.org/][Org-mode]] è una delle più amate major mode esistenti per Emacs ed è anche uno dei migliori pezzi di software che io abbia conosciuto in vita mia.
-At a first sight, it can seems like another markup language, like [[https://en.wikipedia.org/wiki/Markdown][Markdown]] or [[https://en.wikipedia.org/wiki/ReStructuredText][reStructuredText]]; if it was, it would be a good one, considering the enjoyable syntax. In reality, though, org-mode is way more than that.
+Indeed, Org-mode is an enjoyable and versatile markup language, and for this reason it is often compared with [[https://en.wikipedia.org/wiki/Markdown][Markdown]] or [[https://en.wikipedia.org/wiki/ReStructuredText][reStructuredText]], but thanks to its flexibility and extensibility, it can be employed for a wide range of tasks, from writing notes and lists to managing projects and even creating LaTeX documents.
+
+The strength of org-mode lies in its parser. Thanks to it, Emacs is capable of turning a simple text file into living substance: internally, the parsed data is organized into a hierarchical tree structure that can be navigated and manipulated using various commands and functions provided by org-mode.
+In addition to its built-in functionality, org-mode also has a vibrant ecosystem of extensions and plugins that can be used to extend its capabilities.
+
+# recognizing and interpreting a wide variety of structured text and, so, enabling to perform operations like formatting, outlining, and export with great flexibility and precision.
+# It allows users to create and organize notes, TODO lists, schedules, and documents using plain text files with a simple markup syntax.
+# Org-mode is one of the most beloved major modes in Emacs and one of the best pieces of software I have ever encountered.
+# Initially, org-mode may appear to be similar to other markup languages such as Markdown or reStructuredText, given its pleasant syntax. However, org-mode offers far more functionality and capabilities beyond that of a simple markup language.
 # A prima vista sembra "solo l'ennesimo linguaggio di markup", come [[https://en.wikipedia.org/wiki/Markdown][Markdown]] o [[https://en.wikipedia.org/wiki/ReStructuredText][reStructuredText]], ma in realtà è molto, molto di più [fn::anche se, bisogna dirlo, se pure fosse un semplice linguaggio di markup ci sarebbe da tenerne in conto, vista la piacevole sintassi].
 
-Just like Emacs, Org-mode needs a lot of working hours to be known and tamed for good. We can enumerate some common use here:
+Just like Emacs, Org-mode needs a lot of working hours to be known and tamed for good.
+We can enumerate some common uses here:
 - simple notes
 - /literate programming/
 - planners
@@ -1342,10 +1372,12 @@ To install the package:
 (package! org-web-tools)
 #+end_src
 
-*** Org-capture :it:
-Org capture torna comodo per appuntarsi in org-mode frammenti di pagine web.
+*** Org-capture
+# Org capture torna comodo per appuntarsi in org-mode frammenti di pagine web.
+Org capture is useful for taking notes in org-mode of fragments of web pages
 
-Come manipolare l'HTML, però, è qualcosa che noi dobbiamo spiegare ad =org-capture=, fornendo uno o più template.
+# Come manipolare l'HTML, però, è qualcosa che noi dobbiamo spiegare ad =org-capture=, fornendo uno o più template.
+How to manipulate HTML, however, is something that we have to explain to =org-capture=, providing one or more templates.
 
 #+begin_src emacs-lisp :tangle config.el
 ;; org-capture
@@ -1357,13 +1389,15 @@ Come manipolare l'HTML, però, è qualcosa che noi dobbiamo spiegare ad =org-cap
 ))
 #+end_src
 
-Al fine di usare [[https://github.com/sprig/org-capture-extension][Org capture extension (Firefox)]], dobbiamo anche impostare l'org-protocol.
+# Al fine di usare [[https://github.com/sprig/org-capture-extension][Org capture extension (Firefox)]], dobbiamo anche impostare l'org-protocol.
+In order to use [[https://github.com/sprig/org-capture-extension][Org capture extension (Firefox)]], we must also set up org-protocol.
 
 #+begin_quote
 The gist of it is to make your system recognize emacsclient as the handler of org-protocol:// links. In addition, one needs to set up emacs to load org-protocol and to set up capture templates.
 #+end_quote
 
-Su linux, bisogna prima registrare questo handler:
+# Su linux, bisogna prima registrare questo handler:
+On Linux, you must first register this handler:
 
 #+begin_src txt :tangle tangled/.local/share/applications/org-protocol.desktop
 [Desktop Entry]
@@ -1375,7 +1409,8 @@ Categories=System;
 MimeType=x-scheme-handler/org-protocol;
 #+end_src
 
-A questo punto, su Gnome ed altri GTK-based Desktop Environments, è sufficiente lanciare questo comando:
+# A questo punto, su Gnome ed altri GTK-based Desktop Environments, è sufficiente lanciare questo comando:
+At this point, on GNOME and other GTK-based desktop environments, it is sufficient to launch this command:
 
 #+begin_src bash
 $ update-desktop-database ~/.local/share/applications/
@@ -2407,12 +2442,16 @@ Non controlla niente, non fa verifiche strane.
 **** Get NOTES from Kindle
 # TODO
 
-*** Zola :it:
-Funzioni ausiliarie che ho scritto per facilitarmi il lavoro quando scrivevo in Markdown per Zola.
-Come già spiegato sopra, ora esporto da org-mode, quindi l'utilità di queste funzioni è venuta meno, ma occasionalmente mi capita di impiegarle, quindi le lascio comunque.
-(TODO dovrei controllare Yasnippet per questi casi)
+*** Zola
+# Funzioni ausiliarie che ho scritto per facilitarmi il lavoro quando scrivevo in Markdown per Zola.
+Auxiliary functions that I wrote to make my work easier when writing in Markdown for Zola.
 
-**** Markdown TOML frontmatter
+# Come già spiegato sopra, ora esporto da org-mode, quindi l'utilità di queste funzioni è venuta meno, ma occasionalmente mi capita di impiegarle, quindi le lascio comunque.
+As already explained above, now I export from org-mode, so the usefulness of these functions has disappeared, but occasionally I still use them, so I leave them anyway.
+
+# TODO dovrei controllare Yasnippet per questi casi
+
+**** Markdown TOML frontmatter :it:
 Immaginate di voler generare un nuovo file Markdown per il vostro sito web.
 In base al tipo di generatore, questo potrà avere bisogno di un frontespizio in TOML o in YAML, magari. Si tratta di pochi caratteri, ma scriverli di volta in volta può risultare un po' frustrante, soprattutto se si scrivono molti pezzi.
 
@@ -2420,6 +2459,8 @@ Allora perché non lasciare che sia Emacs a fare il lavoro per noi? Siccome [[ht
 
 Iniziamo scrivendo una funzione che generi il blocco di testo di cui abbiamo bisogno.
 Io utilizzo Zola per generare il mio blog, quindi potrei scrivere il frontespizio anche in YAML, ma TOML è il formato di riferimento (ed è anche quello che preferisco, senza alcun dubbio).
+
+# Imagine wanting to generate a new Markdown file for your website. Depending on the type of generator, it may need a TOML or YAML header. Writing this each time can be frustrating, so why not let Emacs do the work for you? Here, the author has formulated a solution based on the widely adopted idea that the programmer's laziness is their strength. They begin by writing a function to generate the needed text block. They use Zola to generate their blog and TOML is their preferred format for the header.
 
 Vogliamo quindi ottenere qualcosa del genere:
 
@@ -2480,7 +2521,8 @@ Con la funzione =add-hook= possiamo agganciare il lancio della nostra funzione a
 Da ora in avanti, basterà aprire un file Markdown vuoto perché Emacs inserisca automaticamente il frontespizio.
 
 **** Markdown shortcode
-Con lo stesso approccio, si possono anche ottenere delle funzioni per aggiungere degli shortcode molto usati nel corpo del testo e persino associare delle combinazioni di tasti ad esse!
+# Con lo stesso approccio, si possono anche ottenere delle funzioni per aggiungere degli shortcode molto usati nel corpo del testo e persino associare delle combinazioni di tasti ad esse!
+With the same approach, it is also possible to obtain functions to add frequently used shortcodes in the body of the text and even associate keyboard shortcuts to them!
 
 #+begin_src emacs-lisp :tangle config.el
 ;; Generate Zola Shortcodes
@@ -2497,9 +2539,9 @@ Con lo stesso approccio, si possono anche ottenere delle funzioni per aggiungere
           "{% end %}"))
 #+end_src
 
-Uniamoci, confratelli, nell'amore per Emacs.
+# Uniamoci, confratelli, nell'amore per Emacs.
 
-**** Org exporter
+**** Org exporter :it:
 L'exporter per Zola è un pacchetto che sto mantenendo io, quindi capita spesso che io debba testare delle modifiche in locale. =package!= gestisce i download, quindi in teoria non dovrebbe essere impiegato per la gestione di file in locale, ma [[https://github.com/doomemacs/doomemacs/issues/3842#issuecomment-681039894][Henrik Lissner consiglia di usare comunque la macro perché è stata adattata anche a questo genere di situazioni]].
 
 Aggiunge:
@@ -2737,6 +2779,7 @@ Qui uno screenshot catturato con il tema city-lights.
 
 #+DOWNLOADED: screenshot @ 2022-08-10 13:34:44
 [[file:Configurare_Emacs_in_Org-mode/2022-08-10_13-34-44_screenshot.png]]
+
 *** Games
 **** Textual adventures
 # GPT
@@ -2775,21 +2818,26 @@ or make your own with [[https://www.emacswiki.org/emacs/InformMode][InformMode]]
 # Non ho tempo al momento, ma si tratta di un progettino potenzialmente interessante
 # Check [[https://github.com/lmintmate/malyon][this fork]] if you encounter some problem.
 
-*** Dashboard :it:
+*** Dashboard
 **** Open org configuration (SPC o c)
-Al posto di aprire la cartella =.doom.d= per configurare Emacs, da ora in avanti vogliamo aprire questo file direttamente, quindi la funzione nella dashboard va modificata.
-Per riuscirci, innanzitutto dobbiamo creare una funzione che apra questo file.
+# Al posto di aprire la cartella =.doom.d= per configurare Emacs, da ora in avanti vogliamo aprire questo file direttamente, quindi la funzione nella dashboard va modificata.
+# Per riuscirci, innanzitutto dobbiamo creare una funzione che apra questo file.
+Instead of opening the folder =.doom.d= to configure Emacs, from now on we want to open this file directly, so the function in the dashboard needs to be modified. To do this, we first need to create a function that opens this file.
 
-Ci servono due elementi, che possono variare di caso in caso:
-- Il nome del file
-- La directory in cui cercarlo
+# Ci servono due elementi, che possono variare di caso in caso:
+# - Il nome del file
+# - La directory in cui cercarlo
+We need two elements that may vary in each case:
+- The name of the file
+- The directory in which to search for it
 
 #+begin_src emacs-lisp :tangle config.el
 (setq config-org-file-name "config.org"
       config-org-directory "~/.doom.d")
 #+end_src
 
-Scriviamo una funzione dedicata all'apertura del file preselezionato.
+# Scriviamo una funzione dedicata all'apertura del file preselezionato.
+We write a function dedicated to opening the right file.
 
 #+begin_src emacs-lisp :tangle config.el
 (defun open-config-org ()
@@ -2799,15 +2847,15 @@ Scriviamo una funzione dedicata all'apertura del file preselezionato.
 #+end_src
 
 # Shortcut
-Assegniamo una scorciatoia da tastiera dedicata, sulle orme di =SPC+f+P= (file > Private).
-
-[[https://www.dschapman.com/notes/bde6e938-0984-4d60-974d-77178f1ecd9b][Come si fa?]]
+# Assegniamo una scorciatoia da tastiera dedicata, sulle orme di =SPC+f+P= (file > Private).
+We assign a dedicated keyboard shortcut, following in the footsteps of =SPC+f+P= (file > Private).
+[[https://www.dschapman.com/notes/bde6e938-0984-4d60-974d-77178f1ecd9b][How?]]
 
 #+begin_quote
 In your =config.el= file add a map declaration using the =:leader= attribute and whatever prefix key you would like to use. Then after you have added the necessary prefix keys add a =:desc "Description of the command"= ="key" #'elisp-command-to-execute= for each shortcut you wish to add.
 #+end_quote
 
-Con =map!=:
+Using =map!=:
 
 # (SPC open/configuration)
 #+begin_src emacs-lisp :tangle config.el
@@ -2817,19 +2865,22 @@ Con =map!=:
 #+end_src
 
 # Dashboard
-Per intervenire sul menù, prima diamo un'occhiata alle sezioni della dashboard.
+# Per intervenire sul menù, prima diamo un'occhiata alle sezioni della dashboard.
+To intervene on the menu, let's first take a look at the sections of the dashboard.
 
 #+begin_src emacs-lisp
 (cl-subseq +doom-dashboard-menu-sections 0)
 #+end_src
 
-Otteniamo una lista, da cui estrapoliamo la funzione che vogliamo sostituire (questa):
+# Otteniamo una lista, da cui estrapoliamo la funzione che vogliamo sostituire (questa):
+We obtain a list, from which we extract the function we want to replace (this one).
 
 #+begin_src emacs-lisp
 ("Open private configuration" :icon (all-the-icons-octicon "tools" :face 'doom-dashboard-menu-title) :when (file-directory-p doom-private-dir) :action doom/open-private-config)
 #+end_src
 
-Come intendiamo modificarla? Così:
+# Come intendiamo modificarla? Così:
+How do we intend to edit it? Like this:
 
 #+name: open-org-configuration-menu-section
 #+begin_src emacs-lisp
@@ -2838,17 +2889,23 @@ Come intendiamo modificarla? Così:
 
 # Intanto teniamo questa funzione da parte col nome di =open-org-configuration-menu-section=.
 
-Ora sostituiamola al menù [[https://stackoverflow.com/questions/170931/replace-an-item-in-a-list-in-common-lisp][con la funzione =setf=]].
+# Ora sostituiamola al menù [[https://stackoverflow.com/questions/170931/replace-an-item-in-a-list-in-common-lisp][con la funzione =setf=]].
+#
+Now let's replace it in the menu with the =setf= function (like shown [[https://stackoverflow.com/questions/170931/replace-an-item-in-a-list-in-common-lisp][on StackOverflow]]).
 
 #+begin_src emacs-lisp :tangle config.el :noweb yes
 (setf (nth 5 +doom-dashboard-menu-sections) '<<open-org-configuration-menu-section>>)
 #+end_src
 
 **** Enter Elfeed (SPC e e)
-Ripercorro i passi fatti prima, ma stavolta senza dilungarmi in chiacchiere.
+# Ripercorro i passi fatti prima, ma stavolta senza dilungarmi in chiacchiere.
+I retrace the steps taken before, but this time without delving into chatter.
 
 # Shortcut
-Prima assegno una scorciatoia da tastiera:
+
+# Prima assegno una scorciatoia da tastiera:
+First, I assign a keyboard shortcut:
+
 # SPC elfeed enter
 #+begin_src emacs-lisp :tangle config.el
 (map! :leader
@@ -2857,20 +2914,25 @@ Prima assegno una scorciatoia da tastiera:
 #+end_src
 
 # Dashboard
-Voglio questo elemento sulla dashboard:
+
+# Voglio questo elemento sulla dashboard:
+I want this element on the dashboard.
 
 #+name: open-elfeed-menu-section
 #+begin_src emacs-lisp
 ("Open elfeed" :icon (all-the-icons-octicon "rss" :face 'doom-dashboard-menu-title) :action elfeed)
 #+end_src
 
-Stavolta vado a sostituire il terzo elemento, che raramente uso (=Recently opened files=).
+# Stavolta vado a sostituire il terzo elemento, che raramente uso (=Recently opened files=).
+This time I am going to replace the third element, which I rarely use (=Recently opened files=).
 
 #+begin_src emacs-lisp :tangle config.el :noweb yes
 (setf (nth 2 +doom-dashboard-menu-sections) '<<open-elfeed-menu-section>>)
 #+end_src
 
-Già che ci siamo, aggiungiamo una shortcut per aggiornare elfeed:
+# Già che ci siamo, aggiungiamo una shortcut per aggiornare elfeed:
+Since we're at it, let's add a shortcut to update Elfeed.
+
 #+begin_src emacs-lisp :tangle config.el
 (map! :leader
       (:prefix-map ("e" . "elfeed")
@@ -2878,7 +2940,8 @@ Già che ci siamo, aggiungiamo una shortcut per aggiornare elfeed:
 #+end_src
 
 **** Quit and go Home (SPC q h)
-Una semplice scorciatoia da tastiera per tornare alla dashboard:
+# Una semplice scorciatoia da tastiera per tornare alla dashboard:
+A simple keyboard shortcut to return to the dashboard:
 
 # SPC quit (and go) home
 #+begin_src emacs-lisp :tangle config.el
@@ -2890,36 +2953,40 @@ Una semplice scorciatoia da tastiera per tornare alla dashboard:
 **** Org Manual (SPC o i)
 Move "Open project" section of the dashboard and make space for the documentation.
 
-Anche stavolta andiamo spediti.
+# Anche stavolta andiamo avanti velocemente.
+This time too we move forward quickly.
 
-# Dashboard
-Voglio questo elemento sulla dashboard:
+# Voglio questo elemento sulla dashboard:
+I need this element on my dashboard:
 
 #+name: open-docs-menu-section
 #+begin_src emacs-lisp
 ("Open info" :icon (all-the-icons-octicon "info" :face 'doom-dashboard-menu-title) :action info)
 #+end_src
 
-Stavolta vado a sostituire il terzo elemento, che raramente uso (=Recently opened files=).
+# Stavolta vado a sostituire il terzo elemento, che raramente uso (=Recently opened files=).
+This time I am going to replace the third element, which I rarely use (=Recently opened files=).
 
 #+begin_src emacs-lisp :tangle config.el :noweb yes
 (setf (nth 3 +doom-dashboard-menu-sections) '<<open-docs-menu-section>>)
 #+end_src
 
-Riprendiamo l'elemento rimosso...
+# Riprendiamo l'elemento rimosso...
+We take back the removed element...
 
 #+name: switch-project-menu-section
 #+begin_src emacs-lisp
 ("Open project" :icon (all-the-icons-octicon "briefcase" :face 'doom-dashboard-menu-title) :action projectile-switch-project)
 #+end_src
 
-... e sistemiamolo in prima posizione:
+# ... e sistemiamolo in prima posizione:
+...and let's put it in first position.
 
 #+begin_src emacs-lisp :tangle config.el :noweb no-export
 (setf (nth 0 +doom-dashboard-menu-sections) '<<switch-project-menu-section>>)
 #+end_src
 
-Aggiungiamo una scorciatoia per org-mode, che è una delle documentazioni più consultate dal sottoscritto.
+Let's add a shortcut for org-mode, since I refer to it frequently.
 
 # SPC elfeed enter
 #+begin_src emacs-lisp :tangle config.el
@@ -2927,6 +2994,7 @@ Aggiungiamo una scorciatoia per org-mode, che è una delle documentazioni più c
       (:prefix-map ("o" . "open")
        :desc "Open org manual." "i" #'org-info))
 #+end_src
+
 **** Doom documentation (SPC h d h)
 Just changing the name.
 
@@ -2935,13 +3003,13 @@ Just changing the name.
 ("Doom documentation" :icon (all-the-icons-octicon "book" :face 'doom-dashboard-menu-title) :action doom/help)
 #+end_src
 
-Lasciamo che resti in sesta posizione:
+Let's leave it in sixth position.
 
 #+begin_src emacs-lisp :tangle config.el :noweb no-export
 (setf (nth 6 +doom-dashboard-menu-sections) '<<open-doom-docs-menu-section>>)
 #+end_src
 
-**** Banner
+**** COMMENT Banner
 Experimental.
 Just trying stuff out, but I stick with the regular banner for the moment.
 

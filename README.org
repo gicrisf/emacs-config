@@ -1,19 +1,18 @@
 #+title: Doom Emacs Configuration
 #+author: Giovanni Crisalfi
 
-The configuration lives inside a single file, the =config.org= file.
+The configuration lives inside a single file, [[./config.org][the =config.org= file]].
 GitHub is able to render org files! If you want to read the configuration entirely, just open the file here in this repo.
 
-> *Keep in mind* that not evey part is translated in English.
-
-It happens to me writing stuff down in Italian, my mother language, so some sections are published as they are.
-It can take some time before I translate everything in English.
+#+begin_quote
+*Keep in mind that not every part is translated into English*.
+Since Italian is my mother language, I sometimes write sections in Italian and publish them as is. It may take some time before I can translate everything into English.
+#+end_quote
 
 If you prefer to read specific section of the configuration in a specific language, you can search for them on my blog.
 
-[[https://www.zwitterio.it/en/tags/emacs/][Click here for english blog posts with the "EMACS" tag]]
-
-[[https://www.zwitterio.it/tags/emacs/][Clicca qui per post in italiano sul blog con il tag "EMACS"]]
+- [[https://www.zwitterio.it/en/tags/emacs/][Click here for english blog posts with the "EMACS" tag]]
+- [[https://www.zwitterio.it/tags/emacs/][Clicca qui per post in italiano sul blog con il tag "EMACS"]]
 
 ** Donate
 Did you find something interesting in my dots?
