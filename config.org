@@ -24,29 +24,24 @@ It's written in Org-mode and designed to be /literate/, meaning that I've docume
 
 {{{more}}}
 
-* Intro
+* Introduction
 ** What is Emacs
-# What is Emacs?
 # developed by Richard Stallman in the 1970s, known for its extensibility and productivity features.
-
-- Emacs is a highly customizable text editor.
-- Emacs is a lisp interpreter.
-- Emacs is a text manipulation application, known for its extensibility.
-- Emacs, like water, adapts to any container, flows around any obstacle, erodes mountains (of data), transforms into different phases (or modes) depending on circumstances.
+# known for its extensibility.
+Emacs is a highly customizable text editor. Emacs is a lisp interpreter. Emacs is a text manipulation application. Emacs, like water, adapts to any container, flows around any obstacle, erodes mountains (of data), transforms into different phases (or modes) depending on circumstances.
 
 # Describing Emacs is not easy, because Emacs it's a moldable environment.
 
 Describing Emacs isn't easy, because Emacs is many things, and different ones to different people.
 To me, Emacs is the place where I write code, I write prose, I manage files, I read feeds, I think.
-In the next sections, I will show how.
-
-Being Emacs so generic and powerful, it can be difficult to approach it and learn how to work with it. That's why Emacs distributions exist.
+# In the next sections, I will show how.
 
 ** Emacs distributions
-The entry barrier can be partially broken down through pre-configured Emacs distributions, of which I mention a few of the most famous:
-- [[https://www.spacemacs.org/][Spacemacs]] was my first distribution: it is particularly indicated for newcomers coming from vim, like I was. Not only is it effective in emulating vim (thanks to [[https://github.com/emacs-evil/evil][Evil]]), but it also has countless auxiliary functions callable with a simple touch on the space bar (space-emacs, not surprisingly).
-- [[https://github.com/rougier/nano-emacs][NANO Emacs]]: minimal dependencies, exceptionally elegant, functionally very close to Vanilla Emacs;
-- [[https://github.com/doomemacs/doomemacs][Doom Emacs]] is my current distribution, and therefore the one I am using to write this document; also this one (like Spacemacs) is very well integrated with Evil and lends itself well to the needs of any ex-vimmer. In addition, the use of various lazy-loading strategies and, in general, a thoughtful selection of packages make this distribution extremely responsive.
+Being Emacs so generic and powerful, it can be difficult to approach it and learn how to work with it. 
+Pre-configured Emacs distributions like Spacemacs, NANO Emacs, and Doom Emacs can break down the entry barrier.
+- [[https://www.spacemacs.org/][Spacemacs]] - for total beginners and vim converts, effective emulation thanks to [[https://github.com/emacs-evil/evil][Evil]] and many auxiliary functions (unsurprisingly callable through the spacebar).
+- [[https://github.com/rougier/nano-emacs][NANO Emacs]] - elegant, has minimal dependencies, closely resembles Vanilla Emacs.
+- [[https://github.com/doomemacs/doomemacs][Doom Emacs]] - my current distro, perfect for ex-vimmers, integrates well with Evil, attentive package selection makes it responsive.
 
 # La configurazione riportata in questo file può, potenzialmente, essere adattata anche ad altre distribuzioni Emacs, ma presa com'è funziona solo su Doom Emacs.
 The configuration reported in this file could potentially be adapted to other Emacs distributions, but as it is, it only works for Doom Emacs.
@@ -58,14 +53,13 @@ Lisp is a functional programming language known for its simple syntax and powerf
 Lisp's monomorphism demands bare-bones syntax (enough to scare lots of C-like coders), but this also gives flexibility that allows for easy prototyping and experimentation.
 Its versatility is illustrated by its use in artificial intelligence, theorem proving and web development, among other areas.
 
-# Non voglio dilungarmi in questa sede nella descrizione del linguaggio. Per un assaggio della sintassi e di qualche funzione base, piuttosto, rimando [[https://www.zwitterio.it/software/elisp-intro/][a questo post che ho scritto sul blog come breve introduzione]].
-
+# Non voglio dilungarmi in questa sede nella descrizione del linguaggio.
+# Per un assaggio della sintassi e di qualche funzione base, piuttosto, rimando [[https://www.zwitterio.it/software/elisp-intro/][a questo post che ho scritto sul blog come breve introduzione]].
 # I don't want to go into detail about the language in this forum. For a taste of the syntax and some basic functions, instead, I refer you to [this post I wrote on the blog as a brief introduction]."# [[https://www.zwitterio.it/coding/2022/elisp-intro/][Ho scritto sul blog un'introduzione ad Emacs Lisp]], ma è in effetti più un mucchietto di appunti personali, un riassunto di funzioni utili.
 # Avendo iniziato solo da poco tempo a navigare nell'oceano di meraviglie e parentesi lispiane, non sono certo la fonte più autorevole per scendere più nel dettaglio.
 
-For a quick guide to Emacs Lisp, I recommend taking a look at [[https://github.com/chrisdone/elisp-guide][this repo]].
-For a less quick but more in-depth guide, refer to [[https://github.com/hypernumbers/learn_elisp_the_hard_way][Learn elisp the hard way]].
-
+- For a quick guide to Emacs Lisp, I recommend taking a look at [[https://github.com/chrisdone/elisp-guide][this repo]].
+- For a less quick but more in-depth guide, refer to [[https://github.com/hypernumbers/learn_elisp_the_hard_way][Learn elisp the hard way]].
 # Per essere ancora più precisi, Emacs fa largo uso di CL e altro con adeguate interfacce
 
 ** Literate programming
@@ -148,11 +142,8 @@ Interesting literary configurations: [[https://gitlab.com/zzamboni/dot-doom][Zam
 # [[https://blog.thomasheartman.com/posts/configuring-emacs-with-org-mode-and-literate-programming][Come scrive Thomas Heartman sul suo blog]], nelle versioni più recenti di Emacs bastano poche righe di codice per incorporare in org-mode la propria configurazione, grazie ad una funzione speciale di org-babel che supporta proprio questo scopo (sempre più diffuso nella comunità di utenti).
 
 ** Frontmatters
-# Translate the following line from italian to english:
-# Cominciamo dalla testa dei nostri file di configurazione, cioè da tutti i commenti che troviamo di norma nelle prime 10-20 righe. C'è solo una modifica che è il caso di fare in questo punto: aggiungere un piccolo commento che ricordi all'eventuale lettore che il file in uscita è un file generato e che non va modificato direttamente.
-Let's start from the head of our configuration files, that is, from all the comments that we usually find in the first 10-20 lines. There is only one modification that needs to be made at this point: adding a small comment that reminds the potential reader that the output file is a generated file and should not be directly modified.
-
-# Aggiungere questo pezzo con una macro:
+Begin at the top of our config files. The first 10-20 lines are filled with comments.
+Just one modifications is needed at this initial point: a small comment reminding readers not to edit the output file, as it is generated.
 
 #+name: do-not-edit
 #+begin_src emacs-lisp
@@ -485,7 +476,7 @@ Ecco perché non uso mu4e, sebbene l'idea mi tenti di tanto in tanto.
 Ed ecco che la tentazione ritorna: TODO, [[https://shom.dev/posts/20220108_setting-up-protonmail-in-emacs/][sincronizzare con protonmail]].
 
 *** App
-Uso Emacs come RSS reader.
+Emacs is my RSS reader.
 
 #+name: doom-app
 #+begin_src emacs-lisp
@@ -499,7 +490,8 @@ Uso Emacs come RSS reader.
 
 *** Config
 # Questa è una literate configuration, quindi mi pare il caso di abilitare il modulo relativo.
-This is a literate configuration, so it looks reasonable to enable the relative module.
+# This is a literate configuration, so it looks reasonable to enable the corresponding module.
+Enabling the "literate" module seems logical, as this is a literate configuration.
 
 #+name: doom-config
 #+begin_src emacs-lisp
@@ -507,7 +499,7 @@ literate
 (default +bindings +smartparens)
 #+end_src
 
-** Package!
+** Package! macro
 # Chiaramente, non tutti i pacchetti disponibili per emacs sono stati integrati in moduli di Doom, quindi alcuni andranno installati per altre vie, ad esempio MELPA o delle repository git.
 Clearly, not every package in Emacs are molded as Doom Emacs modules: it would be crazy. Many of them are to be installed via MELPA or git repositories.
 Like before, I keep original comments of =packages.el= here, but the file will be populated in the next part, side by side with the relative package configuration.
@@ -1592,28 +1584,29 @@ defendants.chesscom -> hans: 72 page report of cheating
 (require 'ox-json)
 #+end_src
 
-*** Org Roam
+*** Org-roam
 :PROPERTIES:
 :EXPORT_HUGO_SECTION: software/org-roam
 :EXPORT_FILE_NAME: index.en.md
 :EXPORT_DATE: [2023-04-08 sab]
 :END:
 
-# Translate the following line from italian in english:
 # Ogni volta che devo prendere un appunto, una domanda torna a pungolarmi: dove scriverlo?
 Every time I have to take a note, a question keeps nagging me: where should I write it?
+Org-roam frees information from hierarchies, hence freed me from the burden of confusion.
 
-Until this very moment, my approach consisted of me collecting notes in "notebooks", which means I had a folder with a lot of org-mode files, named with some kind of topic. For example, I had a file for Python, a file for Linux, a file for Organic chemistry and so on. But my files kept growing and the themes kept mixing: what if I want to take a note about writing organic molecule in emacs? Should I store it in the "Emacs notebook" or the "Organic chemistry notebook"? Every single time a similar but quite different dilemma.
-That's why I searched for a less hierarchized method and I remembered of the zettelkasten method.
+{{{more}}}
 
-**** What is a zettelkasten?
+Until this very moment, my method involved ammassing notes in "notebooks", which meant I had a folder with a lot of org-mode files named with some kind of topic. For example, I had a file for Python, a file for Linux, a file for Organic chemistry and so on. But my files kept growing and the themes kept mixing: what if I want to take a note about writing organic molecule in emacs? Should I store it in the "Emacs notebook" or the "Organic chemistry notebook"? Every single time a similar but quite different dilemma. That's why I searched for a less structured approach and thus, the Zettelkasten method occurred to me.
+
+**** What is a Zettelkasten?
 A zettelkasten is a personal knowledge management system popularized by Niklas Luhman, a German sociologist. As the (German) term suggests, it consists of a collection of small notes; the small notes are often called "slips" and each of them must contain a single idea or topic.
 The point is that these slips can be organized and linked together in various ways and traditionally they required a lot of paper and storage tools to aid in the retrieval of the informations. Today, the zettelkasten can be totally virtual. Of course, this doesn't exclude the usefulness of the analogical one, we have just more options.
 
 The zettelkasten method comes with a series of rules and peculiarities but, to be honest, I don't think I will follow the zettelkasten method zealously; as I said, I was searching for a less hierarchized tool and that's what I found in Org-roam.
 
-**** What is org-roam?
-When it comes to note-taking software, Notion and Obsidian comes to mind. Web-based software is used more and more, but I don't want to live Org-mode, plain text and open-source software.
+**** What is Org-roam?
+# When it comes to note-taking software, Notion and Obsidian comes to mind. Web-based software is used more and more, but I don't want to leave Org-mode, plain text and open-source software.
 # Logseq looks like a wonderful project, since it supports org-mode files and is open-source; I'm interested in Logseq too, but we will talk about it later.
 # Software web-based sono sempre più usati, ma io non voglio abbandonare org-mode. Logseq fornisce supporto per org-mode, ma si tratta di una versione di org-mode con modifiche che la rendono dipendente dalla piattaforma stessa. Non possono essere lette (così come sono) su Emacs. A quel punto, tanto vale usare una versione modificata di Markdown, la portabilità è uguale, i limiti sono gli stessi.
 # Since I like to stay in Emacs as much as I can, I want to talk about Org-roam first.
