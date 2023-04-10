@@ -1869,77 +1869,95 @@ Virtualenv support.
 (package! pyvenv)
 #+end_src
 
-*** Rust :it:
+*** Rust
 **** Semantic analysis
-[[https://robert.kra.hn/posts/rust-emacs-setup/][Come scrive Robert Krahn]],
+# [[https://robert.kra.hn/posts/rust-emacs-setup/][Come scrive Robert Krahn]],
+[[https://robert.kra.hn/posts/rust-emacs-setup/][As Robert Krahn writes]],
 
 #+begin_quote
 Racer used to be the best option for getting IDE features (code navigation etc) into Emacs. It is a non-LSP solution which is still faster than RLS and rust-analyzer. However, the number of features especially around code completion are not up to par with rust-analyzer anymore.
 #+end_quote
 
-Il consiglio, quindi, è quello di passare direttamente al paragrafo successivo, ma chi proprio desiderasse Racer (che era piacevole), lascio qui tutte le istruzioni del caso.
+# Il consiglio, quindi, è quello di passare direttamente al paragrafo successivo, ma chi proprio desiderasse Racer (che era piacevole), lascio qui tutte le istruzioni del caso.
+The advice, therefore, is to skip directly to the next paragraph, but for those who really want Racer (which was enjoyable), I leave here all the necessary instructions.
 
 ***** Racer
-Dopo avere abilitato =rust= in =init.el=, Doom Emacs lamentava l'introvabilità del binario di Racer:
+# Dopo avere abilitato =rust= in =init.el=, Doom Emacs lamentava l'introvabilità del binario di Racer:
+After enabling =rust= in =init.el=, Doom Emacs complained about the inability to find the Racer binary.
 
 #+begin_quote
 Please set ‘racer-rust-src-path’ or ‘RUST_SRC_PATH’
 #+end_quote
 
-Il primo problema derivava non tanto dal fatto che fosse scorretta la variabile =racer-rust-src-path=, ma che proprio non esistesse alcuna =src-path= perché bisognava prima che installarla:
+# Il primo problema derivava non tanto dal fatto che fosse scorretta la variabile =racer-rust-src-path=, ma che proprio non esistesse alcuna =src-path= perché bisognava prima che installarla:
+The first issue derived not so much from the fact that the variable =racer-rust-src-path= was incorrect, but that there was no =src-path= at all because it had to be installed first.
 
 #+begin_src bash
 rustup component add rust-src
 #+end_src
 
-Ma si ottiene un altro errore:
+# Ma si ottiene un altro errore:
+But you get another error:
+
 #+begin_quote
 eldoc error: (user-error /.../.cargo/bin/racer exited with 127. ‘M-x racer-debug’ for more info)
 #+end_quote
 
-Questo perché manca racer, che [[https://lib.rs/crates/racer][va installato a parte]].
-Siccome Racer risiede nella nightly toolchain, installiamo prima quella:
+# Questo perché manca racer, che [[https://lib.rs/crates/racer][va installato a parte]].
+# Siccome Racer risiede nella nightly toolchain, installiamo prima quella:
+This is because Racer is missing, which [[https://lib.rs/crates/racer][must be installed separately]].
+Since Racer is included in the nightly toolchain, we install it first:
+
 #+begin_src bash
 rustup toolchain install nightly
 #+end_src
 
-Poi aggiungiamo gli strumenti da sviluppatore =rustc-dev=:
+# Poi aggiungiamo gli strumenti da sviluppatore =rustc-dev=:
+Then we add the developer tools =rustc-dev=.
+
 #+begin_src bash
 rustup component add rustc-dev --toolchain=nightly
 #+end_src
 
-Assicuriamoci che anche Cargo sia già installato e lanciamo:
+# Assicuriamoci che anche Cargo sia già installato e lanciamo:
+Let's make sure that Cargo is also already installed and let's launch it.
+
 #+begin_src bash
 cargo +nightly install racer
 #+end_src
 
-[[https://github.com/racer-rust/racer/issues/1181][La compilazione potrebbe fallire]], ma bisogna tenere a mente è che Racer non è al momento mantenuto:
+# [[https://github.com/racer-rust/racer/issues/1181][La compilazione potrebbe fallire]], ma bisogna tenere a mente è che Racer non è al momento mantenuto:
+[[https://github.com/racer-rust/racer/issues/1181][The compilation might fail]], but it should be kept in mind that Racer is not currently maintained.
 
 #+begin_quote
-Racer is not actively developped now. Please consider using newer software such as rust-analyzer.
+Racer is not actively developed now. Please consider using newer software such as rust-analyzer.
 #+end_quote
 
 # Per il momento Racer funziona egregiamente, ma successivamente potrei voler dare un occhio anche a [[https://rust-analyzer.github.io/][rust-analyzer]].
 
-Emacs potrebbe non individuare subito Racer, nonostante l'installazione.
+# Emacs potrebbe non individuare subito Racer, nonostante l'installazione.
+Emacs might not detect Racer right away, even if it is installed.
 
 #+name: racer-path
 #+begin_src emacs-lisp
 "~/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library"
 #+end_src
 
-Quick fix per consentire ad Emacs di trovare i binari di Racer:
+# Quick fix per consentire ad Emacs di trovare i binari di Racer:
+Quick fix to allow Emacs to find Racer binaries.
 
 #+begin_src emacs-lisp :tangle config.el :noweb no-export
 ;; (setq racer-rust-src-path <<racer-path>>)
 #+end_src
 
-Io non uso più Racer, ma eldoc si ostina a farlo, dando sempre questo fastidiosissimo errore:
+# Io non uso più Racer, ma eldoc si ostina a farlo, dando sempre questo fastidiosissimo errore:
+I no longer use Racer, but eldoc insists on using it, always giving this very annoying error:
+
 #+begin_quote
 eldoc error: (user-error /home/cromo/.cargo/bin/racer exited with 127. ‘M-x racer-debug’ for more info)
 #+end_quote
 
-[[https://github.com/doomemacs/doomemacs/issues/2271#issuecomment-569775470][Spiega @hlissner]]:
+[[https://github.com/doomemacs/doomemacs/issues/2271#issuecomment-569775470][As @hlissner said]]:
 
 #+begin_quote
 The =:lang rust= module doesn't use =rust-mode=, it uses [[https://github.com/brotzeit/rustic][rustic-mode]], a fork of =rust-mode=.
@@ -1947,46 +1965,56 @@ The =:lang rust= module doesn't use =rust-mode=, it uses [[https://github.com/br
 When =+lsp= is not enabled, the module uses =racer= to provide code completion, type info in the minibuffer (eldoc) and other features, but the racer package depends on =rust-mode=, so it must be installed (but doom still doesn't use it directly).
 #+end_quote
 
-Bisogna perciò evitare che Racer sia avviato tutte le volte che LSP non è attivo. Come ricordato da [[https://www.reddit.com/r/DoomEmacs/comments/slb92w/comment/hvrfkax/?utm_source=share&utm_medium=web2x&context=3][@subderisorious]], per fortuna Doom ci consente di disabilitare un pacchetto della configurazione di default semplicemente richiamando la macro =package!= in =packages.el=.
+# Bisogna perciò evitare che Racer sia avviato tutte le volte che LSP non è attivo. Come ricordato da [[https://www.reddit.com/r/DoomEmacs/comments/slb92w/comment/hvrfkax/?utm_source=share&utm_medium=web2x&context=3][@subderisorious]], per fortuna Doom ci consente di disabilitare un pacchetto della configurazione di default semplicemente richiamando la macro =package!= in =packages.el=.
+Therefore, it is necessary to avoid starting Racer every time LSP is not active. As recalled by [[https://www.reddit.com/r/DoomEmacs/comments/slb92w/comment/hvrfkax/?utm_source=share&utm_medium=web2x&context=3][@subderisorious]], fortunately Doom allows us to disable a package from the default configuration simply by calling the macro =package!= in =packages.el=.
+
+(Note: I corrected the formatting of the original text for clarity.)
 
 #+begin_src emacs-lisp :tangle packages.el
 (package! racer :disable t)
 #+end_src
 
 ***** rust-analyzer
-Circa sei mesi dopo, è tempo di dare un'occhiata a rust-analyzer.
-Dal [[https://rust-analyzer.github.io/manual.html#installation][manuale]]:
+# Circa sei mesi dopo, è tempo di dare un'occhiata a rust-analyzer.
+It's time to look at =rust-analyzer=.
+
+Quoting the [[https://rust-analyzer.github.io/manual.html#installation][manual]]:
 
 #+begin_quote
 At its core, rust-analyzer is a library for semantic analysis of Rust code as it changes over time. This manual focuses on a specific usage of the library — running it as part of a server that implements the Language Server Protocol (LSP). The LSP allows various code editors, like VS Code, Emacs or Vim, to implement semantic features like completion or goto definition by talking to an external language server process.
 #+end_quote
 
-Anche questa volta, possiamo usare =rustup=:
+# Anche questa volta, possiamo usare =rustup=:
+This time too, we can use =rustup=.
 
 #+begin_src bash
 rustup component add rust-src
 #+end_src
 
-Io sto su Arch, quindi installo con pacman:
+# Io sto su Arch, quindi installo con pacman:
+I use Arch (btw), so I will show the command with pacman:
 
 #+begin_src bash
 sudo pacman -S rust-analyzer
 #+end_src
 
-È il caso di specificare quale server intendiamo utilizzare, altrimenti Rustic potrebbe fraintendere o optare per Racer:
+# È il caso di specificare quale server intendiamo utilizzare, altrimenti Rustic potrebbe fraintendere o optare per Racer:
+It is necessary to specify which server we intend to use, otherwise Rustic could misunderstand or opt for Racer.
 
 #+begin_src emacs-lisp :tangle config.el
 (setq rustic-lsp-server 'rust-analyzer)
 #+end_src
 
-Questo dovrebbe essere sufficiente, ma per essere proprio sicuri:
+# Questo dovrebbe essere sufficiente, ma per essere proprio sicuri:
+This should be sufficient, but to be absolutely sure:
 
 #+begin_src emacs-lisp :tangle config.el
 (after! lsp-rust
   (setq lsp-rust-server 'rust-analyzer))
 #+end_src
 
-Lanciamo =lsp= in un buffer con Rust ed assistiamo al compiersi della magia.
+# Lanciamo =lsp= in un buffer con Rust ed assistiamo al compiersi della magia.
+We launch =lsp= in a buffer with Rust and witness the magic happen.
 
 *** Dired
 Drag and drop to dired:
@@ -3453,40 +3481,46 @@ I should find an alternative way, because this one doesn't work, so I'm de-tangl
 #+end_src
 
 *** ChatGPT
-Pacchetti di OpenAI:
+OpenAI's packages:
 
 #+begin_src emacs-lisp :tangle packages.el
 (package! openai :recipe (:host github :repo "emacs-openai/openai"))
 (package! chatgpt :recipe (:host github :repo "emacs-openai/chatgpt"))
 #+end_src
 
-Recuperiamo l'API key da variabile d'ambiente:
+# Recuperiamo l'API key da variabile d'ambiente:
+Retrieving the API key from the env var:
 
 #+begin_src emacs-lisp :tangle config.el
 (setq openai-key (getenv "OPENAI_KEY"))
 #+end_src
 
-Una dipendenza cosmetica di questi pacchetti è spinner.
-Selezioniamo lo spinner preferito:
+# Una dipendenza cosmetica di questi pacchetti è spinner.
+# Selezioniamo lo spinner preferito:
+A cosmetic dependency of these packages is spinner.
+Let's select the preferred spinner.
 
 #+begin_src emacs-lisp :tangle packages.el
 ;; (setq chatgpt-spinner-type 'rotating-line)
 (setq chatgpt-spinner-type 'minibox)
 #+end_src
 
-Questo viene più comodo per selezionare del testo ed elaborarlo direttamente, ma non usa le API:
+# Questo viene più comodo per selezionare del testo ed elaborarlo direttamente, ma non usa le API:
+This is more convenient for selecting text and processing it directly, but it does not use the APIs.
 
 #+begin_src emacs-lisp :tangle packages.el
 ;; (package! chatgptel :recipe (:host github :repo "joshcho/ChatGPT.el"))
 #+end_src
 
-Diamo il path della repo perché ha bisogno di richiamare un file Python che agisce da server:
+# Diamo il path della repo perché ha bisogno di richiamare un file Python che agisce da server:
+We give the path of the repository because it needs to invoke a Python file that acts as a server.
 
 #+begin_src emacs-lisp :tangle config.el
 (setq chatgpt-repo-path "~/Projects/ChatGPT.el/")
 #+end_src
 
-La funzione =chatgpt--query= non va a causa dell'impiego di una macro anaforica che coinvolge due =eval=; potrei semplificarla in questo modo:
+# La funzione =chatgpt--query= non va a causa dell'impiego di una macro anaforica che coinvolge due =eval=; potrei semplificarla in questo modo:
+The =chatgpt--query= function doesn't work because of the use of an anaphoric macro that involves two =eval=; I could simplify it in this way:
 
 #+begin_src emacs-lisp
 (defun chatgpt--query (query)
@@ -3510,29 +3544,38 @@ La funzione =chatgpt--query= non va a causa dell'impiego di una macro anaforica 
                    (chatgpt-display))))))))
 #+end_src
 
-Volendo, potrei usare qualche advice per sovrascriverla temporaneamente.
-Il problema è che questa libreria nello specifico non usa le API di ChatGPT ed io ne preferirei una che le usa. Quindi, per arrivare ad un risultato che mi piaccia, dovrei modificare pure le funzioni nel server, cosa che mi porterebbe a gestire un fork.
-Non so se ho voglia di mantenere un fork. Vediamo se ci sono alternative.
+# Volendo, potrei usare qualche advice per sovrascriverla temporaneamente.
+If I wanted to, I could use some advice to temporarily overwrite it.
+# Il problema è che questa libreria nello specifico non usa le API di ChatGPT ed io ne preferirei una che le usa.
+# Quindi, per arrivare ad un risultato che mi piaccia, dovrei modificare pure le funzioni nel server, cosa che mi porterebbe a gestire un fork.
+The problem is that this specific library does not use the ChatGPT APIs, and I would prefer one that does.
+So, to achieve a result that I like, I would also have to modify the functions in the server, which would lead me to manage a fork.
 
-[[https://github.com/karthink/gptel][Questo, invece, si chiama gptel]] e usa le API:
+# Non so se ho voglia di mantenere un fork. Vediamo se ci sono alternative.
+I don't know if I feel like maintaining a fork.
+Let's see if there are alternatives.
+
+[[https://github.com/karthink/gptel][This one, instead, is called gptel]] e usa le API:
 
 #+begin_src emacs-lisp :tangle packages.el
 (package! gptel :recipe (:host github :repo "karthink/gptel"))
 #+end_src
 
-Anche qui, recuperiamo la key:
+# Anche qui, recuperiamo la key:
+Here too, we recover the key:
 
 #+begin_src emacs-lisp :tangle config.el
 (setq gptel-api-key (getenv "OPENAI_KEY"))
 #+end_src
 
-Proviamo il seguente prompt con gptel:
+# Proviamo il seguente prompt con gptel:
+Let's try the following prompt with gptel.
 
 #+begin_quote
 Tell me about the geography of Taiwan.
 #+end_quote
 
-Questo è il risultato:
+This is the result:
 
 #+begin_quote
 Taiwan is an island located off the southeastern coast of China. It has rugged, mountainous terrain, with more than half of its land area covered in forest. The western side of the island is more densely populated and urbanized, while the eastern side is more rural and less developed. Taiwan also has several small offshore islands.
