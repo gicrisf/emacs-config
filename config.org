@@ -17,26 +17,24 @@
 #+MACRO: prismcss @@html:<link href="/assets/prism/prism.css" rel="stylesheet" />@@
 #+MACRO: prismjs @@html:<script src="/assets/prism/prism.js"></script>@@
 # Macro for backlinks in exported posts
-#+MACRO: exportedfrom @@html:<hr><p>This post was exported from <a href="https://github.com/gicrisf/emacs-config">my literate configuration for Emacs</a></p>@@
+# TODO special blockquote, shortcode
+#+MACRO: backlink @@html:<hr><p>This post was exported from <a href="https://github.com/gicrisf/emacs-config">my literate configuration for Emacs</a></p>@@
 
 Hello, and welcome to my Emacs configuration!
 It's written in Org-mode and designed to be /literate/, meaning that I've documented many of the choices I made throughout the process.
 
 {{{more}}}
 
-* Introduction
-** What is Emacs
+* Emacs
 # developed by Richard Stallman in the 1970s, known for its extensibility and productivity features.
-# known for its extensibility.
 Emacs is a highly customizable text editor. Emacs is a lisp interpreter. Emacs is a text manipulation application. Emacs, like water, adapts to any container, flows around any obstacle, erodes mountains (of data), transforms into different phases (or modes) depending on circumstances.
 
 # Describing Emacs is not easy, because Emacs it's a moldable environment.
-
 Describing Emacs isn't easy, because Emacs is many things, and different ones to different people.
 To me, Emacs is the place where I write code, I write prose, I manage files, I read feeds, I think.
-# In the next sections, I will show how.
+In the next sections, I will show how.
 
-** Emacs distributions
+* Emacs Distributions
 Being Emacs so generic and powerful, it can be difficult to approach it and learn how to work with it. 
 Pre-configured Emacs distributions like Spacemacs, NANO Emacs, and Doom Emacs can break down the entry barrier.
 - [[https://www.spacemacs.org/][Spacemacs]] - for total beginners and vim converts, effective emulation thanks to [[https://github.com/emacs-evil/evil][Evil]] and many auxiliary functions (unsurprisingly callable through the spacebar).
@@ -46,13 +44,12 @@ Pre-configured Emacs distributions like Spacemacs, NANO Emacs, and Doom Emacs ca
 # La configurazione riportata in questo file può, potenzialmente, essere adattata anche ad altre distribuzioni Emacs, ma presa com'è funziona solo su Doom Emacs.
 The configuration reported in this file could potentially be adapted to other Emacs distributions, but as it is, it only works for Doom Emacs.
 
-** Emacs Lisp
-As I was saying, Emacs is a Lisp interpreter, but to be more precise we should refer to Emacs Lisp, a dialect of the programming language family that falls under the name "Lisp" (LISt Processor).
+* Lisp
+In the realm of functional programming languages, there exists a family known as "Lisp" (LISt Processor).
+Lisps are known for their simple syntax and powerful macro system. "Simple syntax" may not convey the idea sufficiently.
+Lisp's monomorphism demands bare-bones syntax, which is enough to scare lots of C-like coders, but this also gives flexibility that allows for easy prototyping and experimentation. Its versatility is illustrated by its use in artificial intelligence, theorem proving, and web development, among other areas.
 
-Lisp is a functional programming language known for its simple syntax and powerful macro system.
-Lisp's monomorphism demands bare-bones syntax (enough to scare lots of C-like coders), but this also gives flexibility that allows for easy prototyping and experimentation.
-Its versatility is illustrated by its use in artificial intelligence, theorem proving and web development, among other areas.
-
+Emacs, indeed, is an interpreter of the Lisp language, albeit a specific dialect known as Emacs Lisp.
 # Non voglio dilungarmi in questa sede nella descrizione del linguaggio.
 # Per un assaggio della sintassi e di qualche funzione base, piuttosto, rimando [[https://www.zwitterio.it/software/elisp-intro/][a questo post che ho scritto sul blog come breve introduzione]].
 # I don't want to go into detail about the language in this forum. For a taste of the syntax and some basic functions, instead, I refer you to [this post I wrote on the blog as a brief introduction]."# [[https://www.zwitterio.it/coding/2022/elisp-intro/][Ho scritto sul blog un'introduzione ad Emacs Lisp]], ma è in effetti più un mucchietto di appunti personali, un riassunto di funzioni utili.
@@ -62,7 +59,14 @@ Its versatility is illustrated by its use in artificial intelligence, theorem pr
 - For a less quick but more in-depth guide, refer to [[https://github.com/hypernumbers/learn_elisp_the_hard_way][Learn elisp the hard way]].
 # Per essere ancora più precisi, Emacs fa largo uso di CL e altro con adeguate interfacce
 
-** Literate programming
+#begin_quote
+The first LispLanguage compiler was developed by JohnMcCarthy at Dartmouth College between 1955 and 1959. This makes it the second oldest programming language in common use today (only Fortran is older, developed between 1954 and 1957). Lisp went forth and grew many many dialects: the most notable of these are AutoLisp, EmacsLisp, Interlisp, MacLisp, Scheme and Common Lisp.
+-- https://www.emacswiki.org/emacs/CommonLisp
+#+end_quote
+
+Emacs provides an interface to other lisps through modes like Sly and Slime, and certain Common Lisp functions can be used in Emacs. This highlights the extensibility of Emacs, although this topic cannot be addressed here due to space constraints.
+
+* Literate programming
 CLOSED:
 :PROPERTIES:
 :EXPORT_HUGO_SECTION: software/literate-programming
@@ -78,6 +82,7 @@ Literate programming is a programming paradigm that emphasizes the organization 
 
 # Mia vecchia introduzione
 # Il literate programming è un paradigma di programmazione ideato da Donald Knuth che prevede l'alternarsi di testo e di codice, in un modo che sono sicuro sia noto a chiunque si sia mai trovato a maneggiare un Jupiter Notebook.
+# a paradigm first proposed by Donald Knuth, who demonstrated its potential by writing the TeX compiler in this way.
 
 In short, everything is written in a single file and the editor is taught how to assemble the code at a later time. The practice of writing the source is called /weaving/, while the moment of exporting is called /tangling/.
 
@@ -113,37 +118,47 @@ For those who seek a deeper dive, behold I leave some additional readings:
 - [[https://www.cs.upc.edu/~eipec/pdf/p583-van_wyk.pdf][Communication of the ACM, 1987]]
 - [[https://orgmode.org/worg/org-contrib/babel/intro.html#literate-programming][Literate programming in org-mode]]
 
-* Literate configuration
-How can we make the Emacs configuration /literate/?
+* Doom literification
+# Qui spiego il metodo, poi passo all'azione
+How can we make Doom Emacs's configuration /literate/?
 # As the winds of Emacs blow, one can refine the art of configuring it, much like a master observes and learns from the tricks of others.
+# TODO elabora la metafora
+# Haiku?
+# Come un lichene è colto in natura mentre lichenifica, noi ci facciamo operatori della literificazione della configurazione di Doom.
 
-First, we need to know the usual configuration of Emacs.
+{{{more}}}
+
+First, we need to know how the usual configuration of Emacs works.
 Traditionally, Emacs expects the configuration to be all contained in =.emacs=, so the approach is very simple and straightforward.
 # TODO: eltweet import as org shortcode
 # @@html:<blockquote class="twitter-tweet"><p lang="en" dir="ltr">OH: I now officially work with people younger than my .emacs file</p>&mdash; â¨ Phil CalÃ§ado (@pcalcado) <a href="https://twitter.com/pcalcado/status/871810979180556292?ref_src=twsrc%5Etfw">June 5, 2017</a></blockquote>@@
 
 Distributions instead provide for a hierarchy of contents in different files.
-Doom Emacs, for example, collects the configuration in three fundamental files:
+Doom Emacs collects the configuration in three fundamental files:
 - =config.el=;
 - =init.el=;
 - =packages.el=.
 
 These are contained in a special directory in the home directory, =.doom.d=.
 Other distributions have more chaotic or more layered hierarchies (e.g. Spacemacs with its layers).
-
 In my opinion, Doom maintains a pleasant middle ground.
 
-Instead of directly modifying these files, we can write our configuration in an =.org= file, from which we can then generate the 3 main configuration files. This practice is based on the principles of literate programming, a paradigm first proposed by Donald Knuth, who demonstrated its potential by writing the TeX compiler in this way.
-
-The art of configuring Emacs (like many others) is refined by studying the tricks of others.
-Interesting literary configurations: [[https://gitlab.com/zzamboni/dot-doom][Zamboni's]] and [[https://git.tecosaur.net/tec/emacs-config][Tecosaur's]].
-
+Instead of directly modifying these files, we can write our configuration in an =.org= file, from which we can then generate the 3 main configuration files.
 # Grazie ad org-mode è possibile abbracciare il literate programming per mezzo di una libreria detta "babel".
 # [[https://blog.thomasheartman.com/posts/configuring-emacs-with-org-mode-and-literate-programming][Come scrive Thomas Heartman sul suo blog]], nelle versioni più recenti di Emacs bastano poche righe di codice per incorporare in org-mode la propria configurazione, grazie ad una funzione speciale di org-babel che supporta proprio questo scopo (sempre più diffuso nella comunità di utenti).
 
-** Frontmatters
-Begin at the top of our config files. The first 10-20 lines are filled with comments.
-Just one modifications is needed at this initial point: a small comment reminding readers not to edit the output file, as it is generated.
+This practice involves writing the configuration in accordance with the principles of literate programming, which we bumped into in the section above.
+
+The art of configuring Emacs (like many others) is refined by studying the tricks of others.
+Notable literary configurations are [[https://gitlab.com/zzamboni/dot-doom][Zamboni's]] and [[https://git.tecosaur.net/tec/emacs-config][Tecosaur's]].
+
+* Beware of the code! (a machine made it)
+# Il nostro primo intervento consiste nell'avvisare un eventuale lettore dei nostri file che si tratta di codice generato e che, quindi, non va modificato direttamente.
+# Introdurremo, quindi, il seguente commento all'inizio di ogni file di configurazione:
+# Queste righe si troveranno a proprio agio, visto che già di default le prime 10-20 righe sono commenti.
+
+Our first intervention is to inform any reader of our files that it is machine-made code and, therefore, that no one should mess with it directly.
+We will, therefore, introduce the following comment at the beginning of each configuration file:
 
 #+name: do-not-edit
 #+begin_src emacs-lisp
@@ -154,9 +169,19 @@ Just one modifications is needed at this initial point: a small comment remindin
 ;; using org-babel-tangle (C-c C-v t)
 #+end_src
 
+These lines will feel right at home, as the first 10-20 lines are already comments by default.
 
-# Frontespizio di =init.el=.
-Frontmatter of =init.el=.
+* Doom's modules
+# Doom Emacs has modules. Explain their nature and usefulness
+Doom Emacs modules are bundles of related packages and configuration that enable specific features in your Emacs environment. They are designed to make it easy to selectively enable or disable different pieces of functionality in a modular way. This allows you to keep your Emacs configuration organized and efficient, while only loading what you need for your current task or project. The modularity of Doom Emacs makes it lightweight and fast, improving your overall Emacs experience.
+
+# Rewrite this text in the style of Hemingway:
+Doom Emacs modules bundle related packages and config for specific features.
+# They're modular, so you can easily turn on/off individual pieces.
+It's efficient and keeps your Emacs unburdened.
+# Speed and lightness make Doom Emacs sweet.
+
+Doom's modules are managed through the =init.el= file.
 
 #+begin_src emacs-lisp :tangle init.el :noweb no-export
 ;;; init.el -*- lexical-binding: t; -*-
@@ -178,41 +203,23 @@ Frontmatter of =init.el=.
 ;;      directory (for easy access to its source code).
 #+end_src
 
-# Frontespizio di =packages.el=.
-Frontmatter of =packages.el=.
+As =init.el='s frontmatter says:
+1. It's recommended to run =doom sync= after making changes.
+2. You can access Doom's documentation by pressing the keys =SPC h d h= (or =C-h d h= for non-vim users).
+3. You can view a module's documentation by placing the cursor over its name or flags and pressing =K= (or =C-c c k= for non-vim users), or browse its directory by pressing =gd= (or =C-c c d=).
 
-#+begin_src emacs-lisp :tangle packages.el :noweb no-export
-;; -*- no-byte-compile: t; -*-
-;;; $DOOMDIR/packages.el
+The =init.el= file is basically a single list of elements
 
-<<do-not-edit>>
+Translate this text from Italian into English:
+Il file 'init.el' è praticamente una semplice lista di elementi magicamente orchestrata dalla 'doom!' macro.
 
-;; To install a package with Doom you must declare them here and run 'doom sync'
-;; on the command line, then restart Emacs for the changes to take effect -- or
-;; use 'M-x doom/reload'.
+Rewrite this text with the style of Melville:
+The 'init.el' file is basically a simple list of elements magically orchestrated by the 'doom!' macro.
 
+Lo, the file 'init.el' doth abound in humble elements, yet by the wizardry of the 'doom!' macro are they wondrously knit together.
 
-;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
-;(package! some-package)
-#+end_src
+'init.el' is a list made easy by 'doom!'.
 
-# Frontespizio di =config.el=.
-Frontmatter of =config.el=.
-
-#+begin_src emacs-lisp :tangle config.el :noweb no-export
-;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
-
-<<do-not-edit>>
-
-;; Place your private configuration here! Remember, you do not need to run 'doom
-;; sync' after modifying this file!
-
-
-;; Some functionality uses this to identify you, e.g. GPG configuration, email
-;; clients, file templates and snippets.
-#+end_src
-
-** Doom modules
 Every time Doom Emacs is started, the following code is evaluated for adding or deleting eventually edited packages.
 # Il codice seguente è impiegato da Doom Emacs per capire quali moduli installare e lanciare tutte le volte che viene avviato.
 # Ogni modifica a questo livello richiede =doom/sync=.
@@ -266,11 +273,11 @@ Every time Doom Emacs is started, the following code is evaluated for adding or 
        )
 #+end_src
 
-As you can see, this part basically consists of a simple list of modules.
+# As you can see, this part basically consists of a simple list of modules.
 # Si tratta di uno dei tratti più leggibili in assoluto, visto che, appunto, è una lista di moduli.
 # Lo riporto qui senza modifiche particolari.
 
-*** Input
+** Input
 #+name: doom-input
 #+begin_src emacs-lisp
 ;;chinese
@@ -278,7 +285,7 @@ As you can see, this part basically consists of a simple list of modules.
 ;;layout            ; auie,ctsrnm is the superior home row
 #+end_src
 
-*** Completion
+** Completion
 #+name: doom-completion
 #+begin_src emacs-lisp
 company           ; the ultimate code completion backend
@@ -287,7 +294,7 @@ company           ; the ultimate code completion backend
 ivy               ; a search engine for love and life
 #+end_src
 
-*** UI
+** UI
 #+name: doom-ui
 #+begin_src emacs-lisp
 ;;deft              ; notational velocity for Emacs
@@ -315,7 +322,7 @@ workspaces        ; tab emulation, persistence & separate workspaces
 zen               ; distraction-free coding or writing
 #+end_src
 
-*** Editor
+** Editor
 #+name: doom-editor
 #+begin_src emacs-lisp
 (evil +everywhere); come to the dark side, we have cookies
@@ -336,7 +343,7 @@ snippets          ; my elves. They type so I don't have to
 About multiple cursors: just run the =g z z= sequence to spawn a new cursor on place.
 # Basta usare =g z z= come shortcut sequenziale per avviare un altro cursore sul posto.
 
-*** Emacs
+** Emacs
 #+name: doom-emacs
 #+begin_src emacs-lisp
 dired             ; making dired pretty [functional]
@@ -346,7 +353,7 @@ undo              ; persistent, smarter undo for your inevitable mistakes
 vc                ; version-control and Emacs, sitting in a tree
 #+end_src
 
-*** Term
+** Term
 #+name: doom-term
 #+begin_src emacs-lisp
 ;;eshell            ; the elisp shell that works everywhere
@@ -355,7 +362,7 @@ vc                ; version-control and Emacs, sitting in a tree
 vterm               ; the best terminal emulation in Emacs
 #+end_src
 
-*** Checkers
+** Checkers
 #+name: doom-checkers
 #+begin_src emacs-lisp
 syntax              ; tasing you for every semicolon you forget
@@ -363,7 +370,7 @@ syntax              ; tasing you for every semicolon you forget
 ;;grammar           ; tasing grammar mistake every you make
 #+end_src
 
-*** Tools
+** Tools
 #+name: doom-tools
 #+begin_src emacs-lisp
 ;;ansible
@@ -388,14 +395,14 @@ magit             ; a git porcelain for Emacs
 ;;upload            ; map local to remote projects via ssh/ftp
 #+end_src
 
-*** OS
+** OS
 #+name: doom-os
 #+begin_src emacs-lisp
 (:if IS-MAC macos)  ; improve compatibility with macOS
 ;;tty               ; improve the terminal Emacs experience
 #+end_src
 
-*** Lang
+** Lang
 
 #+name: doom-lang
 #+begin_src emacs-lisp
@@ -460,7 +467,7 @@ yaml              ; JSON, but readable
 ;;zig               ; C, but simpler
 #+end_src
 
-*** Mail
+** Mail
 Per il momento, non uso Emacs per le mie email.
 [[https://www.zwitterio.it/software/mutt/][Una volta ho provato a gestire tutto da CLI]], anche con buoni risultati, ma a causa di problemi di vario genere alla fine ho deciso che era meglio tornare alla web-app.
 Non tanto perché sia una cattiva idea, quanto piuttosto perché è un inferno con tutto l'HTML pazzo che mettono in mezzo al testo, cosa che si può risolvere leggendo le mail con lynx o altri browser testuali, ma in fin dei conti dà l'impressione di stare sistematicamente forzando il mezzo. Usare il solito browser (coi dovuti accorgimenti) mi sembra la scelta più efficace.
@@ -475,7 +482,7 @@ Ecco perché non uso mu4e, sebbene l'idea mi tenti di tanto in tanto.
 
 Ed ecco che la tentazione ritorna: TODO, [[https://shom.dev/posts/20220108_setting-up-protonmail-in-emacs/][sincronizzare con protonmail]].
 
-*** App
+** App
 Emacs is my RSS reader.
 
 #+name: doom-app
@@ -488,7 +495,7 @@ Emacs is my RSS reader.
 ;;twitter           ; twitter client https://twitter.com/vnought
 #+end_src
 
-*** Config
+** Config
 # Questa è una literate configuration, quindi mi pare il caso di abilitare il modulo relativo.
 # This is a literate configuration, so it looks reasonable to enable the corresponding module.
 Enabling the "literate" module seems logical, as this is a literate configuration.
@@ -499,9 +506,46 @@ literate
 (default +bindings +smartparens)
 #+end_src
 
-** Package! macro
-# Chiaramente, non tutti i pacchetti disponibili per emacs sono stati integrati in moduli di Doom, quindi alcuni andranno installati per altre vie, ad esempio MELPA o delle repository git.
-Clearly, not every package in Emacs are molded as Doom Emacs modules: it would be crazy. Many of them are to be installed via MELPA or git repositories.
+* Packages
+Frontmatter of =packages.el=.
+
+#+begin_src emacs-lisp :tangle packages.el :noweb no-export
+;; -*- no-byte-compile: t; -*-
+;;; $DOOMDIR/packages.el
+
+<<do-not-edit>>
+
+;; To install a package with Doom you must declare them here and run 'doom sync'
+;; on the command line, then restart Emacs for the changes to take effect -- or
+;; use 'M-x doom/reload'.
+
+
+;; To install SOME-PACKAGE from MELPA, ELPA or emacsmirror:
+;(package! some-package)
+#+end_src
+
+# Devi fare doom reload, che vuol dire =SPC h r r= con le keybindings standard
+
+Frontmatter of =config.el=.
+
+#+begin_src emacs-lisp :tangle config.el :noweb no-export
+;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
+
+<<do-not-edit>>
+
+;; Place your private configuration here! Remember, you do not need to run 'doom
+;; sync' after modifying this file!
+
+
+;; Some functionality uses this to identify you, e.g. GPG configuration, email
+;; clients, file templates and snippets.
+#+end_src
+
+# In a literate perspective, this means you just have to tangle this file to see the changes in action.
+
+** Doom's package manager
+Clearly, not every package that exists for Emacs is molded in Doom's modules: it would be crazy.
+Many of them are to be installed via MELPA or git repositories.
 Like before, I keep original comments of =packages.el= here, but the file will be populated in the next part, side by side with the relative package configuration.
 
 # Manteniamo i commenti originali di =packages.el= all'interno del file.
@@ -1680,7 +1724,7 @@ It's better to not mix your own written production with others' written producti
 How to reference others' work, then? I looked at [[https://jethrokuan.github.io/org-roam-guide/][the approach of Jehtro Kuan (org-roam author)]].
 # Per organizzare il roam, meglio seguire un approccio simile a [[https://jethrokuan.github.io/org-roam-guide/][quello descritto in questo post da Jehtro Kuan]] (autore di org-roam).
 
-{{{exportedfrom}}}
+{{{backlink}}}
 {{{prismcss}}}
 {{{prismjs}}}
 
