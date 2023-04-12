@@ -31,8 +31,9 @@ It's written in Org-mode and designed to be /literate/, meaning that I've docume
 {{{more}}}
 
 # Questo lo devo trasformare in uno special blockquote e metterlo solo con la macro italian
+# *Keep in mind that not every part is translated into English*.
 #+begin_comment
-*Keep in mind that not every part is translated into English*.
+*Some parts may not be in English yet.*
 Since Italian is my mother language, I sometimes write sections in Italian and publish them as is. It may take some time before I can translate everything into English.
 #+end_comment
 
@@ -1595,9 +1596,39 @@ Now require it:
 
 Vista la complessità della libreria, ho deciso per il momento di non aggrovigliare nulla e aspettare un momento che mi consenta di studiare meglio ogni impostazione.
 
-* Org LaTeX export
-We add other extensions to logfiles, to let Emacs delete them after exporting the actual tex file; therefore, we have tidier directories.
-# Aggiungiamo altre estensioni ai cosiddetti logfile, cosicché Emacs si occupi di eliminarle dopo l'uso in fase di esportazione (e ci lasci, così, la cartella pulita).
+* LaTeX
+** Emacs changed how I LaTeX
+# Translate this text from Italian into English:
+# Emacs ha rivoluzionato il modo in cui scrivo LaTeX.
+# Questo non solo a causa del fatto che Emacs ha modificato il mio approccio al testo in generale, ma anche perché Org-mode è un layer d'astrazione perfetto per LaTeX e ne estende di molto la versatilità.
+# Non solo la sintassi si semplifica drammaticamente (come già accade nei casi di Markdown -> LaTeX), ma il codice LaTeX può anche essere generato per mezzo di org-babel a partire da dati espressi in forma più intuitiva. Insomma, Org-mode agisce come un layer d'astrazione ulteriore che può facilitare molto la scrittura a chi dovesse già avere dimestichezza con il mezzo (forse non al neofita: è importante imparare prima a conoscere LaTeX, altrimenti gli errori che ci saranno (e ci saranno) saranno di difficile attribuzione: bisogna ricercare la causa nel layer d'astrazione, che è org-mode/babel, o nel codice LaTeX generato? Solo l'esperienza aiuta ad orientarsi in questi casi.
+
+Emacs has revolutionized the way I write LaTeX. Not only because Emacs has changed my approach to text in general, but also because Org-mode greatly extends its versatility:
+- The syntax is dramatically simplified (much like in "Markdown to LaTeX" approaches),
+- LaTeX code can also be generated through org-babel (from data expressed in a more intuitive form).
+
+# Elencare esempi di questo approccio. Tipo CV.
+
+# Using Emacs and Org-mode has greatly improved my LaTeX writing experience. Org-mode provides an abstraction layer for LaTeX that simplifies its syntax and increases its versatility. It enables the generation of LaTeX code from data expressed in a more intuitive form using org-babel. Overall, Emacs and Org-mode revolutionized the way I write LaTeX."
+# Emacs has transformed not only my approach to text, but also has revolutionized the way I write LaTeX.
+
+# Melville style
+# Methinks, Emacs hath wrought a revolution in the art of mine own LaTeX penmanship. Verily, it hath transformed not only mine approach to text, but also endowed me with Org-mode - a wondrous abstraction layer for LaTeX, thus vastly amplifying its versatility. The ways of syntax be simplified yea manifolds (much like from yon Markdown to LaTeX), and through org-babel, LaTeX code may be fashioned from data in a more facile and intuitive form."
+# Hemingway style
+# Emacs changed how I LaTeX. Org-mode made LaTeX better by abstracting it. Syntax simpler, and maths easy to generate from intuitive data.
+
+In short, Org-mode acts as a further abstraction layer that can greatly facilitate writing for those who are already familiar with the medium (yet not for beginners: indeed, one must first learn LaTeX, otherwise the errors that will occur (and there will be) will be hardly attributable: should one look for the cause in org-mode/babel, or in the generated LaTeX code? A little bit of experience helps to navigate these cases.
+
+# Melville style:
+# "Verily, Org-mode doth serve as a cloak of abstraction, which doth abundantly aid those already acquainted with the medium (yet not for novices: verily, one must first learn LaTeX, lest the errors that do arise (and arise they shall) prove unattributable: shall the cause be sought in the abstraction, that is org-mode/babel, or in the wrought LaTeX code? Of a truth, experience alone doth guide in these cases)."
+
+** A tidy directory, a tidy mind
+# We add other extensions to logfiles, to let Emacs delete them after exporting the actual tex file; therefore, we have tidier directories.
+# Zhuangzi:
+# Once, a wise Emacs user said: "Let us not cling to the trifles of life, such as the accumulation of logfiles. Instead, let us enhance our workflow by enabling Emacs to perform the noble task of tidying up after itself. In this way, we cultivate a tidy mind and a tidy directory, and move closer to the true path of productive efficiency."
+
+We extend logfiles with other extensions, so Emacs can scrub them post export.
+In this way, we cultivate a tidy directory, and move closer to a tidy mind.
 
 #+begin_src emacs-lisp :tangle config.el
 (setq org-latex-logfiles-extensions (quote ("lof" "lot" "tex~" "aux" "idx" "log" "out" "toc" "nav" "snm" "vrb" "dvi" "fdb_latexmk" "blg" "brf" "fls" "entoc" "ps" "spl" "bbl" "xmpi" "run.xml" "bcf")))
@@ -1941,6 +1972,9 @@ Virtualenv support.
 #+end_src
 
 * Rust
+# Semantica analysis for Rust in Emacs
+# TODO scrivere un articolo riscrivendo il tutto
+# E facendo funzionare quanto scritto sotto
 ** Semantic analysis
 # [[https://robert.kra.hn/posts/rust-emacs-setup/][Come scrive Robert Krahn]],
 [[https://robert.kra.hn/posts/rust-emacs-setup/][As Robert Krahn writes]],
@@ -2086,13 +2120,6 @@ This should be sufficient, but to be absolutely sure:
 
 # Lanciamo =lsp= in un buffer con Rust ed assistiamo al compiersi della magia.
 We launch =lsp= in a buffer with Rust and witness the magic happen.
-
-* Dired
-Drag and drop to dired:
-
-#+begin_src emacs-lisp :tangle config.el
-(add-hook 'dired-mode-hook 'org-download-enable)
-#+end_src
 
 * Kindle
 ** Send ebooks to Kindle with Emacs
@@ -3304,8 +3331,8 @@ Concludiamo con la configurazione minima di =org-msg=.
 
 (org-msg-mode)
 #+end_src
-* Chemfig
-** mol2chemfig :it:
+* Chemfig :it:
+** mol2chemfig
 Poiché non sento d'avere controllo di qualcosa se non è prima stato informatizzato e parametrizzato dalle fondamenta, trovo poco sopportabile scrivere di chimica dovendo vivere di immagini appiccicate da chissà dove o, anche peggio, dovendo generare, editare e manipolare a mano ogni singola immagine contenente una formula di struttura. È tedioso, a dir poco. Ancora più tedioso è descrivere a mano la molecola perché pacchetti LaTeX siano capaci di renderizzare la molecola finita, soprattutto se parliamo di molecole di grand dimensioni, ma questa via ha il vantaggio di essere informatizzata e parametrizzata sino alle ossa, quindi non c'è dubbio che io la preferisca. Per questo motivo, mi sono messo in testa di dovere automatizzare il più possibile il processo di scrittura delle molecole attraverso un meraviglioso pacchetto LaTeX chiamato =chemfig=. Si tratta di un pacchetto che si occupa di disegnare le molecole via 'TikZ' e che può vantare un'ottima sintassi, semplice ma versatile, soprattutto quando si viene agli angoli di legame. Finché si tratta di piccole molecole non è difficile tenere a mente la sequenza dei legami, ma oltre un certo numero di atomi il processo può farsi decisamente più tedioso di quello tradizionale, quindi si rende necessario passare attraverso una GUI.
 
 Anziché generare delle immagini da copiare ed incollare in giro, però, è una soluzione decisamente più pulita quella di esportare delle stringhe di testo che siano riproducibilmente convertite nello stesso diagramma. Chemfig è chiaramente un ottimo ponte di mezzo. Abbiamo bisogno di qualcosa che trasformi i nostri SMILES o =mol= files in stringhe che Chemfig sia in grado di interpretare.
@@ -3383,7 +3410,7 @@ Sia lodato Emacs, il sacro editor.
 
 Così abbiamo coperto il caso base. Non resta che scrivere funzioni che tengano conto delle varie impostazioni di =mol2chemfig=.
 
-** tochemfig :it:
+** tochemfig
 Finora abbiamo dato per scontato che l'utente introduca direttamente nel minibuffer la stringa da convertire, ma in verità potremmo anche disporre di un file. =mol2chemfig= di default si aspetta, questo, quindi basta lanciare il comando senza =-i direct= per poter lavorare con il percorso di un file. Rinominando la funzione coerentemente, scriveremmo:
 
 #+begin_src emacs-lisp
@@ -3421,7 +3448,7 @@ Installiamo il pacchetto:
 (package! tochemfig :recipe (:host github :repo "gicrisf/tochemfig"))
 #+end_src
 
-** COMMENT orgtochemfig :it:
+** COMMENT obchemfig
 Since I usually write LaTeX code from org-mode, I find annoying to wrap the code in latex exporter all the time. Let's get rid of the problem writing some lispy code.
 
 Siccome devo modificare il comportamento di una funzione preferibilmente senza inficiare il codice della libreria originale, la cosa più immediata sarebbe quella di agganciare il lavoro delle funzioni di tochemfig, per esempio di =tochemfig-default=, per iniziare con la funzione più facile da approcciare.

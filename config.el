@@ -199,8 +199,6 @@ A nil value implies no custom theme should be enabled.")
 (after! lsp-rust
   (setq lsp-rust-server 'rust-analyzer))
 
-(add-hook 'dired-mode-hook 'org-download-enable)
-
 (setq tokindle-epub-path "~/Scaricati/epub")
 
 (setq tokindle-epub-path-sent "~/Scaricati/epub_sent")
