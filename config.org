@@ -181,19 +181,9 @@ We will, therefore, introduce the following comment at the beginning of each con
 These lines will feel right at home, as the first 10-20 lines are already comments by default.
 
 * Doom's modules
-# DONE Doom Emacs has modules. Explain their nature and usefulness
-# TODO Finetune this part
-Doom Emacs modules are bundles of related packages and configuration that enable specific features in your Emacs environment. They are designed to make it easy to selectively enable or disable different pieces of functionality in a modular way. This allows you to keep your Emacs configuration organized and efficient, while only loading what you need for your current task or project. The modularity of Doom Emacs makes it lightweight and fast, improving your overall Emacs experience.
-
-# Rewrite this text in the style of Hemingway:
-Doom Emacs modules bundle related packages and config for specific features.
-# They're modular, so you can easily turn on/off individual pieces.
-It's efficient and keeps your Emacs unburdened.
-# Speed and lightness make Doom Emacs sweet.
+Doom Emacs modules are groups of related packages and configuration settings that enable specific features in your Emacs environment. They are designed to make it easy to selectively enable or disable different pieces of functionality in a modular way. By doing this, you can keep your Emacs configuration organized and efficient so that you only load what you need for your current project or task. The modular design is efficient and keeps Doom Emacs unburdened.
 
 Doom's modules are managed through the =init.el= file.
-
-** Frontmatter
 
 #+begin_src emacs-lisp :tangle init.el :noweb no-export
 ;;; init.el -*- lexical-binding: t; -*-
@@ -220,27 +210,7 @@ As =init.el='s frontmatter says:
 2. You can access Doom's documentation by pressing the keys =SPC h d h= (or =C-h d h= for non-vim users).
 3. You can view a module's documentation by placing the cursor over its name or flags and pressing =K= (or =C-c c k= for non-vim users), or browse its directory by pressing =gd= (or =C-c c d=).
 
-# WIP
-
-The =init.el= file is basically a single list of elements
-
-Translate this text from Italian into English:
-Il file 'init.el' è praticamente una semplice lista di elementi magicamente orchestrata dalla 'doom!' macro.
-
-Rewrite this text with the style of Melville:
-The 'init.el' file is basically a simple list of elements magically orchestrated by the 'doom!' macro.
-
-Lo, the file 'init.el' doth abound in humble elements, yet by the wizardry of the 'doom!' macro are they wondrously knit together.
-
-The =init.el= can apper suspiciously curious.
-
-The =init.el= file is basically a simple list of elements; by the wizardry of the =doom!= macro are they magically orchestrated.
-
-'init.el' is a list made easy by 'doom!'.
-
-Every time Doom Emacs is started, the following code is evaluated for adding or deleting eventually edited packages.
-# Il codice seguente è impiegato da Doom Emacs per capire quali moduli installare e lanciare tutte le volte che viene avviato.
-# Ogni modifica a questo livello richiede =doom/sync=.
+Whenever Doom Emacs is launched, the following code is evaluated.
 
 #+name: init.el
 #+attr_html: :collapsed t
@@ -291,9 +261,10 @@ Every time Doom Emacs is started, the following code is evaluated for adding or 
        )
 #+end_src
 
-# As you can see, this part basically consists of a simple list of modules.
-# Si tratta di uno dei tratti più leggibili in assoluto, visto che, appunto, è una lista di moduli.
-# Lo riporto qui senza modifiche particolari.
+The =init.el= file is basically a list of lists; the elements are all orchestrated by the wizardry of the =doom!= macro.
+The =doom!= macro expects each list provided as an argument to include the module to be installed for its corresponding section (e.g., 'input', 'completion', 'UI', etc.).
+There are only two key macros required to wield Doom's power. The =doom!= macro is only the first one. The second macro, =package!=, will be discussed in the next section.
+# Attaining the state of Doom requires two macros in the practice of Doom Emacs. The second one, 'package', shall be expounded upon in the following section.
 
 ** Input
 #+name: doom-input
@@ -421,7 +392,6 @@ magit             ; a git porcelain for Emacs
 #+end_src
 
 ** Lang
-
 #+name: doom-lang
 #+begin_src emacs-lisp
 ;;agda              ; types of types of types of types...
@@ -525,14 +495,10 @@ literate
 #+end_src
 
 * Doom's packages
-Clearly, not every package that exists for Emacs is molded in Doom's modules: it would be crazy.
-Many of them are to be installed via MELPA or git repositories.
+After the =doom!= macro introduced earlier, we have the second essential macro, =package!=, that enables us to install some exogenous machineries from MELPA or git repositories.
 
-# Like before, I keep original comments of =packages.el= here, but the file will be populated in the next part, side by side with the relative package configuration.
-
-Stanno in =packages.el=.
-
-Frontmatter di quel file.
+When the Emacs configuration is loaded, the =packages.el= file is parsed in search for =package!= macros.
+The macros expand into calls to =straight.el=, although with some additional functionality.
 
 #+begin_src emacs-lisp :tangle packages.el :noweb no-export
 ;; -*- no-byte-compile: t; -*-
@@ -549,12 +515,12 @@ Frontmatter di quel file.
 ;(package! some-package)
 #+end_src
 
-# Devi fare doom reload, che vuol dire =SPC h r r= con le keybindings standard
+The comments in the frontmatter explain that to install a package in Doom Emacs, you need to declare the desired packages in the =packages.el= file and then you have two options:
+- You can run the =doom sync= command in the terminal. Afterward, you will need to restart Emacs for the changes to take effect,
+- You can also use the =M-x doom/reload= command inside Emacs itself (=SPC h r r=).
 
-Come funziona?
-Spieghiamo il funzionamento del package manager e della macro.
-Ora spieghiamo come funziona la macro =package!= seguendo la descrizione fornita dai commenti originali del file.
-I pacchetti saranno installati insieme alla loro configurazione, nella parte seguente.
+# Ora spieghiamo come funziona la macro =package!= seguendo la descrizione fornita dai commenti originali del file.
+# I pacchetti saranno installati insieme alla loro configurazione, nella parte seguente.
 
 ** Recipe
 #+name: packages-recipe
@@ -2759,6 +2725,13 @@ The weak spot is the layout, but fortunately [[https://gist.github.com/rougier/e
 # Di questa parte ho già parlato in [[https://www.zwitterio.it/coding/2022/how-do-i-play-my-lofi-music/][un post dedicato]].
 The following lines are widely commented in a [[https://www.zwitterio.it/en/software/how-do-i-play-my-lofi-music/][specific post]].
 
+# La musica è bella
+# Su youtube c'è un sacco di musica
+# Voglio ascoltare musica presente su youtube
+# Non voglio decidere sempre quale pezzo o album nello specifico
+# Vorrei andare per "vibes" o generi o playlist
+# Ho quindi bisogno di una funzione che faccia da shuffle
+
 #+begin_src emacs-lisp :tangle config.el
 ;; Play Lo-Fi
 ;; Implementation of the knuth shuffle
@@ -2788,6 +2761,34 @@ The following lines are widely commented in a [[https://www.zwitterio.it/en/soft
   (interactive)
   (shell-command (concat "python -mwebbrowser " (car (nshuffle vaporwave-links)))))
 #+end_src
+
+** COMMENT La svolta :it:
+Anziché aprire youtube esternamente, ho pensato che sarebbe bene scaricare il file ed ascoltarlo in locale quando lo si desidera. Si potrebbe pure sincronizzare tutto con syncthing così da averle sul telefono. Funzionerebbe bene fino a un certo punto.
+
+Allora ho pensato che si potrebbe usare youtube-dl.
+
+Allora ho notato che youtube-dl è scritto in Python ed espone robe come libreria.
+
+Allora ho pensato che si potrebbe usare attraverso il server, tipo in llamacs.
+https://github.com/ytdl-org/youtube-dl#embedding-youtube-dl
+
+Ho anche pensato che a me spesso piacciono le playlist, ma sono come unico video.
+Allora si potrebbero usare i capitoli del video per suddividere la lunga traccia audio nei brani che la compongono.
+
+Questo codice in dart mi conferma che si può fare.
+https://github.com/redsolver/yt-splitter
+
+Poi c'è questo post che parla di come mpv integri naturalmente youtube-dl per lo streaming:
+https://ag91.github.io/blog/2022/05/02/emms-+-org-roam-youtube-playlists-with-titles/
+
+Inoltre sarebbe bene amministrare tutto con EMMS, qui il manuale.
+https://www.gnu.org/software/emms/manual/#Introduction
+
+Per questo player si fa qui una buona intro
+https://emacs.stackexchange.com/questions/3667/what-are-the-options-to-play-music-from-within-emacs
+
+In questo articolo si citano un po' di belle playlist da videogiochi
+https://www.indiscreto.org/capire-le-safe-rooms-nei-videogiochi/
 
 * Pretty print
 # Funzioni che tornano utili in varie situazioni.
@@ -3332,6 +3333,38 @@ Concludiamo con la configurazione minima di =org-msg=.
 (org-msg-mode)
 #+end_src
 * Chemfig :it:
+** COMMENT Installare Chemfig per LaTeX :it:
+# https://www.zwitterio.it/2022/installare-chemfig-per-latex/
+Chemfig è un pacchetto LaTeX che sfrutta internamente TikZ per consentire all'utente di disegnare formule chimiche passando esclusivamente attraverso l'editor di testo.
+Scaricare Chemfig è molto semplice, basta andare alla corrispondente pagina su CTAN e scaricare lo zip.
+
+La procedura di installazione può essere un po' più tediosa. Innanzitutto dobbiamo estrarre l'archivio. Dovremmo ritrovarci con una cartella, chemfig, contenente vari file. In particolare, ci interessano i file con estensione .sty ed estensione .tex. L'intera cartella va copiata in una directory che tipicamente è protetta dai requisiti da amministratore e che può variare in base al sistema. Su StackExchange un utente indica /usr/share/texmf-texlive/tex/latex come destinazione. Nel mio sistema, invece, la destinazione utile è /usr/share/texmf-dist/tex/latex. Individuata la destinazione, non resta che trasferire la cartella acquisendo i privilegi d'amministratore. Se siete su Gnome, un modo semplice per farlo è lanciando nautilus dal terminale, anteponendo sudo.
+
+#+begin_src sh
+sudo nautilus
+#+end_src
+
+Da qui sarà facile andare a copiare la directory chemfig ed incollarla nella destinazione con tutti i pacchetti. Fatto ciò, bisogna aggiornare la lista dei pacchetti installati con un semplice comando
+
+#+begin_src sh
+sudo texhash
+#+end_src
+
+A questo punto, chemfig è stato installato e può essere utilizzato in un qualunque documento latex.
+
+#+begin_src latex
+\usepackage{chemfig}
+\begin{document}
+Methane: \chemfig{[,0.8]C(-[2]H)(-[4]H)(-[6]H)-H}
+\end{document}
+#+end_src
+
+** Intro to Chemfig
+Chemfig is a LaTeX package that allows users to create chemical formulas directly within the text editor by mobilizing TikZ.
+
+# TODO fare le dimostrazioni usando obchemfig
+# (quando sarà pronto, è chiaro)
+
 ** mol2chemfig
 Poiché non sento d'avere controllo di qualcosa se non è prima stato informatizzato e parametrizzato dalle fondamenta, trovo poco sopportabile scrivere di chimica dovendo vivere di immagini appiccicate da chissà dove o, anche peggio, dovendo generare, editare e manipolare a mano ogni singola immagine contenente una formula di struttura. È tedioso, a dir poco. Ancora più tedioso è descrivere a mano la molecola perché pacchetti LaTeX siano capaci di renderizzare la molecola finita, soprattutto se parliamo di molecole di grand dimensioni, ma questa via ha il vantaggio di essere informatizzata e parametrizzata sino alle ossa, quindi non c'è dubbio che io la preferisca. Per questo motivo, mi sono messo in testa di dovere automatizzare il più possibile il processo di scrittura delle molecole attraverso un meraviglioso pacchetto LaTeX chiamato =chemfig=. Si tratta di un pacchetto che si occupa di disegnare le molecole via 'TikZ' e che può vantare un'ottima sintassi, semplice ma versatile, soprattutto quando si viene agli angoli di legame. Finché si tratta di piccole molecole non è difficile tenere a mente la sequenza dei legami, ma oltre un certo numero di atomi il processo può farsi decisamente più tedioso di quello tradizionale, quindi si rende necessario passare attraverso una GUI.
 
