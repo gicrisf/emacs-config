@@ -1,8 +1,12 @@
 #+title: Doom Emacs Configuration
 #+author: Giovanni Crisalfi
-#+STARTUP: show2levels
+#+STARTUP: overview
 
 # Export metadata
+# TODO elimina la possibilità di esportare il file integralmente
+# Solo i paragrafi saranno esportati
+# TODO decidere se sezione software o se farlo annualmente,
+# mantenendo l'anno d'esportazione
 #+hugo_base_dir: ~/zwitterio-it/
 #+hugo_tags: emacs org
 #+hugo_categories: software posts notes
@@ -19,6 +23,7 @@
 # Macro for backlinks in exported posts
 # TODO special blockquote, shortcode
 #+MACRO: backlink @@html:<hr><p>This post was exported from <a href="https://github.com/gicrisf/emacs-config">my literate configuration for Emacs</a></p>@@
+# TODO italian macro signal, special blockquote
 
 Hello, and welcome to my Emacs configuration!
 It's written in Org-mode and designed to be /literate/, meaning that I've documented many of the choices I made throughout the process.
@@ -121,10 +126,6 @@ For those who seek a deeper dive, behold I leave some additional readings:
 * Doom literification
 # Qui spiego il metodo, poi passo all'azione
 How can we make Doom Emacs's configuration /literate/?
-# As the winds of Emacs blow, one can refine the art of configuring it, much like a master observes and learns from the tricks of others.
-# TODO elabora la metafora
-# Haiku?
-# Come un lichene è colto in natura mentre lichenifica, noi ci facciamo operatori della literificazione della configurazione di Doom.
 
 {{{more}}}
 
@@ -149,6 +150,7 @@ Instead of directly modifying these files, we can write our configuration in an 
 
 This practice involves writing the configuration in accordance with the principles of literate programming, which we bumped into in the section above.
 
+# As the winds of Emacs blow, one can refine the art of configuring it, much like a master observes and learns from the tricks of others.
 The art of configuring Emacs (like many others) is refined by studying the tricks of others.
 Notable literary configurations are [[https://gitlab.com/zzamboni/dot-doom][Zamboni's]] and [[https://git.tecosaur.net/tec/emacs-config][Tecosaur's]].
 
@@ -172,7 +174,8 @@ We will, therefore, introduce the following comment at the beginning of each con
 These lines will feel right at home, as the first 10-20 lines are already comments by default.
 
 * Doom's modules
-# Doom Emacs has modules. Explain their nature and usefulness
+# DONE Doom Emacs has modules. Explain their nature and usefulness
+# TODO Finetune this part
 Doom Emacs modules are bundles of related packages and configuration that enable specific features in your Emacs environment. They are designed to make it easy to selectively enable or disable different pieces of functionality in a modular way. This allows you to keep your Emacs configuration organized and efficient, while only loading what you need for your current task or project. The modularity of Doom Emacs makes it lightweight and fast, improving your overall Emacs experience.
 
 # Rewrite this text in the style of Hemingway:
@@ -182,6 +185,8 @@ It's efficient and keeps your Emacs unburdened.
 # Speed and lightness make Doom Emacs sweet.
 
 Doom's modules are managed through the =init.el= file.
+
+** Frontmatter
 
 #+begin_src emacs-lisp :tangle init.el :noweb no-export
 ;;; init.el -*- lexical-binding: t; -*-
@@ -208,6 +213,8 @@ As =init.el='s frontmatter says:
 2. You can access Doom's documentation by pressing the keys =SPC h d h= (or =C-h d h= for non-vim users).
 3. You can view a module's documentation by placing the cursor over its name or flags and pressing =K= (or =C-c c k= for non-vim users), or browse its directory by pressing =gd= (or =C-c c d=).
 
+# WIP
+
 The =init.el= file is basically a single list of elements
 
 Translate this text from Italian into English:
@@ -217,6 +224,10 @@ Rewrite this text with the style of Melville:
 The 'init.el' file is basically a simple list of elements magically orchestrated by the 'doom!' macro.
 
 Lo, the file 'init.el' doth abound in humble elements, yet by the wizardry of the 'doom!' macro are they wondrously knit together.
+
+The =init.el= can apper suspiciously curious.
+
+The =init.el= file is basically a simple list of elements; by the wizardry of the =doom!= macro are they magically orchestrated.
 
 'init.el' is a list made easy by 'doom!'.
 
@@ -468,10 +479,12 @@ yaml              ; JSON, but readable
 #+end_src
 
 ** Mail
-Per il momento, non uso Emacs per le mie email.
-[[https://www.zwitterio.it/software/mutt/][Una volta ho provato a gestire tutto da CLI]], anche con buoni risultati, ma a causa di problemi di vario genere alla fine ho deciso che era meglio tornare alla web-app.
-Non tanto perché sia una cattiva idea, quanto piuttosto perché è un inferno con tutto l'HTML pazzo che mettono in mezzo al testo, cosa che si può risolvere leggendo le mail con lynx o altri browser testuali, ma in fin dei conti dà l'impressione di stare sistematicamente forzando il mezzo. Usare il solito browser (coi dovuti accorgimenti) mi sembra la scelta più efficace.
-Ecco perché non uso mu4e, sebbene l'idea mi tenti di tanto in tanto.
+At this moment in time, I refrain from using Emacs to manage emails.
+
+The reasons are many, but they can be summarized as follows:
+- Gmail is often supported, but I use ProtonMail nowadays.
+- ProtonMail can be set up for external clients, and Emacs is certainly among them, but it requires a premium service; I currently have a free account.
+- I'm not so sure Emacs is the best tool for emails. It could have been (and it should be), but the purity of emails has been shattered by letting HTML invade their simplicity. Modern web browsers are probably the optimal medium to interpret emails.
 
 #+name: doom-email
 #+begin_src emacs-lisp
@@ -479,8 +492,6 @@ Ecco perché non uso mu4e, sebbene l'idea mi tenti di tanto in tanto.
 ;;notmuch
 ;;(wanderlust +gmail)
 #+end_src
-
-Ed ecco che la tentazione ritorna: TODO, [[https://shom.dev/posts/20220108_setting-up-protonmail-in-emacs/][sincronizzare con protonmail]].
 
 ** App
 Emacs is my RSS reader.
@@ -506,8 +517,15 @@ literate
 (default +bindings +smartparens)
 #+end_src
 
-* Packages
-Frontmatter of =packages.el=.
+* Doom's packages
+Clearly, not every package that exists for Emacs is molded in Doom's modules: it would be crazy.
+Many of them are to be installed via MELPA or git repositories.
+
+# Like before, I keep original comments of =packages.el= here, but the file will be populated in the next part, side by side with the relative package configuration.
+
+Stanno in =packages.el=.
+
+Frontmatter di quel file.
 
 #+begin_src emacs-lisp :tangle packages.el :noweb no-export
 ;; -*- no-byte-compile: t; -*-
@@ -526,7 +544,81 @@ Frontmatter of =packages.el=.
 
 # Devi fare doom reload, che vuol dire =SPC h r r= con le keybindings standard
 
-Frontmatter of =config.el=.
+Come funziona?
+Spieghiamo il funzionamento del package manager e della macro.
+Ora spieghiamo come funziona la macro =package!= seguendo la descrizione fornita dai commenti originali del file.
+I pacchetti saranno installati insieme alla loro configurazione, nella parte seguente.
+
+** Recipe
+#+name: packages-recipe
+#+begin_src emacs-lisp :tangle packages.el
+;; To install a package directly from a remote git repo, you must specify a
+;; `:recipe'. You'll find documentation on what `:recipe' accepts here:
+;; https://github.com/raxod502/straight.el#the-recipe-format
+;(package! another-package
+;  :recipe (:host github :repo "username/repo"))
+#+end_src
+
+** Files
+#+name: packages-files
+#+begin_src emacs-lisp :tangle packages.el
+;; If the package you are trying to install does not contain a PACKAGENAME.el
+;; file, or is located in a subdirectory of the repo, you'll need to specify
+;; `:files' in the `:recipe':
+;(package! this-package
+;  :recipe (:host github :repo "username/repo"
+;           :files ("some-file.el" "src/lisp/*.el")))
+#+end_src
+
+** Disable
+#+name: packages-disable
+#+begin_src emacs-lisp :tangle packages.el
+;; If you'd like to disable a package included with Doom, you can do so here
+;; with the `:disable' property:
+;(package! builtin-package :disable t)
+#+end_src
+
+** Override
+#+name: packages-override
+#+begin_src emacs-lisp :tangle packages.el
+;; You can override the recipe of a built in package without having to specify
+;; all the properties for `:recipe'. These will inherit the rest of its recipe
+;; from Doom or MELPA/ELPA/Emacsmirror:
+;(package! builtin-package :recipe (:nonrecursive t))
+;(package! builtin-package-2 :recipe (:repo "myfork/package"))
+#+end_src
+
+** Branch
+#+name: packages-branch
+#+begin_src emacs-lisp :tangle packages.el
+;; Specify a `:branch' to install a package from a particular branch or tag.
+;; This is required for some packages whose default branch isn't 'master' (which
+;; our package manager can't deal with; see raxod502/straight.el#279)
+;(package! builtin-package :recipe (:branch "develop"))
+#+end_src
+
+** Pin
+#+name: packages-pin
+#+begin_src emacs-lisp :tangle packages.el
+;; Use `:pin' to specify a particular commit to install.
+;(package! builtin-package :pin "1a2b3c4d5e")
+#+end_src
+
+** Unpin
+#+name: packages-unpin
+#+begin_src emacs-lisp :tangle packages.el
+;; Doom's packages are pinned to a specific commit and updated from release to
+;; release. The `unpin!' macro allows you to unpin single packages...
+;(unpin! pinned-package)
+;; ...or multiple packages
+;(unpin! pinned-package another-pinned-package)
+;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
+;(unpin! t)
+#+end_src
+
+* Private configuration
+Only one of the three essential Doom files we haven't met yet.
+It's called =config.el=, which presents this frontmatter.
 
 #+begin_src emacs-lisp :tangle config.el :noweb no-export
 ;;; $DOOMDIR/config.el -*- lexical-binding: t; -*-
@@ -541,93 +633,25 @@ Frontmatter of =config.el=.
 ;; clients, file templates and snippets.
 #+end_src
 
-# In a literate perspective, this means you just have to tangle this file to see the changes in action.
+Comment says:
+- This is the place for your private configuration.
+- Some features (like GPG and email) may require personal information for identification that can be stored in this file (we'll see how to avoid storing sensitive information here).
+- The user does not need to run any specific commands to update their configuration after making changes to this file. In a literate configuration perspective, this means you just have to tangle this file to see the changes in action.
 
-** Doom's package manager
-Clearly, not every package that exists for Emacs is molded in Doom's modules: it would be crazy.
-Many of them are to be installed via MELPA or git repositories.
-Like before, I keep original comments of =packages.el= here, but the file will be populated in the next part, side by side with the relative package configuration.
-
-# Manteniamo i commenti originali di =packages.el= all'interno del file.
-
-*** Recipe
-#+name: packages-recipe
-#+begin_src emacs-lisp :tangle packages.el
-;; To install a package directly from a remote git repo, you must specify a
-;; `:recipe'. You'll find documentation on what `:recipe' accepts here:
-;; https://github.com/raxod502/straight.el#the-recipe-format
-;(package! another-package
-;  :recipe (:host github :repo "username/repo"))
-#+end_src
-
-*** Files
-#+name: packages-files
-#+begin_src emacs-lisp :tangle packages.el
-;; If the package you are trying to install does not contain a PACKAGENAME.el
-;; file, or is located in a subdirectory of the repo, you'll need to specify
-;; `:files' in the `:recipe':
-;(package! this-package
-;  :recipe (:host github :repo "username/repo"
-;           :files ("some-file.el" "src/lisp/*.el")))
-#+end_src
-
-*** Disable
-#+name: packages-disable
-#+begin_src emacs-lisp :tangle packages.el
-;; If you'd like to disable a package included with Doom, you can do so here
-;; with the `:disable' property:
-;(package! builtin-package :disable t)
-#+end_src
-
-*** Override
-#+name: packages-override
-#+begin_src emacs-lisp :tangle packages.el
-;; You can override the recipe of a built in package without having to specify
-;; all the properties for `:recipe'. These will inherit the rest of its recipe
-;; from Doom or MELPA/ELPA/Emacsmirror:
-;(package! builtin-package :recipe (:nonrecursive t))
-;(package! builtin-package-2 :recipe (:repo "myfork/package"))
-#+end_src
-
-*** Branch
-#+name: packages-branch
-#+begin_src emacs-lisp :tangle packages.el
-;; Specify a `:branch' to install a package from a particular branch or tag.
-;; This is required for some packages whose default branch isn't 'master' (which
-;; our package manager can't deal with; see raxod502/straight.el#279)
-;(package! builtin-package :recipe (:branch "develop"))
-#+end_src
-
-*** Pin
-#+name: packages-pin
-#+begin_src emacs-lisp :tangle packages.el
-;; Use `:pin' to specify a particular commit to install.
-;(package! builtin-package :pin "1a2b3c4d5e")
-#+end_src
-
-*** Unpin
-#+name: packages-unpin
-#+begin_src emacs-lisp :tangle packages.el
-;; Doom's packages are pinned to a specific commit and updated from release to
-;; release. The `unpin!' macro allows you to unpin single packages...
-;(unpin! pinned-package)
-;; ...or multiple packages
-;(unpin! pinned-package another-pinned-package)
-;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
-;(unpin! t)
-#+end_src
-
-** Configuration
-In the end, we get to the actual configuration.
-
-#+begin_quote
-*Keep in mind that not every part is translated into English*.
-Since Italian is my mother language, I sometimes write sections in Italian and publish them as is. It may take some time before I can translate everything into English.
-#+end_quote
-
-*** Who am I?
+* Who am I?
 # *** Chi sono?
-Hi there, I am Giovanni Crisalfi.
+
+# Hi there, I am Giovanni Crisalfi.
+Hi there, I go by the name of Giovanni Crisalfi.
+
+# Greetings, I'm Giovanni Crisalfi, aye.
+# Greetings, I, Giovanni Crisalfi, am present.
+# Greetings, Giovanni Crisalfi am I.
+# Greetings, I am Giovanni Crisalfi, the bearer of this missive.
+# Hark ye, I go by the name of Giovanni Crisalfi.
+# Hark! By name, Giovanni Crisalfi.
+# I'm Giovanni Crisalfi.
+# I am Giovanni Crisalfi.
 
 #+begin_src emacs-lisp :tangle config.el
 ;; Some functionality uses this to identify you, e.g. GPG configuration, email
@@ -636,7 +660,9 @@ Hi there, I am Giovanni Crisalfi.
       user-mail-address "giovanni.crisalfi@protonmail.com")
 #+end_src
 
-*** Emacs as Daemon
+# TODO See more in CV section
+
+* Emacs as Daemon
 :PROPERTIES:
 :EXPORT_HUGO_SECTION: software/emacs-as-daemon
 :EXPORT_FILE_NAME: index
@@ -700,7 +726,7 @@ emacsclient --create-frame --alternate-editor=""
 # Chiaramente, scrivere di volta in volta questo comando è a dir poco noioso, quindi ci conviene aggiungere degli alias su =.bashrc= o lanciarlo con una scorciatoia da tastiera, a seconda del nostro ambiente.
 Writing this command everytime is boring, so it would be best to add some aliases to =.bashrc= or launch it with a keyboard shortcut, depending on our environment.
 
-*** Environment variables on Emacs
+* Environment variables on Emacs
 :PROPERTIES:
 :EXPORT_HUGO_SECTION: software/environment-variables-on-emacs
 :EXPORT_FILE_NAME: index.en.md
@@ -730,7 +756,7 @@ In my case, that's the result.
 Maybe, you need a different environment variable ("env var" from now on).
 How do you set it?
 
-**** The traditional approach
+** The traditional approach
 If you have bash as a shell, you can simply set it the traditional way:
 
 #+begin_src bash
@@ -749,7 +775,7 @@ I used to to export my env vars from =.bashrc= like showed above and it was fine
 But most cases are not "all cases" and I encountered the problematic case.
 Was I surprised? Of course not, it's never so simple.
 
-**** The problem with the daemon
+** The problem with the daemon
 If you run Emacs from a Daemon, your =getenv= functions start returning =nil=.
 Why's that?
 
@@ -851,7 +877,7 @@ So, how can you maintain the daemon while not giving up on environment variables
 As for every technical problem, there are a lot of ways to solve it.
 It depends on the case what is the most appropriate solution.
 
-**** The "Emacs as OS" approach
+** The "Emacs as OS" approach
 # Questo ed i prossimi due paragrafi sono stati pubblicati per la prima volta il 2022.03.16
 Xahlee solved the problem in the most emacs-y way possible: [[http://xahlee.info/emacs/emacs/emacs_env_var_paths.html][setting everything from inside Emacs]]. He must have thought "why should I ever leave Emacs?". That's the classical thought process of any emacser, so it shouldn't surprise anybody.
 
@@ -863,10 +889,10 @@ Emacs let you set environment variables with =setenv=.
 
 I was searching for something different, since I have other scripts that run outside of Emacs and they need access to env vars too. I could duplicate the env vars, but I refuse: it feels hacky and it's difficult to maintain.
 
-**** The Systemd approach
+** The Systemd approach
 A member of the Arch community "[[https://bbs.archlinux.org/viewtopic.php?id=163436][found a good way to export environment variables using systemctl so that they are available to systemd spawned processes]]". This could be exactly what I was looking for, but I don't like the idea of converting the other scripts and messing with systemd, so I kept looking for a different solution.
 
-**** The diffy approach
+** The diffy approach
 In my quest for a balanced way to manage this problem, I found [[https://unix.stackexchange.com/a/285257][an interesting answer on unix stackexchange]] that links a [[https://gist.github.com/ffevotte/9345586][gist]] which presents a
 
 #+begin_quote
@@ -908,7 +934,7 @@ I think it's kind of an overenginereed solution, but I like the spirit of leavin
 # "Now I must do other things in my life, but I promise that I will update this post soon, hopefully with a reasonable and elegant solution. Better: with a working solution. A working solution would be just fine."
 # Well, now I'm fucking back
 
-**** The lispy approach
+** The lispy approach
 # As it was rightly explored in [[https://github.com/syl20bnr/spacemacs/issues/12451][this Spacemacs' Github issue]], if you load Emacs as Daemon, it doesn't have any access to your usual environment variables.
 If you keep the environment variables in a single "lisp-y" file (I mean a valid lisp list stored as simple text), it's possible to import the values both in Emacs and in Bash with a minimal effort. I present an example of such text here below:
 
@@ -1012,7 +1038,7 @@ Then, we run it right away.
 # https://emacs.stackexchange.com/a/15099/39328
 # (add-hook 'after-init-hook #'load-env-vars)
 
-**** Back in Bash
+** Back in Bash
 How to print strings in a file with emacs lisp?
 
 You can use the =write-region= function to write a string to a file in Emacs Lisp. Here's an example:
@@ -1053,7 +1079,7 @@ fi
 
 Since we don't need the output of =bash-load-env-vars=, we redirect it to =/dev/null= ([[https://unix.stackexchange.com/a/459404][like shown here]]).
 
-**** Conclusions
+** Conclusions
 Ultimately, the environment variables are managed by three components:
 - Lisp variables are loaded into Emacs by calling the function =load-env-vars()=;
 - You can sync the variables stored locally with a password manager (e.g. Bitwarden);
@@ -1101,6 +1127,19 @@ To the next adventure!
 
 {{{prismcss}}}
 {{{prismjs}}}
+
+# Questo paragrafo può essere eliminato perché ridondante
+* Configuration
+# In the end, we get to the actual configuration.
+
+# Questo lo devo trasformare in uno special blockquote e metterlo solo con la macro italian
+#+begin_comment
+*Keep in mind that not every part is translated into English*.
+Since Italian is my mother language, I sometimes write sections in Italian and publish them as is. It may take some time before I can translate everything into English.
+#+end_comment
+
+# Questi devono diventare tutti primi livelli
+
 
 *** Emacs UI
 **** Line numbers
