@@ -30,6 +30,12 @@ It's written in Org-mode and designed to be /literate/, meaning that I've docume
 
 {{{more}}}
 
+# Questo lo devo trasformare in uno special blockquote e metterlo solo con la macro italian
+#+begin_comment
+*Keep in mind that not every part is translated into English*.
+Since Italian is my mother language, I sometimes write sections in Italian and publish them as is. It may take some time before I can translate everything into English.
+#+end_comment
+
 * Emacs
 # developed by Richard Stallman in the 1970s, known for its extensibility and productivity features.
 Emacs is a highly customizable text editor. Emacs is a lisp interpreter. Emacs is a text manipulation application. Emacs, like water, adapts to any container, flows around any obstacle, erodes mountains (of data), transforms into different phases (or modes) depending on circumstances.
@@ -1128,35 +1134,22 @@ To the next adventure!
 {{{prismcss}}}
 {{{prismjs}}}
 
-# Questo paragrafo può essere eliminato perché ridondante
-* Configuration
-# In the end, we get to the actual configuration.
-
-# Questo lo devo trasformare in uno special blockquote e metterlo solo con la macro italian
-#+begin_comment
-*Keep in mind that not every part is translated into English*.
-Since Italian is my mother language, I sometimes write sections in Italian and publish them as is. It may take some time before I can translate everything into English.
-#+end_comment
-
-# Questi devono diventare tutti primi livelli
-
-
-*** Emacs UI
-**** Line numbers
+* Emacs UI
+** Line numbers
 #+begin_src emacs-lisp :tangle config.el
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
 #+end_src
 
-**** Maximize on startup
+** Maximize on startup
 #+begin_src emacs-lisp :tangle config.el
 ;; Maximize the window upon startup
 ;; TODO testing this one
 (setq initial-frame-alist '((top . 1) (left . 1) (width . 114) (height . 32)))
 #+end_src
 
-**** COMMENT Frame transparency
+** COMMENT Frame transparency
 Transparency in UI can add a visually interesting layer to the design of an application like Emacs.
 Transparency can create depth and dimensionality, making the UI feel more immersive and interactive.
 Therefore, making transparencies in UI is a cool thing to do.
@@ -1169,7 +1162,7 @@ Therefore, making transparencies in UI is a cool thing to do.
 (add-to-list 'default-frame-alist'(alpha . (99 . 100)))
 #+end_src
 
-**** Fonts
+** Fonts
 Fonts are a core element in a text editor.
 Overall, the right font can greatly enhance the user experience.
 
@@ -1195,7 +1188,7 @@ Overall, the right font can greatly enhance the user experience.
 
 Since I use Emacs both on a laptop and a desktop computer, I wish I could export the same configuration with simple variations to adjust it to the different hardware. In this case, just changing the font would be nice. I still hadn't work on this, but I have to.
 
-**** Default theme
+** Default theme
 First of all, let's select a default theme.
 # Innanzitutto, selezioniamo un tema di default.
 
@@ -1235,7 +1228,7 @@ I leave those default comments here; they're pretty helpful and concise.
 ;; they are implemented.
 #+end_src
 
-**** Spacemacs themes
+** Spacemacs themes
 # Sono affezionato ai temi di spacemacs. Uso specialmente quello chiaro, se ho bisogno di sovrailluminare lo schermo.
 I'm emotionally attached to the Spacemacs' themes. Sometimes I make use of =spacemacs-light=, usually when the environment is brighter than usual (e.g. I'm trying to read outside on a sunny day).
 
@@ -1248,7 +1241,7 @@ Speaking about other distro themes, I would like to make use of Nano-Emacs' colo
 
 Reaching a similar result is possible with "Lambda themes" (see below).
 
-**** Lambda themes
+** Lambda themes
 From [[https://github.com/Lambda-Emacs/lambda-themes][the README]]:
 
 #+begin_quote
@@ -1261,7 +1254,7 @@ Installing lambda themes:
 (package! lambda-themes :recipe (:host github :repo "lambda-emacs/lambda-themes"))
 #+end_src
 
-**** Catppuccin theme
+** Catppuccin theme
 #+begin_quote
 [[https://github.com/catppuccin/catppuccin][Catppuccin]] is a community-driven pastel theme that aims to be the middle ground between low and high contrast themes. It consists of 4 soothing warm flavors with 26 eye-candy colors each, perfect for coding, designing, and much more!
 #+end_quote
@@ -1270,7 +1263,7 @@ Installing lambda themes:
 (package! catppuccin :recipe (:host github :repo "catppuccin/emacs"))
 #+end_src
 
-**** Theme ciclator
+** Theme ciclator
 # Some day I will write what this is about, but I hope the point is pretty easy to grasp for any lisp enthysiast like you probably are.
 This Emacs Lisp code defines a circular list of themes (=quick-switch-themes=) and a function (=toggle-theme=) to switch between these themes with a single command. The function will enable the next theme in the list or disable all themes if the end of the list is reached. It also includes a keybinding (=SPC t t=) to quickly toggle between themes. This code could be useful for anyone who frequently switches between different color themes in Emacs.
 
@@ -1306,7 +1299,7 @@ A nil value implies no custom theme should be enabled.")
       :desc "Quick toggle theme" "t t" #'toggle-theme)
 #+end_src
 
-*** Org-mode
+* Org-mode
 [[https://orgmode.org/][Org-mode]] is a major mode for Emacs that provides a powerful system for organizing and managing information.
 Another vague definition, isn't it? It is certainly not a coincidence.
 The truth is that org-mode is often described as a markup language, but aspires to a much higher goal.
@@ -1353,7 +1346,7 @@ Now we declare in which directory we want most org files to be placed, in such w
 (setq org-directory "~/org/")
 #+end_src
 
-*** Org downloads
+* Org downloads
 Now we can start configuring Org-mode. I think =org-download= is a killer feature of it, since it gives us a way to easily attach elements to the document without never leaving Emacs.
 # Adesso possiamo cominciare ad estendere Org-mode. Una prima killer feature, a mio avviso, è data da =org-download=, che ci consente di appiccicare direttamente degli allegati al file org senza mai abbandonare Emacs, né il documento stesso.
 
@@ -1369,8 +1362,8 @@ Org-download-clipboard is bound to =SPC m a p= in org-mode.
 
 # =org-download-clipboard= è legato a =SPC m a p= [[https://github.com/doomemacs/doomemacs/issues/3830#issuecomment-679925113][dal 25 agosto 2020]] in Doom Emacs.
 
-*** Spaced repetition
-**** Org drill
+* Spaced repetition
+** Org drill
 # Una volta usavo Anki, ora mi sono chiesto perché usare una GUI quando posso semplicemente scrivere tutto il necessario.
 I occasionally use this package, but I prefer writing my text here, then exporting my cards in Anki, so I mostly do that now.
 
@@ -1378,7 +1371,7 @@ I occasionally use this package, but I prefer writing my text here, then exporti
 (package! org-drill)
 #+end_src
 
-**** Anki
+** Anki
 #+begin_quote
 anki-editor – Emacs minor mode for making Anki cards with Org
 #+end_quote
@@ -1390,7 +1383,8 @@ anki-editor – Emacs minor mode for making Anki cards with Org
 In order to make this work, you should install the =anki-connect= Anki plugin too.
 # Bisogna ricordare di installare il plugin Anki chiamato "anki-connect", altrimenti non funziona.
 
-*** Org Journal
+** COMMENT Logseq?
+* Org Journal
 Install the package.
 
 #+begin_src emacs-lisp :tangle packages.el
@@ -1434,7 +1428,7 @@ Configure the keybindings and some parameters.
 (setq org-journal-file-type 'monthly)
 #+end_src
 
-*** Org Web Tools
+* Org Web Tools
 From [[https://github.com/alphapapa/org-web-tools][the README]]:
 
 #+begin_quote
@@ -1447,7 +1441,7 @@ To install the package:
 (package! org-web-tools)
 #+end_src
 
-*** Org-capture
+* Org-capture
 # Org capture torna comodo per appuntarsi in org-mode frammenti di pagine web.
 Org capture is useful for taking notes in org-mode of fragments of web pages
 
@@ -1491,7 +1485,7 @@ At this point, on GNOME and other GTK-based desktop environments, it is sufficie
 $ update-desktop-database ~/.local/share/applications/
 #+end_src
 
-*** Citations
+* Citations
 Install Org-ref:
 #+begin_src emacs-lisp :tangle packages.el
 (package! org-ref)
@@ -1509,7 +1503,7 @@ Export processor to use format files written in Citation Style Language (=.csl=)
 (package! citeproc)
 #+end_src
 
-**** Citing Wikipedia
+** Wikipedia
 Get Wikipedia data directly on org-mode.
 # Richiama informazioni da Wikipedia direttamente su org.
 
@@ -1517,7 +1511,7 @@ Get Wikipedia data directly on org-mode.
 (package! wikinforg)
 #+end_src
 
-***** COMMENT Italian wikipedia :it:
+*** COMMENT Italiano :it:
 Spesso mi servono i contenuti in italiano.
 L'ideale sarebbe scegliere per ogni query.
 
@@ -1528,7 +1522,7 @@ L'ideale sarebbe scegliere per ogni query.
 Purtroppo, i risultati che ottengo da questa versione sono poco accurati.
 Per il momento la disabiliterò.
 
-**** COMMENT Org Bibliography :it:
+** COMMENT Org Bibliography :it:
 Tentativo di literate bibliography con org-mode basato su =org-bib-mode=, di Nicolas P. Rougier (il creatore di NANO Emacs).
 
 Innanzitutto devo installare le dipendenze dal suo profilo Github.
@@ -1601,7 +1595,7 @@ Now require it:
 
 Vista la complessità della libreria, ho deciso per il momento di non aggrovigliare nulla e aspettare un momento che mi consenta di studiare meglio ogni impostazione.
 
-*** Org LaTeX export
+* Org LaTeX export
 We add other extensions to logfiles, to let Emacs delete them after exporting the actual tex file; therefore, we have tidier directories.
 # Aggiungiamo altre estensioni ai cosiddetti logfile, cosicché Emacs si occupi di eliminarle dopo l'uso in fase di esportazione (e ci lasci, così, la cartella pulita).
 
@@ -1609,7 +1603,7 @@ We add other extensions to logfiles, to let Emacs delete them after exporting th
 (setq org-latex-logfiles-extensions (quote ("lof" "lot" "tex~" "aux" "idx" "log" "out" "toc" "nav" "snm" "vrb" "dvi" "fdb_latexmk" "blg" "brf" "fls" "entoc" "ps" "spl" "bbl" "xmpi" "run.xml" "bcf")))
 #+end_src
 
-*** Org D2 diagrams
+* Org D2 diagrams
 I want to generate D2 diagrams without leaving my org-mode files.
 Apparently, that's why [[https://github.com/dmacvicar/ob-d2][ob-d2]] (an org-babel exporter for D2) was written.
 It's not on MELPA yet, so I'll get it from its GitHub repo.
@@ -1658,7 +1652,7 @@ defendants.mc -> hans: Lost then withdrew with accusations
 defendants.chesscom -> hans: 72 page report of cheating
 #+end_src
 
-*** Org JSON export
+* Org JSON export
 #+begin_src emacs-lisp :tangle packages.el
 (package! ox-json)
 #+end_src
@@ -1667,7 +1661,7 @@ defendants.chesscom -> hans: 72 page report of cheating
 (require 'ox-json)
 #+end_src
 
-*** Org-roam
+* Org-roam
 :PROPERTIES:
 :EXPORT_HUGO_SECTION: software/org-roam
 :EXPORT_FILE_NAME: index.en.md
@@ -1682,13 +1676,13 @@ Org-roam frees information from hierarchies, hence freed me from the burden of c
 
 Until this very moment, my method involved ammassing notes in "notebooks", which meant I had a folder with a lot of org-mode files named with some kind of topic. For example, I had a file for Python, a file for Linux, a file for Organic chemistry and so on. But my files kept growing and the themes kept mixing: what if I want to take a note about writing organic molecule in emacs? Should I store it in the "Emacs notebook" or the "Organic chemistry notebook"? Every single time a similar but quite different dilemma. That's why I searched for a less structured approach and thus, the Zettelkasten method occurred to me.
 
-**** What is a Zettelkasten?
+** What is a Zettelkasten?
 A zettelkasten is a personal knowledge management system popularized by Niklas Luhman, a German sociologist. As the (German) term suggests, it consists of a collection of small notes; the small notes are often called "slips" and each of them must contain a single idea or topic.
 The point is that these slips can be organized and linked together in various ways and traditionally they required a lot of paper and storage tools to aid in the retrieval of the informations. Today, the zettelkasten can be totally virtual. Of course, this doesn't exclude the usefulness of the analogical one, we have just more options.
 
 The zettelkasten method comes with a series of rules and peculiarities but, to be honest, I don't think I will follow the zettelkasten method zealously; as I said, I was searching for a less hierarchized tool and that's what I found in Org-roam.
 
-**** What is Org-roam?
+** What is Org-roam?
 # When it comes to note-taking software, Notion and Obsidian comes to mind. Web-based software is used more and more, but I don't want to leave Org-mode, plain text and open-source software.
 # Logseq looks like a wonderful project, since it supports org-mode files and is open-source; I'm interested in Logseq too, but we will talk about it later.
 # Software web-based sono sempre più usati, ma io non voglio abbandonare org-mode. Logseq fornisce supporto per org-mode, ma si tratta di una versione di org-mode con modifiche che la rendono dipendente dalla piattaforma stessa. Non possono essere lette (così come sono) su Emacs. A quel punto, tanto vale usare una versione modificata di Markdown, la portabilità è uguale, i limiti sono gli stessi.
@@ -1710,12 +1704,13 @@ Moreover, Org-roam is a solid piece of software with a large community and has r
 
 # Essendo il mio primo approccio, sicuramente sto trascurando fattori che emergeranno in seguito, ma mi sembrano buone basi.
 # Ho anche letto delle [[https://karl-voit.at/2020/06/14/Zettelkasten-concerns/][critiche]], ad esempio relative al fatto che risulterebbe scomodo mantenere contemporaneamente differenti domini.
-**** Installation
+
+** Installation
 The installation is very easy:
 - You must have SQLite3 on your system (and you probably already have);
 - On Doom Emacs you have to uncomment the =org= module, while adding =roam2= like this: =(org +roam2)=.
 
-**** Basic configuration
+** Basic configuration
 Now, the configuration.
 # A questo punto, bisogna passare alla configurazione.
 # In pratica, grazie a Doom abbiamo già una preconfigurazione, ma dobbiamo comunicare almeno la directory in cui vogliamo tenere i file.
@@ -1731,7 +1726,7 @@ In the following directory, I will keep the plain-text files. I want to be clear
 # L'evidente alternativa sarebbe usare git.
 I sync everything in my Dropbox by storing the files, not the database.
 
-**** The first note
+** The first note
 I use Evil on Doom Emacs, hence the keybinding I use for creating a note is =SPC+n+r+i= (action -> notes -> roam -> insert).
 # Non resta che seguire i comandi di Doom Emacs per creare la prima nota: =SPC+n+r+i= per inserire una nota.
 
@@ -1739,12 +1734,12 @@ The command will leave a link to the note on the underlying buffer. This behavio
 # Mentre stiamo scrivendo la nota, con la stessa combinazione si può inserire un link ad una nota.
 # Questa risulterà connessa alla prima nel buffer.
 
-**** Backlinks
+** Backlinks
 # Explain why backlinks are one of the most relevant strenghts in Org-roam
 # Raw output
 Backlinks in Org-roam are one of the most relevant strengths because they allow for easy navigation and organization of information. Just by adding a link to another note, all notes that link to it are automatically generated, providing a web of related information. This helps in discovering and exploring relationships between pieces of information, making it easier to create connections and draw meaningful insights. Additionally, backlinks allow for a more flexible and non-linear way of organizing information, as notes can be linked in multiple locations without duplicating them.
 
-**** Web UI
+** Web UI
 This UI helps exploring the nodes and the backlinks.
 # I need a UI to explore the nodes:
 
@@ -1754,7 +1749,7 @@ This UI helps exploring the nodes and the backlinks.
 
 # In questo modo posso vedere i nodi in maniera molto piacevole all'interno del browser.
 
-**** References
+** References
 # Una delle cose per cui potrei usare lo zettelkasten è memorizzare tweet o toots. Questo sarebbe facilitato dalle API, ma per quanto riguarda Twitter è difficile capire se valga la pena spendere del tempo, visto che hanno già annunciato cambiamenti. I thread sono difficili da immagazzinare tweet per tweet, quindi non se ne parla.
 
 It's better to not mix your own written production with others' written productions. In other words, don't fill your notes with citations.
@@ -1767,7 +1762,7 @@ How to reference others' work, then? I looked at [[https://jethrokuan.github.io/
 {{{prismcss}}}
 {{{prismjs}}}
 
-*** Emacs Feed Configuration
+* Emacs Feed Configuration
 :PROPERTIES:
 :EXPORT_HUGO_SECTION: software/emacs-config-feed
 :EXPORT_FILE_NAME: index.en.md
@@ -1897,7 +1892,7 @@ Finally, we activate =elfeed-score= by adding these lines in the init file (=con
 {{{prismcss}}}
 {{{prismjs}}}
 
-*** Typescript
+* Typescript
 # Innanzitutto, bisogna avere aggiunto alcuni moduli: =web= e =javascript=, in particolare.
 First of all, you need to have added some modules: =web= and =javascript=, in particular.
 This is done by uncommenting them in =.doom.d/init.el= (remove =;;= as shown in the "Doom modules" paragraph above).
@@ -1928,7 +1923,7 @@ If you are looking for a solution for Vanilla Emacs or Spacemacs, this other one
 Basically, we make a new mode derived from =typescript-mode= and we assign it the =.tsx= extension too.
 For more details, refer to [[https://github.com/emacs-typescript/typescript.el/issues/4#issuecomment-849355222][this Github issue]].
 
-*** Vala
+* Vala
 # Il supporto per Vala è largamente ereditato dalla mode per C#.
 The support for Vala is largely inherited from the C# mode.
 
@@ -1936,8 +1931,8 @@ The support for Vala is largely inherited from the C# mode.
 (package! vala-mode)
 #+end_src
 
-*** Python
-**** Virtualenv
+* Python
+** Virtualenv
 # Supporto per virtualenv.
 Virtualenv support.
 
@@ -1945,8 +1940,8 @@ Virtualenv support.
 (package! pyvenv)
 #+end_src
 
-*** Rust
-**** Semantic analysis
+* Rust
+** Semantic analysis
 # [[https://robert.kra.hn/posts/rust-emacs-setup/][Come scrive Robert Krahn]],
 [[https://robert.kra.hn/posts/rust-emacs-setup/][As Robert Krahn writes]],
 
@@ -1957,7 +1952,7 @@ Racer used to be the best option for getting IDE features (code navigation etc) 
 # Il consiglio, quindi, è quello di passare direttamente al paragrafo successivo, ma chi proprio desiderasse Racer (che era piacevole), lascio qui tutte le istruzioni del caso.
 The advice, therefore, is to skip directly to the next paragraph, but for those who really want Racer (which was enjoyable), I leave here all the necessary instructions.
 
-***** Racer
+*** Racer
 # Dopo avere abilitato =rust= in =init.el=, Doom Emacs lamentava l'introvabilità del binario di Racer:
 After enabling =rust= in =init.el=, Doom Emacs complained about the inability to find the Racer binary.
 
@@ -2050,7 +2045,7 @@ Therefore, it is necessary to avoid starting Racer every time LSP is not active.
 (package! racer :disable t)
 #+end_src
 
-***** rust-analyzer
+*** Rust analyzer
 # Circa sei mesi dopo, è tempo di dare un'occhiata a rust-analyzer.
 It's time to look at =rust-analyzer=.
 
@@ -2092,15 +2087,15 @@ This should be sufficient, but to be absolutely sure:
 # Lanciamo =lsp= in un buffer con Rust ed assistiamo al compiersi della magia.
 We launch =lsp= in a buffer with Rust and witness the magic happen.
 
-*** Dired
+* Dired
 Drag and drop to dired:
 
 #+begin_src emacs-lisp :tangle config.el
 (add-hook 'dired-mode-hook 'org-download-enable)
 #+end_src
 
-*** Kindle
-**** Send ebooks to Kindle with Emacs
+* Kindle
+** Send ebooks to Kindle with Emacs
 :PROPERTIES:
 :EXPORT_HUGO_SECTION: software/send-ebooks-to-kindle
 :EXPORT_FILE_NAME: index.en.md
@@ -2121,7 +2116,7 @@ In order to send something to your personal Kindle, the first step is to enable 
 # Per agevolare l'invio di email contenenti ebook al Kindle, Calibre ha disposto delle funzioni specifiche. Io, però, sono troppo pigro pure per aprire la GUI di Calibre e, generalmente, se un ebook è in giro per il mio computer, significa che prima o poi vorrò leggerlo. Quindi ho pensato di automatizzare il lavoro, affidandolo ad un singolo comando.
 To facilitate the sending of emails containing ebooks to Kindle, Calibre provides specific functions. However, I am too lazy to even open the Calibre GUI and, usually, if an ebook is on my computer, it means that sooner or later I will want to read it. Therefore, I have decided to automate the task by entrusting it to a single function.
 
-***** The strategy
+*** The strategy
 # Questa è la strategia:
 My strategy is pretty simple:
 - The code iterates over all files that have the =.epub= extension in a specific directory.
@@ -2180,7 +2175,7 @@ Finally, we can write the function, here called =send-to-kindle=.
 - We give =full= and =nosort= optional arguments as non-nils to =directory-files= because we like the absolute path of files and we don't need any sorting; making the function sort the files would be a waste of time.
 - Expanding the path is not necessary, because =directory-files= is able to do it by itself.
 
-***** Epub to mobi
+*** Epub to mobi
 It would be convenient having a function to convert any epub file to mobi format.
 Calibre has [[https://manual.calibre-ebook.com/generated/en/ebook-convert.html][a CLI command for solving this problem]]:
 
@@ -2225,7 +2220,7 @@ Since the mobi conversion its done in the same directory of epub files, some fil
 
 # Per mandare via mail usiamo un altro comando reso disponibile da Calibre. Potremmo anche non usarlo, ma visto che già dipendiamo da Calibre per la funzione precedente (ed è quindi necessariamente installato), perché non usarlo?
 
-***** Sending emails
+*** Sending emails
 To send via email, we use [[https://manual.calibre-ebook.com/it/generated/it/calibre-smtp.html][another command made available by Calibre]].
 We could also choose another tool, but since we are already dependent on Calibre for the previous function (and it is therefore necessarily installed), why not use it?
 
@@ -2256,7 +2251,7 @@ To build the SMTP command, we need to set up SMTP and credentials; the simpler w
 We run this command for each mobi file available.
 The question is: asynchronously or synchronously?
 
-***** The sync approach
+*** The sync approach
 The problem with async is that we have to make sure that the commands in the second block (email) doesn't start before the commands in the first block (conversion). Since the "rate determining step" is the first one (the conversion is the slower block), we have to be particularly careful. At this point, it's clear that we cannot write another block like the previous one; not like the following:
 
 # #+name: send-ebook
@@ -2346,7 +2341,7 @@ emacsclient -e '(send-to-kindle)'
 # How can I write two async blocks in emacs lisp, being careful that the first one is being finished before the second block runs?
 # You can use the =async-start= function with the =:sync= option set to =t= for the first block. This will cause it to run synchronously and not return until it has finished. Then use =async-start= again for the second block without setting =:sync= to ensure it runs asynchronously.
 
-***** COMMENT Async excursus
+*** COMMENT Async excursus
 Now, let's go back to the asynchronous version.
 
 How can I write asynchronously functions in emacs lisp?
@@ -2445,7 +2440,7 @@ Ok, si può fare.
 
 #+RESULTS:
 
-***** The async approach
+*** The async approach
 # Translate this italian text in english:
 # Non avrei bisogno nemmeno di scrivere questa funzione, visto che ora Amazon ha annunciato che supporterà epub come formato, ma lo faccio giusto perché mi va di vedere come funzionano le chiamate asincrone su Emacs.
 
@@ -2536,17 +2531,15 @@ Non controlla niente, non fa verifiche strane.
 ;; (funcall (car conversion-lambdas))
 #+end_src
 
-***** Conclusions
+*** Conclusions
 
 [...]
 
 {{{prismcss}}}
 {{{prismjs}}}
 
-**** Get NOTES from Kindle
-# TODO
-
-*** Zola
+** TODO Get NOTES from Kindle
+* Zola
 # Funzioni ausiliarie che ho scritto per facilitarmi il lavoro quando scrivevo in Markdown per Zola.
 Auxiliary functions that I wrote to make my work easier when writing in Markdown for Zola.
 
@@ -2555,7 +2548,7 @@ As already explained above, now I export from org-mode, so the usefulness of the
 
 # TODO dovrei controllare Yasnippet per questi casi
 
-**** Markdown TOML frontmatter :it:
+** Markdown TOML frontmatter :it:
 Immaginate di voler generare un nuovo file Markdown per il vostro sito web.
 In base al tipo di generatore, questo potrà avere bisogno di un frontespizio in TOML o in YAML, magari. Si tratta di pochi caratteri, ma scriverli di volta in volta può risultare un po' frustrante, soprattutto se si scrivono molti pezzi.
 
@@ -2624,7 +2617,7 @@ Con la funzione =add-hook= possiamo agganciare il lancio della nostra funzione a
 
 Da ora in avanti, basterà aprire un file Markdown vuoto perché Emacs inserisca automaticamente il frontespizio.
 
-**** Markdown shortcode
+** Markdown shortcode
 # Con lo stesso approccio, si possono anche ottenere delle funzioni per aggiungere degli shortcode molto usati nel corpo del testo e persino associare delle combinazioni di tasti ad esse!
 With the same approach, it is also possible to obtain functions to add frequently used shortcodes in the body of the text and even associate keyboard shortcuts to them!
 
@@ -2645,7 +2638,7 @@ With the same approach, it is also possible to obtain functions to add frequentl
 
 # Uniamoci, confratelli, nell'amore per Emacs.
 
-**** Org exporter :it:
+** Org exporter :it:
 L'exporter per Zola è un pacchetto che sto mantenendo io, quindi capita spesso che io debba testare delle modifiche in locale. =package!= gestisce i download, quindi in teoria non dovrebbe essere impiegato per la gestione di file in locale, ma [[https://github.com/doomemacs/doomemacs/issues/3842#issuecomment-681039894][Henrik Lissner consiglia di usare comunque la macro perché è stata adattata anche a questo genere di situazioni]].
 
 Aggiunge:
@@ -2700,7 +2693,7 @@ Sempre al fine di automatizzare la produzione dei metadati, meglio automatizzare
 (setq org-log-done 'time)
 #+end_src
 
-*** Twitter
+* Twitter
 # Questo piccolo pacchetto (che conto di estendere presto) nasce per assolvere ad una funzione molto semplice: citare i tweet nel mio blog.
 A small package (which I plan to extend soon) designed to fulfill a very simple function: to cite tweets on my blog.
 
@@ -2710,8 +2703,8 @@ A small package (which I plan to extend soon) designed to fulfill a very simple 
 
 If you speak italian, [[https://zwitterio.it/coding/2022/quote-tweets-properly-with-emacs-lisp/][at this link I narrate how it was written, commenting the code line-by-line from a perspective of a lisp beginner]];
 
-*** Mastodon
-Firstly, let's install "mastodon.el":
+* Mastodon
+Firstly, let's install =mastodon.el=:
 # Prima di tutto, installiamo mastodon.el:
 
 # now *Untangled*
@@ -2735,7 +2728,7 @@ The weak spot is the layout, but fortunately [[https://gist.github.com/rougier/e
 # Fortunatamente, Nicolas Rougier ha già [[https://gist.github.com/rougier/e92d446600dfe350b9ec9d7cabaca211][pubblicato un gist in cui rielabora il layout per adeguarlo alla propria configurazione]].
 # Io non uso NANO, quindi servirà qualche ritocco sicuramente.
 
-*** Music
+* Music
 # Di questa parte ho già parlato in [[https://www.zwitterio.it/coding/2022/how-do-i-play-my-lofi-music/][un post dedicato]].
 The following lines are widely commented in a [[https://www.zwitterio.it/en/software/how-do-i-play-my-lofi-music/][specific post]].
 
@@ -2769,7 +2762,7 @@ The following lines are widely commented in a [[https://www.zwitterio.it/en/soft
   (shell-command (concat "python -mwebbrowser " (car (nshuffle vaporwave-links)))))
 #+end_src
 
-*** Pretty print
+* Pretty print
 # Funzioni che tornano utili in varie situazioni.
 # Questa è per la uso per il pretty-printing di HTML, di solito, ma va bene per un qualunque chunk XML:
 I usually use this one for pretty printing HTML, but it runs fine on any XML chunk.
@@ -2792,7 +2785,7 @@ by using nxml's indentation rules."
   (message "Ah, much better!"))
 #+end_src
 
-*** Which key
+* Which key
 #+begin_quote
 Let’s make this popup a bit faster
 #+end_quote
@@ -2804,7 +2797,7 @@ From [[https://tecosaur.github.io/emacs-config/config.html#which-key][From tecos
 (setq which-key-idle-delay 0.5) ;; I need the help, I really do
 #+end_src
 
-*** Curriculum Vitae :it:
+* Curriculum Vitae :it:
 # TODO make a literate CV
 Trovandomi costretto, ancora una volta, a scrivere un CV, mi sono detto, ancora una volta, quanto fosse necessario trovare un modo perché fosse l'ultima.
 Eppure, non importa quanto tempo si passi ad ideare degli automatismi, il CV è qualcosa di intrinsecamente in via di definzione, quindi sempre soggetto a cambiamenti.
@@ -2851,7 +2844,7 @@ Sulla base di queste premesse,
     (ox-extras-activate '(latex-header-blocks ignore-headlines))))
 #+end_src
 
-*** Manual pages
+* Manual
 # Le pagine dei manuali su Emacs mancano spesso di colore, cosa che le rende più difficili da leggere delle loro controparti web.
 # Il seguente pacchetto corregge questa mancanza:
 The manual pages on Emacs often lack color, which makes them harder to read than their web counterparts.
@@ -2868,24 +2861,8 @@ The following package corrects this deficiency:
 (add-hook 'Info-selection-hook 'info-colors-fontify-node)
 #+end_src
 
-**** COMMENT Screenshots
-#+begin_quote
-non esporto finché non supporto le immagini in ox-zola
-#+end_quote
-
-Lo screenshot dal README:
-
-#+DOWNLOADED: screenshot @ 2022-08-10 14:31:12
-[[file:Configurare_Emacs_in_Org-mode/2022-08-10_14-31-12_screenshot.png]]
-
-
-Qui uno screenshot catturato con il tema city-lights.
-
-#+DOWNLOADED: screenshot @ 2022-08-10 13:34:44
-[[file:Configurare_Emacs_in_Org-mode/2022-08-10_13-34-44_screenshot.png]]
-
-*** Games
-**** Textual adventures
+* Games
+** Textual adventures
 # GPT
 # What is a text-based adventure game?
 A text-based adventure game is a computer game in which the player interacts with the game world through text commands inputted by the player, rather than through graphical interfaces. The game typically presents the player with a narrative or puzzle to solve, and the player navigates the game world by typing in commands to perform actions or interact with objects.
@@ -2922,8 +2899,8 @@ or make your own with [[https://www.emacswiki.org/emacs/InformMode][InformMode]]
 # Non ho tempo al momento, ma si tratta di un progettino potenzialmente interessante
 # Check [[https://github.com/lmintmate/malyon][this fork]] if you encounter some problem.
 
-*** Dashboard
-**** Open org configuration (SPC o c)
+* Dashboard
+** Open org configuration (SPC o c)
 # Al posto di aprire la cartella =.doom.d= per configurare Emacs, da ora in avanti vogliamo aprire questo file direttamente, quindi la funzione nella dashboard va modificata.
 # Per riuscirci, innanzitutto dobbiamo creare una funzione che apra questo file.
 Instead of opening the folder =.doom.d= to configure Emacs, from now on we want to open this file directly, so the function in the dashboard needs to be modified. To do this, we first need to create a function that opens this file.
@@ -3001,7 +2978,7 @@ Now let's replace it in the menu with the =setf= function (like shown [[https://
 (setf (nth 5 +doom-dashboard-menu-sections) '<<open-org-configuration-menu-section>>)
 #+end_src
 
-**** Enter Elfeed (SPC e e)
+** Enter Elfeed (SPC e e)
 # Ripercorro i passi fatti prima, ma stavolta senza dilungarmi in chiacchiere.
 I retrace the steps taken before, but this time without delving into chatter.
 
@@ -3043,7 +3020,7 @@ Since we're at it, let's add a shortcut to update Elfeed.
        :desc "Update all the feeds in elfeed." "u" #'elfeed-update))
 #+end_src
 
-**** Quit and go Home (SPC q h)
+** Quit and go Home (SPC q h)
 # Una semplice scorciatoia da tastiera per tornare alla dashboard:
 A simple keyboard shortcut to return to the dashboard:
 
@@ -3054,7 +3031,7 @@ A simple keyboard shortcut to return to the dashboard:
        :desc "Switch to the dashboard in the current window, of the current FRAME." "h" #'+doom-dashboard/open))
 #+end_src
 
-**** Org Manual (SPC o i)
+** Org Manual (SPC o i)
 Move "Open project" section of the dashboard and make space for the documentation.
 
 # Anche stavolta andiamo avanti velocemente.
@@ -3099,7 +3076,7 @@ Let's add a shortcut for org-mode, since I refer to it frequently.
        :desc "Open org manual." "i" #'org-info))
 #+end_src
 
-**** Doom documentation (SPC h d h)
+** Doom documentation (SPC h d h)
 Just changing the name.
 
 #+name: open-doom-docs-menu-section
@@ -3113,7 +3090,7 @@ Let's leave it in sixth position.
 (setf (nth 6 +doom-dashboard-menu-sections) '<<open-doom-docs-menu-section>>)
 #+end_src
 
-**** COMMENT Banner
+** COMMENT Banner
 Experimental.
 Just trying stuff out, but I stick with the regular banner for the moment.
 
@@ -3151,7 +3128,7 @@ A weebish example (not tangled code):
 (setq +doom-dashboard-ascii-banner-fn #'my-weebery-is-always-greater)
 #+end_src
 
-*** COMMENT Zen mode
+* COMMENT Zen mode
 # Usiamo un font seriffato:
 Using a serif font for Zen mode:
 
@@ -3163,7 +3140,7 @@ Using a serif font for Zen mode:
 
 Detangled because I don't like this anymore. Maybe I should look for a totally different font with Zen mode.
 
-*** Weather
+* Weather
 # [[https://github.com/bcbcarl/emacs-wttrin/][Esiste già un frontend per Emacs]], ma è da almeno cinque anni che non dà segni di manutenzione. Quindi [[https://github.com/gicrisf/emacs-wttrin][lavorerò sul mio fork]] (tanto avevo comunque intenzione di aggiungere funzioni supplementari, avrei probabilmente forkato a prescindere).
 [[https://github.com/bcbcarl/emacs-wttrin/][There is already a frontend for Emacs]], but it has not shown any signs of maintenance for at least five years. Therefore, [[https://github.com/gicrisf/emacs-wttrin][I will work on my fork]] (since I intended to add additional functions anyway, I would have probably forked it regardless).
 
@@ -3182,7 +3159,7 @@ Here, I configure it according to my needs:
 (setq wttrin-default-accept-language '("Accept-Language" . "it-IT"))
 #+end_src
 
-*** COMMENT Protonmail :it:
+* COMMENT Protonmail :it:
 Quando Protonmail ha rilasciato ProtonBridge mi sono chiesto se non valesse la pena di ritentare un approccio locale alle email.
 Le alternative apprezzabili per il momento mi sembrano due:
 - Mozilla Thunderbird
@@ -3207,7 +3184,7 @@ Prima di continuare, tieni a mente che Proton Bridge è un servizio fornito solo
 Io l'ho scoperto troppo tardi, motivo per cui lascerò tutto nel mio file di configurazione (potrebbe tornare utile in futuro), ma per ora non aggroviglierò nulla.
 #+end_quote
 
-**** Installare ProtonBridge
+** Installare ProtonBridge
 Da AUR:
 
 #+begin_src bash
@@ -3217,14 +3194,14 @@ yay protonmail-bridge
 Si tratta di un'applicazione open source che rimane aperta in background e genera tutti i file necessari per autenticarsi in sicurezza mediante un client esterno.
 Apprezzo il fatto che non sia un'app di Electron, ma che il frontend sia in Qt. Ciononostante, comunque temo un po' per il consumo sul mio laptop.
 
-**** Installare mbsync
+** Installare mbsync
 Innanzitutto, è necessario installare e configurare =mbsync=. Sarebbe materia per i miei literate dotfiles, ma al fine di tenere tutto in un posto preferisco gestire da qui anche questo.
 
 #+begin_src bash
 sudo pacman -S isync
 #+end_src
 
-**** Configurazione di mbsync
+** Configurazione di mbsync
 La configurazione di mbsync è l'ennesimo dotfile sulla home, =~/.mbsyncrc=:
 
 # User giovanni . crisalfi at...
@@ -3253,7 +3230,7 @@ Create Both
 SyncState *
 #+end_src
 
-**** Configurazione di mu4e
+** Configurazione di mu4e
 Su Doom Emacs, è possibile abilitare il modulo =mu4e= onde avere quasi tutto l'occorrente.
 
 Passiamo alla configurazione di mu4e.
@@ -3283,7 +3260,7 @@ Passiamo alla configurazione di mu4e.
     ("/proton/All Mail"  . ?a)))
 #+end_src
 
-**** Configurazione SMTP
+** Configurazione SMTP
 Il supporto SMTP è integrato nativamente in Emacs con =smtpmail=.
 Non c'è bisogno di installare nulla qui.
 Il server SMTP potrebbe interferire con altri server locali? Esempio quello di Zola?
@@ -3297,7 +3274,7 @@ Il server SMTP potrebbe interferire con altri server locali? Esempio quello di Z
       smtpmail-stream-type  'ssl)
 #+end_src
 
-**** Componi le email con org-mode
+** Componi le email con org-mode
 Installiamo =org-msg= per scrivere le mail in org mode ed esportarle in HTML.
 
 #+begin_quote
@@ -3327,8 +3304,8 @@ Concludiamo con la configurazione minima di =org-msg=.
 
 (org-msg-mode)
 #+end_src
-
-*** mol2chemfig :it:
+* Chemfig
+** mol2chemfig :it:
 Poiché non sento d'avere controllo di qualcosa se non è prima stato informatizzato e parametrizzato dalle fondamenta, trovo poco sopportabile scrivere di chimica dovendo vivere di immagini appiccicate da chissà dove o, anche peggio, dovendo generare, editare e manipolare a mano ogni singola immagine contenente una formula di struttura. È tedioso, a dir poco. Ancora più tedioso è descrivere a mano la molecola perché pacchetti LaTeX siano capaci di renderizzare la molecola finita, soprattutto se parliamo di molecole di grand dimensioni, ma questa via ha il vantaggio di essere informatizzata e parametrizzata sino alle ossa, quindi non c'è dubbio che io la preferisca. Per questo motivo, mi sono messo in testa di dovere automatizzare il più possibile il processo di scrittura delle molecole attraverso un meraviglioso pacchetto LaTeX chiamato =chemfig=. Si tratta di un pacchetto che si occupa di disegnare le molecole via 'TikZ' e che può vantare un'ottima sintassi, semplice ma versatile, soprattutto quando si viene agli angoli di legame. Finché si tratta di piccole molecole non è difficile tenere a mente la sequenza dei legami, ma oltre un certo numero di atomi il processo può farsi decisamente più tedioso di quello tradizionale, quindi si rende necessario passare attraverso una GUI.
 
 Anziché generare delle immagini da copiare ed incollare in giro, però, è una soluzione decisamente più pulita quella di esportare delle stringhe di testo che siano riproducibilmente convertite nello stesso diagramma. Chemfig è chiaramente un ottimo ponte di mezzo. Abbiamo bisogno di qualcosa che trasformi i nostri SMILES o =mol= files in stringhe che Chemfig sia in grado di interpretare.
@@ -3406,7 +3383,7 @@ Sia lodato Emacs, il sacro editor.
 
 Così abbiamo coperto il caso base. Non resta che scrivere funzioni che tengano conto delle varie impostazioni di =mol2chemfig=.
 
-*** tochemfig :it:
+** tochemfig :it:
 Finora abbiamo dato per scontato che l'utente introduca direttamente nel minibuffer la stringa da convertire, ma in verità potremmo anche disporre di un file. =mol2chemfig= di default si aspetta, questo, quindi basta lanciare il comando senza =-i direct= per poter lavorare con il percorso di un file. Rinominando la funzione coerentemente, scriveremmo:
 
 #+begin_src emacs-lisp
@@ -3444,7 +3421,7 @@ Installiamo il pacchetto:
 (package! tochemfig :recipe (:host github :repo "gicrisf/tochemfig"))
 #+end_src
 
-*** COMMENT orgtochemfig :it:
+** COMMENT orgtochemfig :it:
 Since I usually write LaTeX code from org-mode, I find annoying to wrap the code in latex exporter all the time. Let's get rid of the problem writing some lispy code.
 
 Siccome devo modificare il comportamento di una funzione preferibilmente senza inficiare il codice della libreria originale, la cosa più immediata sarebbe quella di agganciare il lavoro delle funzioni di tochemfig, per esempio di =tochemfig-default=, per iniziare con la funzione più facile da approcciare.
@@ -3472,7 +3449,7 @@ Un esempio che consente di modificare il valore restituito dalla funzione tutte 
 
 A me interessa che Emacs sappia che quando scrivo in org-mode è necessario l'exporter. Va detto pure che magari io sono già dentro un blocco e allora non voglio aggiungere blocchi dentro blocchi, in a nested fashion. Not at all. I prefer using different function's names: this gives the control to the user.
 
-*** COMMENT Whisper (Speech to Text)
+* COMMENT Whisper (Speech to Text)
 I simply find this interesting, so I want to try it.
 
 # :tangle packages.el
@@ -3491,7 +3468,7 @@ I simply find this interesting, so I want to try it.
         whisper-translate nil))
 #+end_src
 
-*** COMMENT My life in Emacs: EXWM
+* COMMENT My life in Emacs: EXWM
 I'm a Gnome user, but I think it would be nice to have the EXWM option, especially because I'm interested to study the power consumption.
 
 # :tangle packages.el
@@ -3512,8 +3489,8 @@ Not tangled, because it's experimental.
     ;;  "Holds the process of the running Polybar instance, if any")
 #+end_src
 
-*** COMMENT Quick browsing
-**** Deft
+* COMMENT Quick browsing
+** Deft
 Set directory, extension to search for and explicitly say you want to search recursively in the subfolders.
 
 # :tangle config.el
@@ -3528,7 +3505,7 @@ The main function is too heavy and I don't really need using all deft features.
 I'm detangling this block because I prefer simply using =SPC n s= for the moment (notes/search note).
 # La funzione principale per me è troppo lenta, oltre ad essere fin troppo fornita. Per ora disabilito tutto, perché preferisco usare =SPC+n+s= (notes/search note).
 
-**** Rifle
+** Rifle
 # Per il momento ne faccio a meno per lo stesso motivo per cui ho disabilitato deft (vedi più avanti).
 I'm living without right now for similar reasons on why I disabled DEFT (see later); so, I leave the line commented.
 
@@ -3536,7 +3513,7 @@ I'm living without right now for similar reasons on why I disabled DEFT (see lat
 ;; (package! helm-org-rifle)
 #+end_src
 
-*** COMMENT Backtab
+* COMMENT Backtab
 I should find an alternative way, because this one doesn't work, so I'm de-tangling it.
 
 # :tangle config.el
@@ -3556,7 +3533,7 @@ I should find an alternative way, because this one doesn't work, so I'm de-tangl
         (replace-match "")))))
 #+end_src
 
-*** ChatGPT
+* ChatGPT
 OpenAI's packages:
 
 #+begin_src emacs-lisp :tangle packages.el
@@ -3659,7 +3636,7 @@ Taiwan is an island located off the southeastern coast of China. It has rugged, 
 
 Looks fine.
 
-*** Llama
+* Llama
 Sfruttando la CLI fornita da [[https://github.com/rustformers/llama-rs][=llama-rs=/=llama-cli=]], è possibile passare un prompt da emacs e restituire i risultati direttamente nel browser.
 
 # :tangle config.el
