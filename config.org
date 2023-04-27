@@ -280,7 +280,8 @@ There are only two key macros required to wield Doom's power. The =doom!= macro 
 company           ; the ultimate code completion backend
 ;;helm              ; the *other* search engine for love and life
 ;;ido               ; the other *other* search engine...
-ivy               ; a search engine for love and life
+;;ivy               ; a search engine for love and life
+vertico
 #+end_src
 
 ** UI
@@ -363,6 +364,7 @@ syntax              ; tasing you for every semicolon you forget
 #+name: doom-tools
 #+begin_src emacs-lisp
 ;;ansible
+biblio
 ;;debugger          ; FIXME stepping through code, to help you add bugs
 ;;direnv
 ;;docker
@@ -497,8 +499,11 @@ literate
 * Doom's packages
 After the =doom!= macro introduced earlier, we have the second essential macro, =package!=, that enables us to install some exogenous machineries from MELPA or git repositories.
 
-When the Emacs configuration is loaded, the =packages.el= file is parsed in search for =package!= macros.
-The macros expand into calls to =straight.el=, although with some additional functionality.
+# Verificare che quanto scritto sia del tutto corretto.
+When the Emacs configuration is loaded, the =packages.el= file is parsed in search for =package!= macros. The macros expand into calls to =straight.el=, although with some additional functionality.
+This implies that, in general, the better integrated package manager in Doom is Straight.
+
+# Straight è uno dei package manager in Emacs. Spiegarlo a un nabbo.
 
 #+begin_src emacs-lisp :tangle packages.el :noweb no-export
 ;; -*- no-byte-compile: t; -*-
@@ -521,6 +526,16 @@ The comments in the frontmatter explain that to install a package in Doom Emacs,
 
 # Ora spieghiamo come funziona la macro =package!= seguendo la descrizione fornita dai commenti originali del file.
 # I pacchetti saranno installati insieme alla loro configurazione, nella parte seguente.
+
+# TODO expand this
+How does =package!= works? What an user should know about it? There are 7 cases that the are discussed in the =packages.el= comments:
+- Recipe
+- Files
+- Disable
+- Override
+- Branch
+- Pin
+- Unpin
 
 ** Recipe
 #+name: packages-recipe
@@ -1237,10 +1252,8 @@ This Emacs Lisp code defines a circular list of themes (=quick-switch-themes=) a
 #+begin_src emacs-lisp :tangle config.el
 ;; Theme switcher functions
 (defvar quick-switch-themes
-  (let ((themes-list (list 'lambda-dark-faded
-                           'lambda-dark
-                           'lambda-light
-                           'lambda-light-faded)))
+  (let ((themes-list (list 'lambda-dark
+                           'lambda-light)))
     (nconc themes-list themes-list))
   "A circular list of themes to keep switching between.
 Make sure that the currently enabled theme is at the head of this
@@ -1313,21 +1326,25 @@ Now we declare in which directory we want most org files to be placed, in such w
 (setq org-directory "~/org/")
 #+end_src
 
+Now we can start configuring Org-mode.
+
 * Org downloads
-Now we can start configuring Org-mode. I think =org-download= is a killer feature of it, since it gives us a way to easily attach elements to the document without never leaving Emacs.
+I think =org-download= is a killer feature of it, since it gives us a way to easily attach elements to the document without never leaving Emacs.
 # Adesso possiamo cominciare ad estendere Org-mode. Una prima killer feature, a mio avviso, è data da =org-download=, che ci consente di appiccicare direttamente degli allegati al file org senza mai abbandonare Emacs, né il documento stesso.
 
 #+begin_src emacs-lisp :tangle packages.el
 (package! org-download)
 #+end_src
 
-[[https://github.com/doomemacs/doomemacs/issues/3830#issuecomment-679925113][Starting from 2020 August 25]],
-
-#+begin_quote
-Org-download-clipboard is bound to =SPC m a p= in org-mode.
-#+end_quote
-
+[[https://github.com/doomemacs/doomemacs/issues/3830#issuecomment-679925113][Starting from 2020 August 25]], =org-download-clipboard= is bound to =SPC m a p= in org-mode.
 # =org-download-clipboard= è legato a =SPC m a p= [[https://github.com/doomemacs/doomemacs/issues/3830#issuecomment-679925113][dal 25 agosto 2020]] in Doom Emacs.
+
+Drag and drop to dired:
+
+#+begin_src emacs-lisp :tangle config.el
+(require 'org-download)
+(add-hook 'dired-mode-hook 'org-download-enable)
+#+end_src
 
 * Spaced repetition
 ** Org drill
@@ -1453,15 +1470,119 @@ $ update-desktop-database ~/.local/share/applications/
 #+end_src
 
 * Citations
-Install Org-ref:
-#+begin_src emacs-lisp :tangle packages.el
-(package! org-ref)
+# :PROPERTIES:
+# :EXPORT_HUGO_SECTION: 2023
+# :EXPORT_HUGO_BUNDLE: citations
+# :EXPORT_FILE_NAME: index
+# :EXPORT_DATE: [2023-04-27 gio]
+# :END:
+
+Managing citations can be cumbersome, but they matter (a lot).
+Citations enable readers to trace the evolution and development of an idea or a field of study, and assess the credibility and reliability of the work.
+
+*How can we use Emacs to cite better?*
+
+In recent years, a lot of wonderful people have tried to answer this same question.
+So, packages like =org-ref= and, consequently, =org-cite= were born.
+
+# Da https://kristofferbalintona.me/posts/202206141852/#org-ref
+#+begin_quote
+[[https://github.com/jkitchin/org-ref][Org-ref]] has historically been the dominant citation system for org-mode. I elect to use org-cite instead because (i) it comes with org-mode, meaning there is one less conceptual- and configuration-layer to navigate, (ii) Moreover, org-ref uses a format that follows org conventions less closely, and (iii) I have read that is arguably more robust and future-proof. Nevertheless, some users still prefer it.
+#+end_quote
+
+Doom try to condense the essentials in the =tools::biblio= module, which I enable in the =doom!= block.
+
+# Prima usavo org-ref, ora ho deciso di usare org-cite.
+# https://blog.tecosaur.com/tmio/2021-07-31-citations.html
+
+#+begin_comment
+- doom-package:bibtex-completion if doom-module::completion ivy or doom-module::completion helm
+- doom-package:parsebib if doom-module::completion ivy or doom-module::completion helm or doom-module::completion vertico
+- doom-package:citar if doom-module::completion vertico
+- doom-package:citar-embark if doom-module::completion vertico
+- doom-package:citar-org-roam if doom-module::completion vertico and doom-module::lang org +roam2
+- doom-package:helm-bibtex if doom-module::completion helm
+- doom-package:ivy-bibtex if doom-module::completion ivy
+#+end_comment
+
+Is there anything specific we need to do before installing this module?
+
+#+begin_quote
+*There are no hard dependencies for this module* ["biblio", ndr], but this module can benefit from having a PDF reader and one of Doom’s doom-module::completion modules. [...]
+For vertico, helm, or ivy bibtex completion you should enable doom-module::completion vertico, doom-module::completion helm, or doom-module::completion ivy respectively.
+#+end_quote
+
+# I was using ivy as a completion system, but I never made real use of its full potential. For this reason, and another one that we will discuss soon, I switched to vertigo.
+I previously used ivy for autocompletion, but I didn't fully made use of its capabilities. Due to this and another reason I'll mention soon, I switched to vertigo.
+# Ora uso vertico (nei moduli) perché è quello che supporta citar.
+# voglio citar perché è quello che prevede un pacchetto dedicato per org-roam
+# Quindi la catena causale è: org-roam -> citar -> org-cite
+
+As Tecosaur points out [[https://blog.tecosaur.com/tmio/2021-07-31-citations.html][in this blog post]],
+
+#+begin_quote
+To get started with Org Cite, we must have some form of bibliography. This can either be a BibTeX file or a CSL-JSON file.
+
+First we need to let Org know about this bibliography file (which must have a =.bib=, =.bibtex=, or =.json= extension), which we do either via the "#+bibliography" keyword, or the variable =org-cite-global-bibliography=.
+#+end_quote
+
+A minimal example in org-mode could be:
+
+#+begin_src org
+,#+bibliography: references.bib
+[cite:@lehn_toward_2002]
+,#+print_bibliography:
+#+end_src
+Setting the global bibliography would imply tangling this line to =config.el=:
+
+#+begin_src emacs-lisp
+(setq org-cite-global-bibliography "/path/to/references.bib")
 #+end_src
 
-Install Citar:
-#+begin_src emacs-lisp :tangle packages.el
+We could set this variable right away, but we don't, because [[https://github.com/doomemacs/doomemacs/tree/master/modules/tools/biblio#path-configuration][Doom already dispose a way]] that keep in mind the completion system too:
+
+#+begin_quote
+You must set the path variable for either doom-package:citar (if using doom-module::completion vertico) or doom-package:bibtex-completion (if using ivy or helm); this module will in turn set the var:org-cite-global-bibliography variable to the same value.
+#+end_quote
+
+# Installing =citar= would be as easy as running a simple =package!= macro, but it's not needed, as the package is already within the =biblio= module.
+Here comes the second reason for choosing =vertico=: it is not only more minimalistic and lightweight, but it is also the system directly supported by =citar=.
+To install Citar, we should tangle this line to =package.el=:
+
+#+begin_src emacs-lisp
 (package! citar)
 #+end_src
+
+# Please, rewrite this text for further clarity:
+Again, we don't. Doom had already took care of it in the =biblio= module.
+Since everything is in the right place, let's assing our path.
+
+#+begin_src emacs-lisp :tangle config.el
+;; (setq! bibtex-completion-bibliography '("/path/to/references.bib"))
+(setq! citar-bibliography '("~/Dropbox/references.bib"))
+#+end_src
+
+#+begin_quote
+You may also set the respective note and library path variables as well for enhanced functionality:
+#+end_quote
+
+#+begin_src emacs-lisp :tangle config.el
+;; (setq! citar-library-paths '("/path/to/library/files/")
+;;       citar-notes-paths '("/path/to/your/notes/"))
+#+end_src
+
+#+begin_quote
+Once you have a bibliography source, you can start referencing to your heart’s content! The basic citation syntax is as follows:
+#+end_quote
+
+#+DOWNLOADED: screenshot @ 2023-04-26 18:00:32
+#+Caption: Basic citation syntax with org-cite
+[[file:Citations/2023-04-26_18-00-32_screenshot.png]]
+
+# Al completo
+#+DOWNLOADED: screenshot @ 2023-04-26 18:06:17
+#+Caption: Full citation syntax
+[[file:Citations/2023-04-26_18-06-17_screenshot.png]]
 
 Use CSL format files.
 Export processor to use format files written in Citation Style Language (=.csl=). This isn't latex-only, so I should be able to use it with Libre Office and HTML too, if needed.
@@ -1469,6 +1590,21 @@ Export processor to use format files written in Citation Style Language (=.csl=)
 #+begin_src emacs-lisp :tangle packages.el
 (package! citeproc)
 #+end_src
+
+Why Citar?
+# [[https://kristofferbalintona.me/posts/202206141852/#citar][Kristoffer Balintona]]:
+
+#+begin_quote
+Using org-cite is really simple. But many users will find the interface… too bare.
+Citar is, roughly, the foremost attempt to provide a pleasing frontend to org-cite. It adds the citar citation-insert processor.
+#+end_quote
+
+Other sources:
+- [[https://kristofferbalintona.me/posts/202206141852/#citar][Citation in org-mode: Org-cite and Citar]]
+- [[https://jethrokuan.github.io/org-roam-guide/][How I takes notes with Org-Roam]]
+- [[https://blog.tecosaur.com/tmio/2021-07-31-citations.html][Introducing citations!]]
+- [[https://github.com/doomemacs/doomemacs/tree/master/modules/tools/biblio][:tools biblio (Doom Emacs docs)]]
+- [[https://www.reddit.com/r/emacs/comments/cxu0qg/comment/eyqe4vq/][Reddit thread]]
 
 ** Wikipedia
 Get Wikipedia data directly on org-mode.
@@ -1488,79 +1624,6 @@ L'ideale sarebbe scegliere per ogni query.
 
 Purtroppo, i risultati che ottengo da questa versione sono poco accurati.
 Per il momento la disabiliterò.
-
-** COMMENT Org Bibliography :it:
-Tentativo di literate bibliography con org-mode basato su =org-bib-mode=, di Nicolas P. Rougier (il creatore di NANO Emacs).
-
-Innanzitutto devo installare le dipendenze dal suo profilo Github.
-
-# :tangle packages.el
-#+begin_src emacs-lisp
-(package! org-imenu :recipe (:host github :repo "rougier/org-imenu"))
-(package! pdf-drop-mode :recipe (:host github :repo "rougier/pdf-drop-mode"))
-(package! org-bib-mode :recipe (:host github :repo "rougier/org-bib-mode"))
-#+end_src
-
-Purtroppo, quando utilizzo =require= su =org-imenu= noto che qualcosa non va.
-Mi chiedo se il problema sia risolvibile impiegando Nano Emacs, ma non ho tempo per verificare.
-Anche se fosse, dubito che abbandonerei Doom Emacs, quindi per ora il tentativo mi pare evitabile.
-
-Lo stesso NPR rimanda ad =org-ref= (di John Kitchin) per chi volesse qualcosa di più elaborato.
-Anziché aggrovigliare i due blocchi precedenti, aggroviglio i prossimi.
-
-# :tangle packages.el
-#+begin_src emacs-lisp
-(package! org-ref :recipe (:host github :repo "jkitchin/org-ref"))
-#+end_src
-
-Ora configuriamo org-ref.
-
-# :tangle config.el
-#+begin_src emacs-lisp
-(setq bibtex-completion-bibliography '("~/org/papers/bibliography.bib"
-                                       "~/org/papers/dei.bib"
-                                       "~/org/papers/master.bib"
-                                       "~/org/papers/archive.bib")
-      bibtex-completion-library-path '("~/org/papers/bibtex-pdfs/")
-      bibtex-completion-notes-path "~/org/papers/notes/"
-      bibtex-completion-notes-template-multiple-files "* ${author-or-editor}, ${title}, ${journal}, (${year}) :${=type=}: \n\nSee [[cite:&${=key=}]]\n"
-
-      bibtex-completion-additional-search-fields '(keywords)
-      bibtex-completion-display-formats
-      '((article       . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${journal:40}")
-        (inbook        . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} Chapter ${chapter:32}")
-        (incollection  . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${booktitle:40}")
-        (inproceedings . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*} ${booktitle:40}")
-        (t             . "${=has-pdf=:1}${=has-note=:1} ${year:4} ${author:36} ${title:*}"))
-      bibtex-completion-pdf-open-function
-      (lambda (fpath)
-        (call-process "open" nil 0 nil fpath)))
-#+end_src
-
-Su consiglio di Kitchin, aggiungo queste impostazioni per semplificarmi il lavoro:
-
-# :tangle config.el
-#+begin_src emacs-lisp
-(require 'bibtex)
-
-(setq bibtex-autokey-year-length 4
-      bibtex-autokey-name-year-separator "-"
-      bibtex-autokey-year-title-separator "-"
-      bibtex-autokey-titleword-separator "-"
-      bibtex-autokey-titlewords 2
-      bibtex-autokey-titlewords-stretch 1
-      bibtex-autokey-titleword-length 5)
-
-(define-key bibtex-mode-map (kbd "H-b") 'org-ref-bibtex-hydra/body)
-#+end_src
-
-Now require it:
-# :tangle config.el
-#+begin_src emacs-lisp
-(require 'org-ref)
-#+end_src
-
-Vista la complessità della libreria, ho deciso per il momento di non aggrovigliare nulla e aspettare un momento che mi consenta di studiare meglio ogni impostazione.
 
 * LaTeX
 ** Emacs changed how I LaTeX
@@ -2686,6 +2749,13 @@ Sempre al fine di automatizzare la produzione dei metadati, meglio automatizzare
 (setq org-log-done 'time)
 #+end_src
 
+Inserita la possibilità di dichiarare shortcode dedicati, facciamolo.
+
+#+begin_src emacs-lisp :tangle config.el
+(setq ox-zola-special-block-type-properties '(("twitter" . (:trim-pre t :trim-post t))
+                                              ("figure" . (:trim-pre t :trim-post t))))
+#+end_src
+
 * Twitter
 # Questo piccolo pacchetto (che conto di estendere presto) nasce per assolvere ad una funzione molto semplice: citare i tweet nel mio blog.
 A small package (which I plan to extend soon) designed to fulfill a very simple function: to cite tweets on my blog.
@@ -2827,17 +2897,37 @@ From [[https://tecosaur.github.io/emacs-config/config.html#which-key][From tecos
 
 * Curriculum Vitae :it:
 # TODO make a literate CV
+
 Trovandomi costretto, ancora una volta, a scrivere un CV, mi sono detto, ancora una volta, quanto fosse necessario trovare un modo perché fosse l'ultima.
 Eppure, non importa quanto tempo si passi ad ideare degli automatismi, il CV è qualcosa di intrinsecamente in via di definzione, quindi sempre soggetto a cambiamenti.
 Non si può fare altro che rimaneggiarlo continuamente. Bisogna quindi focalizzarsi sulla via che garantisca l'attrito minore, così da rendere la pratica degli aggiornamenti non troppo detestabile.
-Il generato più importante di un CV, ad oggi, è sempre il formato stampabile, cioè un PDF. Ad un buon PDF si può arrivare principalmente per queste vie:
-- LaTeX
-- LibreOffice, Microsoft Office o altre suite d'ufficio WYSIWYG
-- Immagini (SVG e vettoriali in genere)
 
+# Rewrite this text with the style of Zhuangzi:
+"Finding myself forced, once again, to write a CV, I thought to myself, once again, how necessary it was to find a way for it to be the last one. Yet, no matter how much time is spent devising automatic procedures, a CV is something that is intrinsically in the process of being defined, and thus always subject to change. One can only keep revising it continually. The focus should then be on the path that guarantees the least amount of friction, in order to make the practice of updates not too detestable."
+
+# Zhuangzi
+# "The way of the world demands that I yet again compose a CV. Alas, the cycle repeats and I ponder the need to make this the final one. But such a document is bound by its very nature to be in constant flux - a mutable entity that resists all attempts at automatic constraint. It can only be revised ad infinitum. It is wise, then, to seek the path of least resistance, so that the act of revision is not a source of unbearable vexation."
+
+# Hemingway
+# Having to write a damn CV again reminded me how essential it is to make it the final one. But no matter how much automation you introduce, a CV is always being shaped and thus continually revised. You just gotta keep updating it. The key is to make this process as painless as possible.
+
+# Il generato più importante di un CV, ad oggi, è sempre il formato stampabile, cioè un PDF. Ad un buon PDF si può arrivare principalmente per queste vie: [...]
+The most important output of a CV today is still the printable format, which is a PDF. You can achieve a good PDF mainly through these methods:
+- LaTeX
+- LibreOffice, Microsoft Office or other WYSIWYG office suites
+- Images (SVG and vector graphics in general)
+
+Translate this text from Italian into English:
 A me piacerebbe, però, anche avere una pagina web sempre aggiornata, quindi gestire un file esportabile sia in PDF (più o meno direttamente) che in HTML.
 LaTeX è scomodo per esportare in formati web ed io vorrei mantenere una matrice utile ad esportare da ambo i lati con anche piccole differenze (senza mantenere due file o due branch paralleli su git).
 C'è chi ottiene questo risultato esportando a partire da un JSON, ma figurarsi se mi metto a scrivere un JSON a mano. Si potrebbe mantenere un YAML/TOML da esportare in JSON che poi esporti nei vari formati, ma comunque mi sembra una strategia poco flessibile.
+
+Rewrite in the style of Hemingway:
+I would like, however, to also have a constantly updated web page, so I can manage an exportable file in both PDF (more or less directly) and HTML. LaTeX is inconvenient for exporting to web formats and I would like to maintain a useful matrix for exporting on both sides with even small differences (without keeping two files or two parallel branches on git). Some achieve this result by exporting from JSON, but I can't imagine writing a JSON by hand. We could maintain a YAML/TOML to export to JSON and then export in various formats, but still, I feel like the idea of managing an org file gives more flexibility.
+
+I want a web page that's always updated, with a file I can export as PDF and HTML. LaTeX is no good for exporting to web formats, and I don't want to manage two files or branches. Some use JSON for this, but I'm no good at composing it manually. Exporting YAML/TOML to JSON and then to various formats is an option, but I prefer an org file for flexibility.
+
+# Once upon a time, there was a wise wanderer who sought to keep a continually refreshed web scroll so that they could export a file both in the PDF form and in the HTML form with ease. However, the flow of LaTeX was not compatible with web export, and thus, the wanderer sought to keep a balance by having a functional matrix that worked perfectly on both ends, with even minor discrepancies (without having to manage two files or two branching paths on Git). Some have found a way to achieve this feat by exporting from JSON, but the wanderer was hesitant to attempt such a task by hand. Even if they were to use YAML or TOML as a basis for their JSON export, they still felt that managing an org file would provide more flexibility.
 
 Sulla base di queste premesse,
 [[https://github.com/gicrisf/my-org-resume][ho da poco cominciato a mantenere il mio CV in org-mode]]; poiché l'esportazione avviene attraverso LaTeX (via template AltaCV), torna comoda qualche funzione che tenga in ordine la directory di output ad ogni modifica.

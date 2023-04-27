@@ -70,10 +70,6 @@
 
 (package! org-web-tools)
 
-(package! org-ref)
-
-(package! citar)
-
 (package! citeproc)
 
 (package! wikinforg)

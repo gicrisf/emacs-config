@@ -96,10 +96,8 @@
 
 ;; Theme switcher functions
 (defvar quick-switch-themes
-  (let ((themes-list (list 'lambda-dark-faded
-                           'lambda-dark
-                           'lambda-light
-                           'lambda-light-faded)))
+  (let ((themes-list (list 'lambda-dark
+                           'lambda-light)))
     (nconc themes-list themes-list))
   "A circular list of themes to keep switching between.
 Make sure that the currently enabled theme is at the head of this
@@ -127,6 +125,9 @@ A nil value implies no custom theme should be enabled.")
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/org/")
+
+(require 'org-download)
+(add-hook 'dired-mode-hook 'org-download-enable)
 
 ;; org journal
 ;; in ~/.doom.d/+bindings.el
@@ -168,6 +169,12 @@ A nil value implies no custom theme should be enabled.")
 	("L" "Protocol Link" entry (file+headline ,(concat org-directory "notes.org") "Inbox")
         "* %? [[%:link][%:description]] \nCaptured On: %U")
 ))
+
+;; (setq! bibtex-completion-bibliography '("/path/to/references.bib"))
+(setq! citar-bibliography '("~/Dropbox/references.bib"))
+
+;; (setq! citar-library-paths '("/path/to/library/files/")
+;;       citar-notes-paths '("/path/to/your/notes/"))
 
 (setq org-latex-logfiles-extensions (quote ("lof" "lot" "tex~" "aux" "idx" "log" "out" "toc" "nav" "snm" "vrb" "dvi" "fdb_latexmk" "blg" "brf" "fls" "entoc" "ps" "spl" "bbl" "xmpi" "run.xml" "bcf")))
 
@@ -305,6 +312,9 @@ A nil value implies no custom theme should be enabled.")
 
 ;; add "CLOSED" when an item is set with DONE state
 (setq org-log-done 'time)
+
+(setq ox-zola-special-block-type-properties '(("twitter" . (:trim-pre t :trim-post t))
+                                              ("figure" . (:trim-pre t :trim-post t))))
 
 (setq mastodon-instance-url "https://fosstodon.org"
       mastodon-active-user "gicrisf")
