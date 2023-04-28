@@ -55,10 +55,6 @@
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
 (setq display-line-numbers-type t)
 
-;; Maximize the window upon startup
-;; TODO testing this one
-(setq initial-frame-alist '((top . 1) (left . 1) (width . 114) (height . 32)))
-
 ;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
 ;; are the three important ones:
 ;;
@@ -71,6 +67,11 @@
 ;; font string. You generally only need these two:
 (setq doom-font (font-spec :family "Noto Sans Mono" :size 16 :weight 'semi-light)
       doom-variable-pitch-font (font-spec :family "sans" :size 16))
+
+(map!
+ :n "C-=" #'doom/reset-font-size
+ :n "C-+" #'text-scale-increase
+ :n "C--" #'text-scale-decrease)
 
 ;; There are two ways to load a theme. Both assume the theme is installed and
 ;; available. You can either set `doom-theme' or manually load a theme with the

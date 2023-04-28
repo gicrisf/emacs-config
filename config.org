@@ -71,7 +71,8 @@ Emacs, indeed, is an interpreter of the Lisp language, albeit a specific dialect
 - For a less quick but more in-depth guide, refer to [[https://github.com/hypernumbers/learn_elisp_the_hard_way][Learn elisp the hard way]].
 # Per essere ancora più precisi, Emacs fa largo uso di CL e altro con adeguate interfacce
 
-#begin_quote
+# TODO quote with org-cite!
+#+begin_quote
 The first LispLanguage compiler was developed by JohnMcCarthy at Dartmouth College between 1955 and 1959. This makes it the second oldest programming language in common use today (only Fortran is older, developed between 1954 and 1957). Lisp went forth and grew many many dialects: the most notable of these are AutoLisp, EmacsLisp, Interlisp, MacLisp, Scheme and Common Lisp.
 -- https://www.emacswiki.org/emacs/CommonLisp
 #+end_quote
@@ -1124,7 +1125,7 @@ To the next adventure!
 (setq display-line-numbers-type t)
 #+end_src
 
-** Maximize on startup
+** COMMENT Maximize on startup
 #+begin_src emacs-lisp :tangle config.el
 ;; Maximize the window upon startup
 ;; TODO testing this one
@@ -1169,6 +1170,18 @@ Overall, the right font can greatly enhance the user experience.
 # TODO: differenziare tra font laptop e desktop e variare la configurazione esportata in base alla situazione.
 
 Since I use Emacs both on a laptop and a desktop computer, I wish I could export the same configuration with simple variations to adjust it to the different hardware. In this case, just changing the font would be nice. I still hadn't work on this, but I have to.
+
+# Sfortunatamente, le funzioni per aumentare o diminuire la dimensione del font sembrano mappate diversamente dalle aspettative.
+Unfortunately, the functions for increasing or decreasing the font size seem to be mapped differently than expected.
+When I try to increase the font size, I get "The font hasn't been resized", just like described in this [[https://www.reddit.com/r/emacs/comments/y4l1e1/cannot_resize_past_default_font_size/][Reddit thread]].
+Here a simple remapping to restore the expected behaviour:
+
+#+begin_src emacs-lisp :tangle config.el
+(map!
+ :n "C-=" #'doom/reset-font-size
+ :n "C-+" #'text-scale-increase
+ :n "C--" #'text-scale-decrease)
+#+end_src
 
 ** Default theme
 First of all, let's select a default theme.
