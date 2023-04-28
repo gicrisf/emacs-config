@@ -2757,7 +2757,7 @@ Inserita la possibilità di dichiarare shortcode dedicati, facciamolo.
 #+end_src
 
 * Twitter
-# Tradotto da
+# Tradotto dall'articolo introduttivo
 It is a very common practice on several websites, but especially on blogs and news outlets, to quote tweets in the body of text. To do so, the official Twitter widget is usually employed: a copy and paste seems to be enough to accomplish the magic. Unfortunately, this magic comes at a high price.
 
 What really happens is that the web page hosting the tweet is infiltrated by an iframe for each tweet, resulting in:
@@ -2904,15 +2904,12 @@ From [[https://tecosaur.github.io/emacs-config/config.html#which-key][From tecos
 (setq which-key-idle-delay 0.5) ;; I need the help, I really do
 #+end_src
 
-* Curriculum Vitae :it:
+* Curriculum Vitae
 # TODO make a literate CV
-
-Trovandomi costretto, ancora una volta, a scrivere un CV, mi sono detto, ancora una volta, quanto fosse necessario trovare un modo perché fosse l'ultima.
-Eppure, non importa quanto tempo si passi ad ideare degli automatismi, il CV è qualcosa di intrinsecamente in via di definzione, quindi sempre soggetto a cambiamenti.
-Non si può fare altro che rimaneggiarlo continuamente. Bisogna quindi focalizzarsi sulla via che garantisca l'attrito minore, così da rendere la pratica degli aggiornamenti non troppo detestabile.
+# Trovandomi costretto, ancora una volta, a scrivere un CV, mi sono detto, ancora una volta, quanto fosse necessario trovare un modo perché fosse l'ultima. Eppure, non importa quanto tempo si passi ad ideare degli automatismi, il CV è qualcosa di intrinsecamente in via di definzione, quindi sempre soggetto a cambiamenti. Non si può fare altro che rimaneggiarlo continuamente. Bisogna quindi focalizzarsi sulla via che garantisca l'attrito minore, così da rendere la pratica degli aggiornamenti non troppo detestabile.
 
 # Rewrite this text with the style of Zhuangzi:
-"Finding myself forced, once again, to write a CV, I thought to myself, once again, how necessary it was to find a way for it to be the last one. Yet, no matter how much time is spent devising automatic procedures, a CV is something that is intrinsically in the process of being defined, and thus always subject to change. One can only keep revising it continually. The focus should then be on the path that guarantees the least amount of friction, in order to make the practice of updates not too detestable."
+Finding myself forced, once again, to write a CV, I thought to myself, once again, how necessary it was to find a way for it to be the last one. Yet, no matter how much time is spent devising automatic procedures, a CV is something that is intrinsically in the process of being defined, and thus always subject to change. One can only keep revising it continually. The focus should then be on the path that guarantees the least amount of friction, in order to make the practice of updates not too detestable.
 
 # Zhuangzi
 # "The way of the world demands that I yet again compose a CV. Alas, the cycle repeats and I ponder the need to make this the final one. But such a document is bound by its very nature to be in constant flux - a mutable entity that resists all attempts at automatic constraint. It can only be revised ad infinitum. It is wise, then, to seek the path of least resistance, so that the act of revision is not a source of unbearable vexation."
@@ -2926,20 +2923,21 @@ The most important output of a CV today is still the printable format, which is 
 - LibreOffice, Microsoft Office or other WYSIWYG office suites
 - Images (SVG and vector graphics in general)
 
-Translate this text from Italian into English:
-A me piacerebbe, però, anche avere una pagina web sempre aggiornata, quindi gestire un file esportabile sia in PDF (più o meno direttamente) che in HTML.
-LaTeX è scomodo per esportare in formati web ed io vorrei mantenere una matrice utile ad esportare da ambo i lati con anche piccole differenze (senza mantenere due file o due branch paralleli su git).
-C'è chi ottiene questo risultato esportando a partire da un JSON, ma figurarsi se mi metto a scrivere un JSON a mano. Si potrebbe mantenere un YAML/TOML da esportare in JSON che poi esporti nei vari formati, ma comunque mi sembra una strategia poco flessibile.
+# Translate this text from Italian into English:
+# A me piacerebbe, però, anche avere una pagina web sempre aggiornata, quindi gestire un file esportabile sia in PDF (più o meno direttamente) che in HTML. LaTeX è scomodo per esportare in formati web ed io vorrei mantenere una matrice utile ad esportare da ambo i lati con anche piccole differenze (senza mantenere due file o due branch paralleli su git). C'è chi ottiene questo risultato esportando a partire da un JSON, ma figurarsi se mi metto a scrivere un JSON a mano. Si potrebbe mantenere un YAML/TOML da esportare in JSON che poi esporti nei vari formati, ma comunque mi sembra una strategia poco flessibile.
 
-Rewrite in the style of Hemingway:
-I would like, however, to also have a constantly updated web page, so I can manage an exportable file in both PDF (more or less directly) and HTML. LaTeX is inconvenient for exporting to web formats and I would like to maintain a useful matrix for exporting on both sides with even small differences (without keeping two files or two parallel branches on git). Some achieve this result by exporting from JSON, but I can't imagine writing a JSON by hand. We could maintain a YAML/TOML to export to JSON and then export in various formats, but still, I feel like the idea of managing an org file gives more flexibility.
+I would like, however, to also have a constantly updated web page, so I can manage an exportable file in both PDF (more or less directly) and HTML. LaTeX isn't convenient for exporting to web formats and I would like to maintain a useful matrix for exporting on both sides with even small differences (without keeping two files or two parallel branches on git). Some achieve this result by exporting from JSON, but I can't imagine writing a JSON by hand. We could maintain a YAML/TOML to export to JSON and then export in various formats, but still, I feel like the idea of managing an org file gives more flexibility.
 
-I want a web page that's always updated, with a file I can export as PDF and HTML. LaTeX is no good for exporting to web formats, and I don't want to manage two files or branches. Some use JSON for this, but I'm no good at composing it manually. Exporting YAML/TOML to JSON and then to various formats is an option, but I prefer an org file for flexibility.
+# Hemingway style
+# I want a web page that's always updated, with a file I can export as PDF and HTML. LaTeX is no good for exporting to web formats, and I don't want to manage two files or branches. Some use JSON for this, but I'm no good at composing it manually. Exporting YAML/TOML to JSON and then to various formats is an option, but I prefer an org file for flexibility.
 
+# Zhuangzi style
 # Once upon a time, there was a wise wanderer who sought to keep a continually refreshed web scroll so that they could export a file both in the PDF form and in the HTML form with ease. However, the flow of LaTeX was not compatible with web export, and thus, the wanderer sought to keep a balance by having a functional matrix that worked perfectly on both ends, with even minor discrepancies (without having to manage two files or two branching paths on Git). Some have found a way to achieve this feat by exporting from JSON, but the wanderer was hesitant to attempt such a task by hand. Even if they were to use YAML or TOML as a basis for their JSON export, they still felt that managing an org file would provide more flexibility.
 
-Sulla base di queste premesse,
-[[https://github.com/gicrisf/my-org-resume][ho da poco cominciato a mantenere il mio CV in org-mode]]; poiché l'esportazione avviene attraverso LaTeX (via template AltaCV), torna comoda qualche funzione che tenga in ordine la directory di output ad ogni modifica.
+That's why I'm working on [[https://github.com/gicrisf/orgcv][my CV exporter in org-mode]].
+Keep in mind this is a work in progress and the code can look kind of messy at this moment.
+
+The next settings aren't essential, just potentially useful.
 
 #+begin_src emacs-lisp :tangle config.el
 (after! org
@@ -2971,7 +2969,7 @@ Sulla base di queste premesse,
     (ox-extras-activate '(latex-header-blocks ignore-headlines))))
 #+end_src
 
-* Manual
+* Emacs info pages
 # Le pagine dei manuali su Emacs mancano spesso di colore, cosa che le rende più difficili da leggere delle loro controparti web.
 # Il seguente pacchetto corregge questa mancanza:
 The manual pages on Emacs often lack color, which makes them harder to read than their web counterparts.
