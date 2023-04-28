@@ -1150,6 +1150,7 @@ Fonts are a core element in a text editor.
 Overall, the right font can greatly enhance the user experience.
 
 # Fonts are an important element in a text editor because they affect the visual appearance of text, making it easier for users to read and understand. Different fonts have varying weights, sizes, and styles, which can be used to emphasize certain words, headings, or sections. Additionally, some fonts are designed for specific use cases, such as coding fonts that are optimized for ease of use and readability when coding.
+Since I use Emacs on multiple devices, usually a laptop and a desktop computer, I need the font to conform as best as possible to the screen dimensions. Instead of hardcoding a standard size here, I retrieve it as an environment variable:
 
 #+begin_src emacs-lisp :tangle config.el
 ;; Doom exposes five (optional) variables for controlling fonts in Doom. Here
@@ -1162,14 +1163,9 @@ Overall, the right font can greatly enhance the user experience.
 ;;
 ;; They all accept either a font-spec, font string ("Input Mono-12"), or xlfd
 ;; font string. You generally only need these two:
-(setq doom-font (font-spec :family "Noto Sans Mono" :size 16 :weight 'semi-light)
-      doom-variable-pitch-font (font-spec :family "sans" :size 16))
+(setq doom-font (font-spec :family "Noto Sans Mono" :size (string-to-number (getenv "DOOM_FONT")) :weight 'semi-light)
+      doom-variable-pitch-font (font-spec :family "sans" :size (string-to-number (getenv "DOOM_VARIABLE_PITCH_FONT"))))
 #+end_src
-
-
-# TODO: differenziare tra font laptop e desktop e variare la configurazione esportata in base alla situazione.
-
-Since I use Emacs both on a laptop and a desktop computer, I wish I could export the same configuration with simple variations to adjust it to the different hardware. In this case, just changing the font would be nice. I still hadn't work on this, but I have to.
 
 # Sfortunatamente, le funzioni per aumentare o diminuire la dimensione del font sembrano mappate diversamente dalle aspettative.
 Unfortunately, the functions for increasing or decreasing the font size seem to be mapped differently than expected.
