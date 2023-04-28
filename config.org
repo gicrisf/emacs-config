@@ -2757,14 +2757,23 @@ Inserita la possibilità di dichiarare shortcode dedicati, facciamolo.
 #+end_src
 
 * Twitter
-# Questo piccolo pacchetto (che conto di estendere presto) nasce per assolvere ad una funzione molto semplice: citare i tweet nel mio blog.
-A small package (which I plan to extend soon) designed to fulfill a very simple function: to cite tweets on my blog.
+# Tradotto da
+It is a very common practice on several websites, but especially on blogs and news outlets, to quote tweets in the body of text. To do so, the official Twitter widget is usually employed: a copy and paste seems to be enough to accomplish the magic. Unfortunately, this magic comes at a high price.
+
+What really happens is that the web page hosting the tweet is infiltrated by an iframe for each tweet, resulting in:
+- A considerable increase in the weight of the web page (thus more latency for slow connections and more energy consumption on the network);
+- The introduction of several trackers that monitor the reader's activity.
+
+Assuming we are writing in Markdown for a static site generator, how can we address the problem?
+
+There are plenty of ways, but this small package provide a simple one.
 
 #+begin_src emacs-lisp :tangle packages.el
 (package! eltweet :recipe (:host github :repo "gicrisf/eltweet"))
 #+end_src
 
-If you speak italian, [[https://zwitterio.it/coding/2022/quote-tweets-properly-with-emacs-lisp/][at this link I narrate how it was written, commenting the code line-by-line from a perspective of a lisp beginner]];
+# If you speak italian, [[https://zwitterio.it/coding/2022/quote-tweets-properly-with-emacs-lisp/][at this link I narrate how it was written, commenting the code line-by-line from a perspective of a lisp beginner]];
+(Installed from the repo because is not on MELPA yet)
 
 * Mastodon
 Firstly, let's install =mastodon.el=:
