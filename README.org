@@ -4,15 +4,14 @@
 The configuration lives inside a single file, [[./config.org][the =config.org= file]].
 GitHub is able to render org files! If you want to read the configuration entirely, just open the file here in this repo.
 
-#+begin_quote
+#+begin_comment
 *Keep in mind that not every part is translated into English*.
 Since Italian is my mother language, I sometimes write sections in Italian and publish them as is. It may take some time before I can translate everything into English.
-#+end_quote
+#+end_comment
 
-If you prefer to read specific section of the configuration in a specific language, you can search for them on my blog.
-
-- [[https://www.zwitterio.it/en/tags/emacs/][Click here for english blog posts with the "EMACS" tag]]
-- [[https://www.zwitterio.it/tags/emacs/][Clicca qui per post in italiano sul blog con il tag "EMACS"]]
+In some cases, I keep Italian counterparts of my posts on my blog. If you want to read parts of the configuration in a specific language, you can find the already filtered one at the following links.
+- [[https://www.zwitterio.it/en/tags/emacs/][(EN) Click here for English blog posts with the "EMACS" tag]]
+- [[https://www.zwitterio.it/tags/emacs/][(IT) Click here for Italian blog posts with the "EMACS" tag]]
 
 ** Donate
 Did you find something interesting in my dots?

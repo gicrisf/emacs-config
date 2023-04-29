@@ -14,17 +14,23 @@
 #+hugo_auto_set_lastmod: t
 #+hugo_date: [2023-04-09 dom]
 #+hugo_section: software/emacs-config/index.en.md
-#+bibliography: ~/Dropbox/references.bib
 
-# Zola specific divider
+# Zola-specific divider
 #+MACRO: more @@html:<!-- more -->@@
+
 # Temporary macros for prism support
+# Waiting for Zola update
 #+MACRO: prismcss @@html:<link href="/assets/prism/prism.css" rel="stylesheet" />@@
 #+MACRO: prismjs @@html:<script src="/assets/prism/prism.js"></script>@@
+
 # Macro for backlinks in exported posts
-# TODO special blockquote, shortcode
-#+MACRO: backlink @@html:<hr><p>This post was exported from <a href="https://github.com/gicrisf/emacs-config">my literate configuration for Emacs</a></p>@@
+# Hardcoded, now disabled
+# #+MACRO: backlink @@html:<blockquote><p>This post was exported from <a href="https://github.com/gicrisf/emacs-config/blob/main/config.org#$1">my literate configuration for Emacs</a></p></blockquote>@@
+
+#+MACRO: backlink @@hugo:{{ backlink(id="$1", color="yellow") }}@@
+
 # TODO italian macro signal, special blockquote
+# #+MACRO: backlink @@html:<blockquote class="disclaimer yellow"><p>This section is not translated into English, yet. Since Italian is my mother language, I sometimes write in Italian and publish content as is. It may take some time before I can translate everything into English.</p></blockquote>@@
 
 Hello, and welcome to my Emacs configuration!
 It's written in Org-mode and designed to be /literate/, meaning that I've documented many of the choices I made throughout the process.
@@ -68,6 +74,7 @@ CLOSED: [2023-04-29 sab 16:54]
 In the realm of functional programming languages, there exists a family known as /Lisp/ (LISt Processor).
 
 {{{more}}}
+{{{backlink(lisp)}}}
 
 Lisps are known for their simple syntax and powerful macro system. "Simple syntax" may not convey the idea sufficiently.
 Lisp's monomorphism demands bare-bones syntax, which is enough to scare lots of C-like coders, but this also gives flexibility that allows for easy prototyping and experimentation. Its versatility is illustrated by its use in artificial intelligence, theorem proving, and web development, among other areas.
@@ -102,6 +109,7 @@ CLOSED:
 What is /literate programming/? Is it not just another way of describing code?
 
 {{{more}}}
+{{{backlink(literate-programming)}}}
 
 Literate programming is a programming paradigm that emphasizes the organization of code for human understanding, rather than computer execution. It involves embedding documentation and explanatory text alongside code in a single document, allowing for clearer communication of the code's intent and functionality.
 
@@ -666,7 +674,7 @@ Hi there, I go by the name of Giovanni Crisalfi.
 * Emacs as Daemon
 :PROPERTIES:
 :EXPORT_HUGO_SECTION: software/emacs-as-daemon
-:EXPORT_FILE_NAME: index
+:EXPORT_FILE_NAME: index.en.md
 :EXPORT_DATE: [2023-04-05 mer]
 :END:
 
@@ -674,6 +682,7 @@ Running Emacs as a daemon allows you to start Emacs once and then use it in mult
 This translates to faster startup times and more efficient use of system resources.
 
 {{{more}}}
+{{{backlink(emacs-as-daemon)}}}
 
 # Si tratta di una possibilità introdotta con Emacs 23.1 per ridurre i (già bassi) tempi di avvio di ogni finestra. Ottimo se, come me, utilizzate Emacs anche per modificare piccoli file di testo per cui andrebbe benissimo vim o nano.
 This is a feature introduced with Emacs 23.1 to reduce the (already low) startup times of each window. It's great if, like me, you also use Emacs to edit small text files for which vim or nano would be just fine.
@@ -729,7 +738,8 @@ Writing this command everytime is boring, so it would be best to add some aliase
 
 * Environment variables on Emacs
 :PROPERTIES:
-:EXPORT_HUGO_SECTION: software/environment-variables-on-emacs
+:EXPORT_HUGO_SECTION: software
+:EXPORT_HUGO_BUNDLE: environment-variables-on-emacs
 :EXPORT_FILE_NAME: index.en.md
 :EXPORT_DATE: [2023-04-04 mar]
 :END:
@@ -738,6 +748,7 @@ An environment variable is a key-value pair that is declared and stored in the o
 Clearly, the program must have access to the environment to use the variable: that's the whole point of *environment* variables.
 
 {{{more}}}
+{{{backlink(environment-variables-on-emacs)}}}
 
 Traditional examples of environment variables include =PATH=, =HOME=, and =USER=.
 
@@ -755,7 +766,7 @@ In my case, that's the result.
 #+end_SRC
 
 Maybe, you need a different environment variable ("env var" from now on).
-How do you set it?
+How can you set it?
 
 ** The traditional approach
 If you have bash as a shell, you can simply set it the traditional way:
@@ -765,7 +776,7 @@ If you have bash as a shell, you can simply set it the traditional way:
 export VARNAME="var string"
 #+end_src
 
-Maybe, you need the said env var *inside Emacs*, because a package requires it.
+You could need the said env var *inside Emacs*, because a package requires it.
 Emacs has you covered, since emacs-lisp has a function to access env vars.
 
 #+begin_src emacs-lisp
@@ -888,7 +899,7 @@ Emacs let you set environment variables with =setenv=.
 (setenv "VARNAME" "var string")
 #+end_src
 
-I was searching for something different, since I have other scripts that run outside of Emacs and they need access to env vars too. I could duplicate the env vars, but I refuse: it feels hacky and it's difficult to maintain.
+I was searching for something different, since I have other scripts that run outside of Emacs and they need access to env vars too. I could duplicate the env vars, but I refuse: it feels hacky and it's hard to maintain.
 
 ** The Systemd approach
 A member of the Arch community "[[https://bbs.archlinux.org/viewtopic.php?id=163436][found a good way to export environment variables using systemctl so that they are available to systemd spawned processes]]". This could be exactly what I was looking for, but I don't like the idea of converting the other scripts and messing with systemd, so I kept looking for a different solution.
@@ -1086,7 +1097,7 @@ Ultimately, the environment variables are managed by three components:
 - You can sync the variables stored locally with a password manager (e.g. Bitwarden);
 - Bash variables are exported from Emacs by calling the function =bash-export-env-vars()= to a local directory.
 
-#+Caption: The diagram represents a system with three components: "Local storage", "Password manager" and "Emacs". The arrows indicate the flow of data and commands between these components. The image was made with D2. Released by Giovanni Crisalfi under CC BY-NC-SA.
+#+Caption: The diagram represents a system with three components: 'Local storage', 'Password manager' and 'Emacs'. The arrows indicate the flow of data and commands between these components. The image was made with D2. Released by Giovanni Crisalfi under CC BY-NC-SA.
 [[file:conclusion.png]]
 
 #+begin_comment d2
@@ -1558,7 +1569,7 @@ A minimal example in org-mode could be:
 Setting the global bibliography imply tangling this line to =config.el=:
 
 #+begin_src emacs-lisp :tangle config.el
-(setq org-cite-global-bibliography "~/Dropbox/references.bib")
+(setq org-cite-global-bibliography '("~/Dropbox/references.bib"))
 #+end_src
 
 We could set this variable right away, but we don't, because [[https://github.com/doomemacs/doomemacs/tree/master/modules/tools/biblio#path-configuration][Doom already dispose a way]] that keep in mind the completion system too:
@@ -2743,6 +2754,8 @@ As already explained above, now I export from org-mode, so the usefulness of the
 # TODO dovrei controllare Yasnippet per questi casi
 
 ** Markdown TOML frontmatter :it:
+{{{italian}}}
+
 Immaginate di voler generare un nuovo file Markdown per il vostro sito web.
 In base al tipo di generatore, questo potrà avere bisogno di un frontespizio in TOML o in YAML, magari. Si tratta di pochi caratteri, ma scriverli di volta in volta può risultare un po' frustrante, soprattutto se si scrivono molti pezzi.
 
