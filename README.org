@@ -9,9 +9,9 @@ GitHub is able to render org files! If you want to read the configuration entire
 Since Italian is my mother language, I sometimes write sections in Italian and publish them as is. It may take some time before I can translate everything into English.
 #+end_comment
 
-In some cases, I keep Italian counterparts of my posts on my blog. If you want to read parts of the configuration in a specific language, you can find the already filtered one at the following links.
-- [[https://www.zwitterio.it/en/tags/emacs/][(EN) Click here for English blog posts with the "EMACS" tag]]
-- [[https://www.zwitterio.it/tags/emacs/][(IT) Click here for Italian blog posts with the "EMACS" tag]]
+In some cases, I keep Italian counterparts of my posts on my blog. If you want to read parts of the configuration in a specific language, you can find the already filtered ones at the following links.
+- [[https://www.zwitterio.it/en/tags/emacs/][English (EN) blog posts with the "EMACS" tag]]
+- [[https://www.zwitterio.it/tags/emacs/][Italian (IT) blog posts with the "EMACS" tag]]
 
 ** Donate
 Did you find something interesting in my dots?

@@ -29,8 +29,7 @@
 
 #+MACRO: backlink @@hugo:{{ backlink(id="$1", color="yellow") }}@@
 
-# TODO italian macro signal, special blockquote
-# #+MACRO: backlink @@html:<blockquote class="disclaimer yellow"><p>This section is not translated into English, yet. Since Italian is my mother language, I sometimes write in Italian and publish content as is. It may take some time before I can translate everything into English.</p></blockquote>@@
+#+MACRO: italian @@html:<blockquote class="disclaimer yellow"><p>This section is not translated into English, yet. Since Italian is my mother language, I sometimes write in Italian and publish content as is. It may take some time before I can translate everything into English.</p></blockquote>@@
 
 Hello, and welcome to my Emacs configuration!
 It's written in Org-mode and designed to be /literate/, meaning that I've documented many of the choices I made throughout the process.
@@ -2846,6 +2845,8 @@ With the same approach, it is also possible to obtain functions to add frequentl
 # Uniamoci, confratelli, nell'amore per Emacs.
 
 ** Org exporter :it:
+{{{italian}}}
+
 L'exporter per Zola è un pacchetto che sto mantenendo io, quindi capita spesso che io debba testare delle modifiche in locale. =package!= gestisce i download, quindi in teoria non dovrebbe essere impiegato per la gestione di file in locale, ma [[https://github.com/doomemacs/doomemacs/issues/3842#issuecomment-681039894][Henrik Lissner consiglia di usare comunque la macro perché è stata adattata anche a questo genere di situazioni]].
 
 Aggiunge:
