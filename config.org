@@ -14,6 +14,7 @@
 #+hugo_auto_set_lastmod: t
 #+hugo_date: [2023-04-09 dom]
 #+hugo_section: software/emacs-config/index.en.md
+#+bibliography: ~/Dropbox/references.bib
 
 # Zola specific divider
 #+MACRO: more @@html:<!-- more -->@@
@@ -57,7 +58,17 @@ Pre-configured Emacs distributions like Spacemacs, NANO Emacs, and Doom Emacs ca
 The configuration reported in this file could potentially be adapted to other Emacs distributions, but as it is, it only works for Doom Emacs.
 
 * Lisp
-In the realm of functional programming languages, there exists a family known as "Lisp" (LISt Processor).
+CLOSED: [2023-04-29 sab 16:54]
+:PROPERTIES:
+:EXPORT_HUGO_SECTION: software/lisp
+:EXPORT_FILE_NAME: index.en.md
+:EXPORT_DATE: [2023-04-29]
+:END:
+
+In the realm of functional programming languages, there exists a family known as /Lisp/ (LISt Processor).
+
+{{{more}}}
+
 Lisps are known for their simple syntax and powerful macro system. "Simple syntax" may not convey the idea sufficiently.
 Lisp's monomorphism demands bare-bones syntax, which is enough to scare lots of C-like coders, but this also gives flexibility that allows for easy prototyping and experimentation. Its versatility is illustrated by its use in artificial intelligence, theorem proving, and web development, among other areas.
 
@@ -71,10 +82,11 @@ Emacs, indeed, is an interpreter of the Lisp language, albeit a specific dialect
 - For a less quick but more in-depth guide, refer to [[https://github.com/hypernumbers/learn_elisp_the_hard_way][Learn elisp the hard way]].
 # Per essere ancora più precisi, Emacs fa largo uso di CL e altro con adeguate interfacce
 
-# TODO quote with org-cite!
+# TODO better quoting with org cite
+# Custom shortcode would be awesome
 #+begin_quote
 The first LispLanguage compiler was developed by JohnMcCarthy at Dartmouth College between 1955 and 1959. This makes it the second oldest programming language in common use today (only Fortran is older, developed between 1954 and 1957). Lisp went forth and grew many many dialects: the most notable of these are AutoLisp, EmacsLisp, Interlisp, MacLisp, Scheme and Common Lisp.
--- https://www.emacswiki.org/emacs/CommonLisp
+[cite:@EmacsWikiCommonLisp]
 #+end_quote
 
 Emacs provides an interface to other lisps through modes like Sly and Slime, and certain Common Lisp functions can be used in Emacs. This highlights the extensibility of Emacs, although this topic cannot be addressed here due to space constraints.
@@ -1542,10 +1554,11 @@ A minimal example in org-mode could be:
 [cite:@lehn_toward_2002]
 ,#+print_bibliography:
 #+end_src
-Setting the global bibliography would imply tangling this line to =config.el=:
 
-#+begin_src emacs-lisp
-(setq org-cite-global-bibliography "/path/to/references.bib")
+Setting the global bibliography imply tangling this line to =config.el=:
+
+#+begin_src emacs-lisp :tangle config.el
+(setq org-cite-global-bibliography "~/Dropbox/references.bib")
 #+end_src
 
 We could set this variable right away, but we don't, because [[https://github.com/doomemacs/doomemacs/tree/master/modules/tools/biblio#path-configuration][Doom already dispose a way]] that keep in mind the completion system too:
@@ -1722,9 +1735,16 @@ defendants.chesscom -> hans: 72 page report of cheating
 #+end_src
 
 * Org JSON export
+JSON is a lightweight data interchange format used to transmit and store data.
+It is often used in web applications to exchange data between the application and the server.
+
+This package enables the export of org files to JSON, making them easy to parse for machines.
+
 #+begin_src emacs-lisp :tangle packages.el
 (package! ox-json)
 #+end_src
+
+Require it at startup:
 
 #+begin_src emacs-lisp :tangle config.el
 (require 'ox-json)
@@ -2159,7 +2179,7 @@ This should be sufficient, but to be absolutely sure:
 # Lanciamo =lsp= in un buffer con Rust ed assistiamo al compiersi della magia.
 We launch =lsp= in a buffer with Rust and witness the magic happen.
 
-* Kindle
+* Ebooks
 ** Send ebooks to Kindle with Emacs
 :PROPERTIES:
 :EXPORT_HUGO_SECTION: software/send-ebooks-to-kindle
@@ -2603,7 +2623,116 @@ Non controlla niente, non fa verifiche strane.
 {{{prismcss}}}
 {{{prismjs}}}
 
-** TODO Get NOTES from Kindle
+** Notes and Highlights
+# TODO Prova il pacchetto e lascia una stella su GitHub
+# How Kindle manage notes?
+# Tell people of Ramiel
+# This code could be hacked and mix-matched for exporting to multiple formats
+
+# How ebooks have changed our way to take notes?
+Ebook readers allow to easily highlight, annotate, and search through digital text. This has made note-taking more efficient and convenient.
+I own a Kindle since 2014 and I always wondered how I optimize the process of importing my notes in the text I write.
+
+*** Kindle clippings
+Kindles store the notes in a really simple text file called =My Clippings.txt=.
+
+The Kindle clippings file is formatted in the following way:
+- Each clipping is separated by a line with 10 "equal" signs.
+- The first line of each clipping contains the title of the book and the author's name.
+- The second line contains lots of metadata, separated by pipes ("|"):
+  - the type of the clipping (e.g., "Highlight," "Note");
+  - the position in the book where the clipping was made (it can be an integer or a range of two integers);
+  - the date and time when the clipping was made.
+- The third line is a blank line.
+- The fifth line contains the actual text of the clipping.
+
+Here is an example of a clipping from a Kindle clippings file:
+
+#+begin_src txt
+The Art of War (Sun Tzu)
+- Highlight Loc. 444-45 | Added on Sunday, November 7, 2021, 11:10 PM
+
+Victorious warriors win first and then go to war, while defeated warriors go to war first and then seek to win.
+#+end_src
+
+*** COMMENT Il problema della lingua
+Come si può facilmente osservare, il testo si legge facilmente.
+Un umano legge facilmente, ma una macchina ha bisogno di storare i dati in maniera più strutturata prima di riportarli in altri formati.
+La sintassi è scandita da parole più che da semplici segni.
+Questo aumenta la leggibilità, ma può essere un problema perché in altre lingue cambiano le keys.
+Vedi un esempio in italiano:
+
+#+begin_src txt
+Chthulucene (Donna Haraway)
+- La tua evidenziazione a pagina 6 | posizione 88-88 | Aggiunto in data giovedì 2 luglio 2020 00:20:41
+
+Ci ritroviamo a vivere sulla Terra in tempi confusi, torbidi e inquieti.
+#+end_src
+
+Notiamo un po' di differenze:
+- Al posto di avere "Highlight" abbiamo "La tua evidenziazione"
+- È riportata anche la pagina, prima della posizione
+- La data è espressa in un differente formato. Non più "Month day, year, time" ma "day month year time"
+
+È evidente che questo complica le cose in fase di parsing.
+Dobbiamo fare in modo che il parser disponga di tutte le possibili varianti linguistiche per poter trasferire i dati in un formato leggibile.
+
+Se va bene solo l'inglese e solo il formato org-mode, questo pacchetto fa al caso vostro.
+Prima ancora di conoscere l'esistenza di questo pacchetto e di cominciare ad usare org-mode così intensamente, io mi ero posto lo stesso problema ed avevo pensato ad una soluzione che fosse in grado di esportare in HTML, JSON e Markdown, anche supportando l'italiano e altre lingue.
+Avevo chiamato questo pacchetto ramiel e l'avevo scritto in rust per avere un codice quanto mai solido e facile da mantenere.
+Al fine di richiamare questo codice rust in Emacs, ho pensato di scrivere delle bindings in python.
+Le bindings in python sono utili perché emacs si interfaccia molto più facilmente a python che non ad un binario rust attraverso CLI.
+Inoltre, questo consente l'integrazione del pacchetto anche in altro codice python.
+Per esempio, potrebbe tornare utile richiamarlo in plugin per Pelican o Django o, ancora, in Flask.
+Ma tutto ciò verrà più avanti.
+Intanto importante focalizzarsi sul parsing.
+# Link al parser in rust e lo chiamo ramiel-clippings or something.
+# La repo è ancora privata
+
+# Fare schema D2:
+My Clippings.txt -> JSON (grazie a ramiel, in rust) -> altri formati
+
+Nel frattempo sulla scena sono apparsi molti altri gestori di note.
+Github ha categoria =kindle-clippings=
+
+Abbiamo supporto per Notion, per Obsidian, per Logseq.
+Ognuno di questi presenta vantaggi, svantaggi.
+Notion è in python, supporto per alcune lingue, pacchetto abbastanza semplice.
+Obsidian è in typescript, già più complesso, consente di importare direttamente dal cloud di Amazon.
+
+C'è un'altra persona che ha realizzato un parser in rust. Sta sviluppando tutto un progetto intorno che sfrutta Serde. In pratica ha avuto la mia stessa idea.
+Vedo caratteri cinesi, quindi persona a cui interessa del supporto multilingua.
+Il supporto è solo per cinese e inglese al momento, ma c'è un enum che può essere facilmente esteso.
+
+Continuo a credere che Rust sia la scelta giusta.
+Si fa il parsing dei dati in JSON. Poi da JSON si esporta nella maniera preferita:
+- Org mode
+- HTML
+- Markdown
+- Altri formati tipo Notion, Obsidian e quant'altro
+
+Per org mode sarebbe interessante il supporto per la sintassi di org-cite.
+Questo faciliterebbe molto. Ho visto che il pacchetto di obsidian fa la ricerca del libro online. ISBN.
+Questo consentirebbe molto facilmente la generazione di references.
+
+*** Export clippings in org-mode
+#+begin_quote
+This package converts Kindle’s “My Clippings.txt” to a format usable in Org mode. The result will be sorted by book title and displayed in a temporary buffer named ”*clippings*”.
+#+end_quote
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! clip2org :recipe (:host github :repo "Kungsgeten/clip2org"))
+#+end_src
+
+After setting =clip2org-clippings-file=...
+
+#+begin_src emacs-lisp
+(require 'clip2org)
+(setq clip2org-clippings-file "/path/to/My Clippings.txt")
+#+end_src
+
+... launch =M-x clip2org=.
+
 * Zola
 # Funzioni ausiliarie che ho scritto per facilitarmi il lavoro quando scrivevo in Markdown per Zola.
 Auxiliary functions that I wrote to make my work easier when writing in Markdown for Zola.
@@ -3438,25 +3567,62 @@ Concludiamo con la configurazione minima di =org-msg=.
 
 (org-msg-mode)
 #+end_src
-* Chemfig :it:
-** COMMENT Installare Chemfig per LaTeX :it:
-# https://www.zwitterio.it/2022/installare-chemfig-per-latex/
-Chemfig è un pacchetto LaTeX che sfrutta internamente TikZ per consentire all'utente di disegnare formule chimiche passando esclusivamente attraverso l'editor di testo.
-Scaricare Chemfig è molto semplice, basta andare alla corrispondente pagina su CTAN e scaricare lo zip.
 
-La procedura di installazione può essere un po' più tediosa. Innanzitutto dobbiamo estrarre l'archivio. Dovremmo ritrovarci con una cartella, chemfig, contenente vari file. In particolare, ci interessano i file con estensione .sty ed estensione .tex. L'intera cartella va copiata in una directory che tipicamente è protetta dai requisiti da amministratore e che può variare in base al sistema. Su StackExchange un utente indica /usr/share/texmf-texlive/tex/latex come destinazione. Nel mio sistema, invece, la destinazione utile è /usr/share/texmf-dist/tex/latex. Individuata la destinazione, non resta che trasferire la cartella acquisendo i privilegi d'amministratore. Se siete su Gnome, un modo semplice per farlo è lanciando nautilus dal terminale, anteponendo sudo.
+* Chemical structures
+# TODO ristrutturare questa parte
+# Prima spiego il problema della rappresentazione delle molecole
+# Spiego perché mi dà fastidio portarmi in giro le immagini
+# Mi dà fastidio che non siano riproducibili
+# Questo vale per 2D e 3D
+# Affrontiamo prima il problema delle 2D => chemfig
+# Cosa è chemfig
+# Come si installa chemfig
+# Come possiamo integrare chemfig in Emacs?
+# Link alla libreria
+# Affrontiamo poi il problema delle 3D => fresnel
+# Cos'è fresnel
+# Come si installa fresnel
+
+** Get Started with Chemfig LaTeX: A Beginner's Guide to Installation
+:PROPERTIES:
+:EXPORT_HUGO_SECTION: software/get-started-with-chemfig-latex
+:EXPORT_FILE_NAME: index.en.md
+:EXPORT_DATE: [2023-04-29 sab 16:41]
+:END:
+
+# TODO move below
+# https://www.zwitterio.it/2022/installare-chemfig-per-latex/
+# Chemfig is a LaTeX package that allows users to create chemical formulas directly within the text editor by mobilizing TikZ.
+Chemfig is a LaTeX package used for drawing chemical structures. It provides a simple syntax for describing molecules and reactions using various symbols and commands. With Chemfig, users can draw without any GUI, in a complete textual fashion; the package internally leverages TikZ to create high-quality, publication-ready chemical diagrams directly in LaTeX.
+
+{{{more}}}
+
+Installing Chemfig starts with a very simple step: just go to the corresponding page on CTAN and download the zip.
+
+The following section might seem clunky but it works:
+- First, we extract the archive and find the =chemfig= folder.
+- The folder contains several files, including essential =sty= and =tex= ones.
+- We must determine the destination for our freshly baked =chemfig= folder.
+- In accessing this destination, we must keep in mind the need for administrator privileges.
+
+One may easily obtain privileges by launching sudo-prefixed file manager from terminal (e.g. Nautilus, in the GNOME environment).
 
 #+begin_src sh
 sudo nautilus
 #+end_src
 
-Da qui sarà facile andare a copiare la directory chemfig ed incollarla nella destinazione con tutti i pacchetti. Fatto ciò, bisogna aggiornare la lista dei pacchetti installati con un semplice comando
+On StackExchange, a user indicates =/usr/share/texmf-texlive/tex/latex= as the destination.
+In my system, however, the useful destination is =/usr/share/texmf-dist/tex/latex=.
+Once the destination has been identified, just transfer the folder by acquiring administrator privileges.
+# From here it will be easy to go copy the =chemfig= directory and paste it into the destination with all the packages.
+
+After that, you need to update the list of installed packages.
 
 #+begin_src sh
 sudo texhash
 #+end_src
 
-A questo punto, chemfig è stato installato e può essere utilizzato in un qualunque documento latex.
+At this point, Chemfig has been installed and can be used in any LaTeX document.
 
 #+begin_src latex
 \usepackage{chemfig}
@@ -3465,55 +3631,99 @@ Methane: \chemfig{[,0.8]C(-[2]H)(-[4]H)(-[6]H)-H}
 \end{document}
 #+end_src
 
-** Intro to Chemfig
-Chemfig is a LaTeX package that allows users to create chemical formulas directly within the text editor by mobilizing TikZ.
-
 # TODO fare le dimostrazioni usando obchemfig
 # (quando sarà pronto, è chiaro)
 
 ** mol2chemfig
-Poiché non sento d'avere controllo di qualcosa se non è prima stato informatizzato e parametrizzato dalle fondamenta, trovo poco sopportabile scrivere di chimica dovendo vivere di immagini appiccicate da chissà dove o, anche peggio, dovendo generare, editare e manipolare a mano ogni singola immagine contenente una formula di struttura. È tedioso, a dir poco. Ancora più tedioso è descrivere a mano la molecola perché pacchetti LaTeX siano capaci di renderizzare la molecola finita, soprattutto se parliamo di molecole di grand dimensioni, ma questa via ha il vantaggio di essere informatizzata e parametrizzata sino alle ossa, quindi non c'è dubbio che io la preferisca. Per questo motivo, mi sono messo in testa di dovere automatizzare il più possibile il processo di scrittura delle molecole attraverso un meraviglioso pacchetto LaTeX chiamato =chemfig=. Si tratta di un pacchetto che si occupa di disegnare le molecole via 'TikZ' e che può vantare un'ottima sintassi, semplice ma versatile, soprattutto quando si viene agli angoli di legame. Finché si tratta di piccole molecole non è difficile tenere a mente la sequenza dei legami, ma oltre un certo numero di atomi il processo può farsi decisamente più tedioso di quello tradizionale, quindi si rende necessario passare attraverso una GUI.
+# Poiché non sento d'avere controllo di qualcosa se non è prima stato informatizzato e parametrizzato dalle fondamenta, trovo poco sopportabile scrivere di chimica dovendo vivere di immagini appiccicate da chissà dove o, anche peggio, dovendo generare, editare e manipolare a mano ogni singola immagine contenente una formula di struttura. È tedioso, a dir poco. Ancora più tedioso è descrivere a mano la molecola perché pacchetti LaTeX siano capaci di renderizzare la molecola finita, soprattutto se parliamo di molecole di grand dimensioni, ma questa via ha il vantaggio di essere informatizzata e parametrizzata sino alle ossa, quindi non c'è dubbio che io la preferisca. Per questo motivo, mi sono messo in testa di dovere automatizzare il più possibile il processo di scrittura delle molecole attraverso un meraviglioso pacchetto LaTeX chiamato =chemfig=. Si tratta di un pacchetto che si occupa di disegnare le molecole via 'TikZ' e che può vantare un'ottima sintassi, semplice ma versatile, soprattutto quando si viene agli angoli di legame. Finché si tratta di piccole molecole non è difficile tenere a mente la sequenza dei legami, ma oltre un certo numero di atomi il processo può farsi decisamente più tedioso di quello tradizionale, quindi si rende necessario passare attraverso una GUI.
+Since I don't feel like I have control over something unless it's been computerized and parameterized from the ground up, I find it unbearable to write about chemistry while having to live with images pasted from who knows where or, even worse, having to manually generate, edit, and manipulate every single image containing a structural formula. It's tedious, to say the least; and it's hardly reproducible.
 
-Anziché generare delle immagini da copiare ed incollare in giro, però, è una soluzione decisamente più pulita quella di esportare delle stringhe di testo che siano riproducibilmente convertite nello stesso diagramma. Chemfig è chiaramente un ottimo ponte di mezzo. Abbiamo bisogno di qualcosa che trasformi i nostri SMILES o =mol= files in stringhe che Chemfig sia in grado di interpretare.
-È qui che =mol2chemfig= si rende decisamente utile. Si tratta di un piccolo programma python per convertire stringhe SMILES o =mol= in stringhe =chemfig=.
+# Even more tedious is describing the molecule by hand so that LaTeX packages are able to render the finished molecule, especially for large molecules, but this path has the advantage of being potentially parameterized to the bone, so there's no doubt that I prefer it. For this reason, I have set my mind to automating the writing process of molecules as much as possible through a wonderful LaTeX package called =chemfig=. The package draws molecules through =TikZ= and boasts a versatile syntax for bond angles.
 
-Qualcuno potrebbe chiedersi: perché non usare direttamente le immagini generate con l'editor o gli SMILES, a questo punto. La risposta è semplice: perché è molto più semplice intervenire al volo su una stringa di Chemfig per manipolare il diagramma, pur lasciando possibilmente intatto il nucleo della molecola. Si possono variare opportunamente gli angoli di legame, i sostituenti, il tutto senza lasciare l'editor. Il problema rimane dover lasciare l'editor per lanciare =mol2chemfig=. Potremmo aprire un emulatore di terminale nel frame a fianco, ma rimane una soluzione scomoda ed inelegante. È qui che subentra il bello di vivere dentro Emacs: possiamo configurarlo perché sia lui a fare il lavoro al posto nostro.
+# Ancora più tedioso è scrivere del semplice testo perché sia interpretato da un software per produrre il disegno desiderato. Scrivere il metano con gli SMILES è semplice, basta un carattere; ma se doveste scrivere il [[https://it.wikipedia.org/wiki/Taxolo][taxolo]]?
+Even more tedious seems writing plain text so that it can be interpreted by software to produce the desired drawing. Writing methane with SMILES is simple, it only takes one character, =C=; butane takes four: =CCCC=; but what if you had to modify the structure of [[https://en.wikipedia.org/wiki/Paclitaxel][paclitaxel]]?
 
-Ci troviamo dinnanzi alle seguenti vie:
-- Scrivere un port di =mol2chemfig= in emacs lisp;
-- Richiamare =mol2chemfig= come libreria Python all'interno di uno script emacs lisp (per mezzo di =Pymacs=, che si situerebbe all'interfaccia);
-- Lanciare =mol2chemfig= nella shell e catturare l'output.
+#+begin_src txt
+CC1=C2C(C(=O)C3(C(CC4C(C3C(C(C2(C)C)(CC1OC(=O)C(C(C5=CC=CC=C5)NC(=O)C6=CC=CC=C6)O)O)OC(=O)C7=CC=CC=C7)(CO4)OC(=O)C)O)C)OC(=O)C
+#+end_src
 
-La prima soluzione è la più elegante, ma anche la più energivora. Io non ho il tempo e le risorse necessarie al momento per affrontare un simile cammino, anche se mi piacerebbe.
-L'idea di utilizzare Pymacs è allettante, ma non ha i benefici della prima via, né riesce a cavarci dagli impicci in cui ci pone la terza.
-Quest'ultima, infatti, richiede che =mol2chemfig= sia installato globalmente, altrimenti il comando inevitabilmente fallirà. Potrebbe anche essere la via più lenta, ma parliamo di frazioni di secondo che non sono sinceramente particolarmente preoccupanti. Si tratta anche del metodo più efficiente dal punto di vista dello sviluppo, tanto da potere essere affrontato qui nella configurazione generale.
-Ecco perché ne parlo in questa sede; ecco perché l'ho scelto. Riservo per il futuro l'ambizione di riscrivere il modulo in elisp. Nel frattempo, eccoci qua.
+# È molto difficile riuscire a capire quale carattere aggiungere o rimuovere per alterare il disegno conclusivo a partire da una rappresentazione così compressa. Gli SMILES non sono l'unica rappresentazione testuale possibile per una molecola, fortunatamente, ma più il testo di presta alla comprensione umana, più i caratteri necessari per descrivere la molecola aumentano ed aumenta così la difficoltà associata alla modifica. Qual è il vantaggio del testo, allora? Che l'approccio al testo può sempre essere informatizzato.
+It is very difficult to understand which character to add or remove to alter the final design starting from such a compressed representation of the molecule.
+Fortunately, SMILES are not the only possible textual representation for a molecule, but the more the text is understandable to humans, the more the characters needed to describe the molecule increase, and thus the difficulty associated with modification increases accordingly.
 
-Di cosa abbiamo bisogno? Innanzitutto, come dicevo, dobbiamo assicurarci che =mol2chemfig= sia installato.
-Per comodità, io installo una riproposizione in Python3 chiamata [[https://github.com/Augus1999/mol2chemfigPy3][=mol2chemfigPy3=]].
+# TODO riscrivi meglio
+# A great example of a less compressed code for molecules is given from molecules written for a LaTeX package called =chemfig=.
+A great example of a more human-readable code for a molecule is given from a LaTeX package called =chemfig=.
+This is butane through chemfig syntax:
+
+#+begin_src tex
+\chemfig{
+            % 1
+      -[:30]% 2
+    -[::300]% 3
+     -[::60]% 4
+}
+#+end_src
+
+# What is the advantage of text, then? That the approach to text can always be computerized.
+For this reason, I have set my mind to automating the writing process of molecules as much as possible through a wonderful LaTeX package called =chemfig=. The package draws molecules through =TikZ= and boasts a versatile syntax for bond angles.
+
+# Anziché generare delle immagini da copiare ed incollare in giro, però, è una soluzione decisamente più pulita quella di esportare delle stringhe di testo che siano riproducibilmente convertite nello stesso diagramma. Chemfig è chiaramente un ottimo ponte di mezzo. Abbiamo bisogno di qualcosa che trasformi i nostri SMILES o =mol= files in stringhe che Chemfig sia in grado di interpretare.
+# È qui che =mol2chemfig= si rende decisamente utile. Si tratta di un piccolo programma python per convertire stringhe SMILES o =mol= in stringhe =chemfig=.
+
+Instead of generating images to copy and paste around, a much cleaner solution is to export text strings that can be reproducingly converted into the same diagram. Chemfig is clearly an excellent middle ground. We need something that will transform our SMILES or =mol= files into strings that Chemfig can interpret. This is where =mol2chemfig= comes in handy. It is a small Python program to convert SMILES or =mol= strings into =chemfig= strings.
+
+# Qualcuno potrebbe chiedersi: perché non usare direttamente le immagini generate con l'editor o gli SMILES, a questo punto. La risposta è semplice: perché è molto più semplice intervenire al volo su una stringa di Chemfig per manipolare il diagramma, pur lasciando possibilmente intatto il nucleo della molecola. Si possono variare opportunamente gli angoli di legame, i sostituenti, il tutto senza lasciare l'editor. Il problema rimane dover lasciare l'editor per lanciare =mol2chemfig=. Potremmo aprire un emulatore di terminale nel frame a fianco, ma rimane una soluzione scomoda ed inelegante. È qui che subentra il bello di vivere dentro Emacs: possiamo configurarlo perché sia lui a fare il lavoro al posto nostro.
+
+Someone might wonder: why not use directly the images generated with the editor or SMILES at this point? The answer is simple: it's much easier to intervene on a Chemfig string on the fly to manipulate the diagram, while possibly leaving the core of the molecule intact. You can suitably vary the bond angles, the substituents, all without leaving the editor. The problem remains having to leave the editor to launch =mol2chemfig=. We could open a terminal emulator in the adjacent frame, but it remains an uncomfortable and inelegant solution. This is where the beauty of living inside Emacs comes in: we can configure it to do the work for us.
+
+# Ci troviamo dinnanzi alle seguenti vie:
+# - Scrivere un port di =mol2chemfig= in emacs lisp;
+# - Richiamare =mol2chemfig= come libreria Python all'interno di uno script emacs lisp (per mezzo di =Pymacs=, che si situerebbe all'interfaccia);
+# - Lanciare =mol2chemfig= nella shell e catturare l'output.
+
+We are facing the following potential paths:
+- Writing a port of =mol2chemfig= in Emacs Lisp;
+- Calling =mol2chemfig= as a Python library within an Emacs Lisp script (using =Pymacs=, which would be at the interface);
+- Running =mol2chemfig= in the shell and capturing the output.
+
+# La prima soluzione è la più elegante, ma anche la più energivora. Io non ho il tempo e le risorse necessarie al momento per affrontare un simile cammino, anche se mi piacerebbe. L'idea di utilizzare Pymacs è allettante, ma non ha i benefici della prima via, né riesce a cavarci dagli impicci in cui ci pone la terza. Quest'ultima, infatti, richiede che =mol2chemfig= sia installato globalmente, altrimenti il comando inevitabilmente fallirà. Potrebbe anche essere la via più lenta, ma parliamo di frazioni di secondo che non sono sinceramente particolarmente preoccupanti. Si tratta anche del metodo più efficiente dal punto di vista dello sviluppo, tanto da potere essere affrontato qui nella configurazione generale. Ecco perché ne parlo in questa sede; ecco perché l'ho scelto. Riservo per il futuro l'ambizione di riscrivere il modulo in elisp. Nel frattempo, eccoci qua.
+
+The first solution is the most elegant but also the most energy-consuming. At the moment, I don't have the time and resources to take on such a path, although I would like to. Using Pymacs is tempting, but it doesn't have the benefits of the first option, nor can it get us out of the predicament the third option puts us in. The latter, in fact, requires that 'mol2chemfig' be installed globally, otherwise the command will inevitably fail. It may also be the slowest route, but we're talking about fractions of a second that aren't particularly worrying. It's also the most efficient method from a development point of view, so it can be tackled here in the general configuration. That's why I'm talking about it here; that's why I chose it. I plan to rewrite the module in elisp in the future. In the meantime, here we are.
+
+# Di cosa abbiamo bisogno? Innanzitutto, come dicevo, dobbiamo assicurarci che =mol2chemfig= sia installato.
+# Per comodità, io installo una riproposizione in Python3 chiamata [[https://github.com/Augus1999/mol2chemfigPy3][=mol2chemfigPy3=]].
+What do we need? First of all, as I was saying, we need to make sure that =mol2chemfig= is installed.
+For convenience, I install a Python3 reproposition called =mol2chemfigPy3=, which can be found at [[https://github.com/Augus1999/mol2chemfigPy3]].
 
 #+begin_src bash
 $ pip install -U mol2chemfigPy3
 #+end_src
 
-Viene installata anche una dipendenza vitale, cioè Indigo:
+# Viene installata anche una dipendenza vitale, cioè Indigo:
+Indigo, a vital dependency, is also installed:
 
 #+begin_src
 Successfully installed epam.indigo-1.7.4 mol2chemfigPy3-1.5.7
 #+end_src
 
-Al momento dell'installazione, queste sono le versioni:
+# Al momento dell'installazione, queste sono le versioni:
+At the time of installation, these are the versions:
 - indigo 1.7.4
 - mol2chemfig 1.5.7
 
-Poiché pip potrebbe installare al di fuori dal PATH, per sicurezza meglio lanciare il comando attraverso Python.
-Visto che dobbiamo scriptare, non vale la pena di imbattersi in inutili ed evitabili errori. Scriveremo quindi non =mol2chemfig= ma:
+# Poiché pip potrebbe installare al di fuori dal PATH, per sicurezza meglio lanciare il comando attraverso Python.
+# Visto che dobbiamo scriptare, non vale la pena di imbattersi in inutili ed evitabili errori. Scriveremo quindi non =mol2chemfig= ma:
+Since pip could install outside the PATH, it's safer to run the command through Python.
+Since we're scripting, it's not worth encountering unnecessary and avoidable errors.
+So we'll write not =mol2chemfig= but:
 
 #+begin_src bash
 python -m mol2chemfigPy3
 #+end_src
 
-Per testare la conversione di uno SMILES,
+# Per testare la conversione di uno SMILES,
+To test the conversion of a SMILES:
 
 #+begin_src bash :results output latex
 python -m mol2chemfigPy3 -zw -i direct "C1=CC=C(C=C1)O"
@@ -3524,8 +3734,9 @@ python -m mol2chemfigPy3 -zw -i direct "C1=CC=C(C=C1)O"
 \chemfig{OH-[:180,,1]=_[:240]-[:180]=_[:120]-[:60]=_(-[:300])}
 #+end_export
 
-Non resta che scrivere una semplice funzione elisp per automatizzare il lancio di questo comando a partire da uno SMILES in input.
-[[https://emacs.stackexchange.com/a/30273][Come illustrato da Dan, su StackExchange di Emacs]], questo è un modo molto semplice per lanciare un comando attraverso la shell ed inserire l'output nel buffer attuale.
+# Non resta che scrivere una semplice funzione elisp per automatizzare il lancio di questo comando a partire da uno SMILES in input.
+# [[https://emacs.stackexchange.com/a/30273][Come illustrato da Dan, su StackExchange di Emacs]], questo è un modo molto semplice per lanciare un comando attraverso la shell ed inserire l'output nel buffer attuale.
+All that remains is to write a simple elisp function to automate the execution of this command starting from an input SMILES. [[https://emacs.stackexchange.com/questions/30272/get-output-of-external-command-in-the-buffer/30273#30273][As shown by Dan on Emacs StackExchange]], this is a very simple way to launch a command through the shell and insert the output into the current buffer.
 
 #+begin_src emacs-lisp
 (defun insert-shell-command-output (command)
@@ -3534,8 +3745,10 @@ buffer."
   (insert (shell-command-to-string command)))
 #+end_src
 
-[[https://stackoverflow.com/a/15528629/13436102][Come fa notare sds su StackOverflow]], =call-process= sarebbe più veloce, perché è una funzione che non aspetta la mediazione della shell, ma si tratta di uno script da richiamare all'occorrenza e per il momento le performance possono anche essere messe da parte. Ci torneremo in un altro momento, nel frattempo è bene lavorare su questo.
-Perché una funzione possa essere richiamabile, va introdotta da =(interactive)=, quindi scriviamola tenendone conto:
+# [[https://stackoverflow.com/a/15528629/13436102][Come fa notare sds su StackOverflow]], =call-process= sarebbe più veloce, perché è una funzione che non aspetta la mediazione della shell, ma si tratta di uno script da richiamare all'occorrenza e per il momento le performance possono anche essere messe da parte. Ci torneremo in un altro momento, nel frattempo è bene lavorare su questo.
+# Perché una funzione possa essere richiamabile, va introdotta da =(interactive)=, quindi scriviamola tenendone conto:
+[[https://stackoverflow.com/a/15528629/13436102][As pointed out by sds on StackOverflow]], =call-process= would be faster, because it is a function that does not require the mediation of the shell, but it is a script to be called when needed and for the moment performance can be set aside. We will come back to it another time, meanwhile it is good to work on this.
+In order to be callable, a function must be introduced by =(interactive)=, so let's write it taking this into account:
 
 #+begin_src emacs-lisp :tangle config.el
 (defun mol2chemfig (mol)
@@ -3544,13 +3757,16 @@ Perché una funzione possa essere richiamabile, va introdotta da =(interactive)=
   (insert (shell-command-to-string (concat "python -m mol2chemfigPy3 -w -i direct " mol))))
 #+end_src
 
-Ora possiamo tornare a scrivere i nostri documenti senza dover più rimbalzare da un software all'altro.
-Sia lodato Emacs, il sacro editor.
+# Ora possiamo tornare a scrivere i nostri documenti senza dover più rimbalzare da un software all'altro.
+# Sia lodato Emacs, il sacro editor.
+# Così abbiamo coperto il caso base. Non resta che scrivere funzioni che tengano conto delle varie impostazioni di =mol2chemfig=.
+Now we can go back to writing our documents without having to bounce from one software to another. Praise Emacs, the sacred editor.
+So we have covered the base case. We just need to write functions that take into account the various settings of =mol2chemfig=.
 
-Così abbiamo coperto il caso base. Non resta che scrivere funzioni che tengano conto delle varie impostazioni di =mol2chemfig=.
+# Qui nasce la libreria
 
-** tochemfig
-Finora abbiamo dato per scontato che l'utente introduca direttamente nel minibuffer la stringa da convertire, ma in verità potremmo anche disporre di un file. =mol2chemfig= di default si aspetta, questo, quindi basta lanciare il comando senza =-i direct= per poter lavorare con il percorso di un file. Rinominando la funzione coerentemente, scriveremmo:
+** Introducing a new interface for Chemfig in Emacs
+So far, we assumed that the user directly enters the string to be converted in the minibuffer, but in reality, we could also have a file available. By default, =mol2chemfig= expects this, so we just need to run the command without =-i direct= to work with the path of a file. Renaming the function accordingly, we would write:
 
 #+begin_src emacs-lisp
 (defun mol2chemfig-from-file (molpath)
@@ -3568,9 +3784,11 @@ Removing whitespaces.
   (insert (shell-command-to-string (concat "python -m mol2chemfigPy3 -zw -i direct " mol))))
 #+end_src
 
-Potremmo andare avanti ancora per un pezzo, ma questo è un pessimo approccio, perché implica siano scritte tutte le combinazioni possibili. Sarebbe molto meglio partire da un default considerata la funzione preferita dall'utente (quindi configurabile via lisp) e che poi le funzioni supplementari varino il comando di default, lasciando il resto intatto. Potremmo passare gli argomenti, ma il bello di Emacs è proprio avere funzioni verbose, perché così si può lanciare il comando desiderato anche senza ricordare a memoria le flags. Per arrivare al risultato desiderato si può passare per varie vie: una, più vicina al comando reale, prevede l'introduzione di argomenti facoltativi nella funzione principale. Un'altra passa per un dedalo di condizioni if/else che verifichino prima se la funzione specifica sia stata esplicitamente espressa, poi quale sia il default e compongano così il comando finale. Un modulo dedicato potrebbe tenere conto di entrambi gli approcci, così da offrire la massima flessibilità possibile all'utente.
+# Potremmo andare avanti ancora per un pezzo, ma questo è un pessimo approccio, perché implica siano scritte tutte le combinazioni possibili. Sarebbe molto meglio partire da un default considerata la funzione preferita dall'utente (quindi configurabile via lisp) e che poi le funzioni supplementari varino il comando di default, lasciando il resto intatto. Potremmo passare gli argomenti, ma il bello di Emacs è proprio avere funzioni verbose, perché così si può lanciare il comando desiderato anche senza ricordare a memoria le flags. Per arrivare al risultato desiderato si può passare per varie vie: una, più vicina al comando reale, prevede l'introduzione di argomenti facoltativi nella funzione principale. Un'altra passa per un dedalo di condizioni if/else che verifichino prima se la funzione specifica sia stata esplicitamente espressa, poi quale sia il default e compongano così il comando finale. Un modulo dedicato potrebbe tenere conto di entrambi gli approcci, così da offrire la massima flessibilità possibile all'utente.
+We could go on for a while, but this is a terrible approach because it involves writing all possible combinations. It would be much better to start from a default considering the user's preferred function (configurable via Lisp) and then have additional functions vary the default command, leaving the rest intact. We could pass arguments, but the beauty of Emacs is having verbose functions, so you can launch the desired command without memorizing the flags. To reach the desired result, there are various approaches: one, closer to the actual command, involves introducing optional arguments into the main function. Another passes through a maze of if/else conditions that first check if the specific function has been explicitly expressed, then what the default is, and compose the final command accordingly. A dedicated module could take both approaches into account, thus offering the user maximum flexibility.
 
-Per un ipotetico pacchetto dedicato chiamato =tochemfig=, i default divergenti dall'impostazione di =mol2chemfig= potrebbero essere indicati nel modo seguente.
+# Per un ipotetico pacchetto dedicato chiamato =tochemfig=, i default divergenti dall'impostazione di =mol2chemfig= potrebbero essere indicati nel modo seguente.
+For a hypothetical dedicated package called "tochemfig", the defaults diverging from the "mol2chemfig" settings could be indicated as follows.
 
 #+begin_src emacs-lisp :tangle config.el
 (setq tochemfig-default-input "direct")
@@ -3579,9 +3797,12 @@ Per un ipotetico pacchetto dedicato chiamato =tochemfig=, i default divergenti d
 (setq tochemfig-default-wrap-chemfig t)
 #+end_src
 
-Anziché proseguire con le speculazioni, non mi resta che proseguire il lavoro su =tochemfig.el= e renderlo disponibile attraverso [[https://github.com/gicrisf/tochemfig][questa repo]]. In attesa che =tochemfig= sia concluso, o anche nel caso di un uso occasionale con pochi comandi, un approccio come quello sopra è più che sufficiente.
+# Anziché proseguire con le speculazioni, non mi resta che proseguire il lavoro su =tochemfig.el= e renderlo disponibile attraverso [[https://github.com/gicrisf/tochemfig][questa repo]]. In attesa che =tochemfig= sia concluso, o anche nel caso di un uso occasionale con pochi comandi, un approccio come quello sopra è più che sufficiente.
+Instead of continuing with speculations, all I have to do is to continue working on =tochemfig.el= and make it available through [[https://github.com/gicrisf/tochemfig][this repository]].
+# While waiting for =tochemfig= to be completed, or even in the case of occasional use with few commands, an approach like the one above is more than sufficient.
 
-Installiamo il pacchetto:
+# Installiamo il pacchetto:
+Let's install the package.
 
 #+begin_src emacs-lisp :tangle packages.el :noweb yes
 (package! tochemfig :recipe (:host github :repo "gicrisf/tochemfig"))
@@ -3590,7 +3811,8 @@ Installiamo il pacchetto:
 ** COMMENT obchemfig
 Since I usually write LaTeX code from org-mode, I find annoying to wrap the code in latex exporter all the time. Let's get rid of the problem writing some lispy code.
 
-Siccome devo modificare il comportamento di una funzione preferibilmente senza inficiare il codice della libreria originale, la cosa più immediata sarebbe quella di agganciare il lavoro delle funzioni di tochemfig, per esempio di =tochemfig-default=, per iniziare con la funzione più facile da approcciare.
+# Siccome devo modificare il comportamento di una funzione preferibilmente senza inficiare il codice della libreria originale, la cosa più immediata sarebbe quella di agganciare il lavoro delle funzioni di tochemfig, per esempio di =tochemfig-default=, per iniziare con la funzione più facile da approcciare.
+Since I have to modify the behavior of a function preferably without affecting the original library code, the most immediate thing would be to hook the work of the tochemfig functions, for example, the =tochemfig-default= function, to start with the easiest function to approach.
 
 #+begin_quote
 When you need to modify a function defined in another library [...] or basically any variable or object field which holds a function value, you can use the appropriate setter function, such as fset or defun for named functions, setq for hook variables, or set-process-filter for process filters, but those are often too blunt, completely throwing away the previous value.
@@ -3598,7 +3820,8 @@ When you need to modify a function defined in another library [...] or basically
 *The advice feature lets you add to the existing definition of a function, by advising the function*. This is a cleaner method than redefining the whole function.
 #+end_quote
 
-Un esempio che consente di modificare il valore restituito dalla funzione tutte le volte che viene lanciata:
+# Un esempio che consente di modificare il valore restituito dalla funzione tutte le volte che viene lanciata:
+An example that allows you to modify the return value of the function every time it is called:
 
 #+begin_src emacs-lisp
 (defun my-double (x)
@@ -3613,7 +3836,8 @@ Un esempio che consente di modificare il valore restituito dalla funzione tutte 
 #+RESULTS:
 : 5
 
-A me interessa che Emacs sappia che quando scrivo in org-mode è necessario l'exporter. Va detto pure che magari io sono già dentro un blocco e allora non voglio aggiungere blocchi dentro blocchi, in a nested fashion. Not at all. I prefer using different function's names: this gives the control to the user.
+# A me interessa che Emacs sappia che quando scrivo in org-mode è necessario l'exporter. Va detto pure che magari io sono già dentro un blocco e allora non voglio aggiungere blocchi dentro blocchi, in a nested fashion. Not at all. I prefer using different function's names: this gives the control to the user.
+I am interested in Emacs knowing that when I write in org-mode it needs to be exported. It should also be noted that perhaps I am already inside a block and then I don't want to add blocks within blocks, in a nested fashion. Not at all. I prefer to use different function names, as this gives control to the user.
 
 * COMMENT Whisper (Speech to Text)
 I simply find this interesting, so I want to try it.
@@ -3803,7 +4027,8 @@ Taiwan is an island located off the southeastern coast of China. It has rugged, 
 Looks fine.
 
 * Llama
-Sfruttando la CLI fornita da [[https://github.com/rustformers/llama-rs][=llama-rs=/=llama-cli=]], è possibile passare un prompt da emacs e restituire i risultati direttamente nel browser.
+# Sfruttando la CLI fornita da [[https://github.com/rustformers/llama-rs][=llama-rs=/=llama-cli=]], è possibile passare un prompt da emacs e restituire i risultati direttamente nel browser.
+Using the CLI provided by [[https://github.com/rustformers/llama-rs][=llama-rs=/=llama-cli=]], it is possible to pass a prompt from Emacs and return the results directly in the browser.
 
 # :tangle config.el
 #+begin_src emacs-lisp
@@ -3815,23 +4040,27 @@ Sfruttando la CLI fornita da [[https://github.com/rustformers/llama-rs][=llama-r
   (message "The Llama has spoken."))
 #+end_src
 
-Voglio evitare che questo processo faccia laggare l'intera piattaforma.
-Mi serve un RPC stack per Emacs.
+# Voglio evitare che questo processo faccia laggare l'intera piattaforma.
+# Mi serve un RPC stack per Emacs.
+I want to avoid this process from making the entire platform lag.
+I need an RPC stack for Emacs.
 
-Prima installo =deferred=...
+# Prima installo =deferred=...
+I install =deferred= first.
 
 #+begin_src emacs-lisp :tangle packages.el
 (package! deferred)
 #+end_src
 
-poi =epc=:
+Then =epc=.
 
 #+begin_src emacs-lisp :tangle packages.el
 (package! epc :recipe (:host github :repo "kiwanami/emacs-epc"))
 #+end_src
 
-Scrivo =llamacs= e ne faccio un pacchetto.
-A questo punto, devo configurarlo.
+# Scrivo =llamacs= e ne faccio un pacchetto.
+# A questo punto, devo configurarlo.
+I write =llamacs= and [[https://github.com/gicrisf/llamacs][turn it into a package]]. At this point, I need to configure it.
 
 #+begin_src emacs-lisp :tangle config.el
 (setq llamacs-model-path "~/ggml-alpaca-7b-q4.bin")

@@ -90,6 +90,8 @@
 
 (package! racer :disable t)
 
+(package! clip2org :recipe (:host github :repo "Kungsgeten/clip2org"))
+
 ;; (package! ox-hugo :recipe (:host github :repo "gicrisf/ox-zola"))
 (package! ox-hugo)
 

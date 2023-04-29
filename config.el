@@ -171,6 +171,8 @@ A nil value implies no custom theme should be enabled.")
         "* %? [[%:link][%:description]] \nCaptured On: %U")
 ))
 
+(setq org-cite-global-bibliography "~/Dropbox/references.bib")
+
 ;; (setq! bibtex-completion-bibliography '("/path/to/references.bib"))
 (setq! citar-bibliography '("~/Dropbox/references.bib"))
 
