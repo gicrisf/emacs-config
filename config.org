@@ -20,6 +20,7 @@
 
 # Temporary macros for prism support
 # Waiting for Zola update
+# Check this issue: https://github.com/getzola/zola/issues/1787
 #+MACRO: prismcss @@html:<link href="/assets/prism/prism.css" rel="stylesheet" />@@
 #+MACRO: prismjs @@html:<script src="/assets/prism/prism.js"></script>@@
 
@@ -29,21 +30,19 @@
 
 #+MACRO: backlink @@hugo:{{ backlink(id="$1", color="yellow") }}@@
 
-#+MACRO: italian @@html:<blockquote class="disclaimer yellow"><p>This section is not translated into English, yet. Since Italian is my mother language, I sometimes write in Italian and publish content as is. It may take some time before I can translate everything into English.</p></blockquote>@@
+#+MACRO: italian @@html:<blockquote class="disclaimer yellow"><p>This section wasn't translated into English, yet. Since Italian is my mother language, I sometimes write in Italian and publish content as is. It may take some time before I can translate everything into English.</p></blockquote>@@
+
+# Please, leave me a star on GitHub
+#+MACRO: begforstars @@hugo:{{ begforstars(repo="https://github.com/gicrisf/emacs-config") }}@@
+
+# Custom shortcode for citing would be awesome
 
 Hello, and welcome to my Emacs configuration!
 It's written in Org-mode and designed to be /literate/, meaning that I've documented many of the choices I made throughout the process.
 
 {{{more}}}
 
-# Questo lo devo trasformare in uno special blockquote e metterlo solo con la macro italian
-# *Keep in mind that not every part is translated into English*.
-#+begin_comment
-*Some parts may not be in English yet.*
-Since Italian is my mother language, I sometimes write sections in Italian and publish them as is. It may take some time before I can translate everything into English.
-#+end_comment
-
-* Emacs
+* What is Emacs: a Definition Dilemma
 # developed by Richard Stallman in the 1970s, known for its extensibility and productivity features.
 Emacs is a highly customizable text editor. Emacs is a lisp interpreter. Emacs is a text manipulation application. Emacs, like water, adapts to any container, flows around any obstacle, erodes mountains (of data), transforms into different phases (or modes) depending on circumstances.
 
@@ -62,7 +61,7 @@ Pre-configured Emacs distributions like Spacemacs, NANO Emacs, and Doom Emacs ca
 # La configurazione riportata in questo file può, potenzialmente, essere adattata anche ad altre distribuzioni Emacs, ma presa com'è funziona solo su Doom Emacs.
 The configuration reported in this file could potentially be adapted to other Emacs distributions, but as it is, it only works for Doom Emacs.
 
-* Lisp
+* Lisp: the symbolic power Woven into Emacs' Fabric
 CLOSED: [2023-04-29 sab 16:54]
 :PROPERTIES:
 :EXPORT_HUGO_SECTION: software/lisp
@@ -75,21 +74,34 @@ In the realm of functional programming languages, there exists a family known as
 {{{more}}}
 {{{backlink(lisp)}}}
 
-Lisps are known for their simple syntax and powerful macro system. "Simple syntax" may not convey the idea sufficiently.
-Lisp's monomorphism demands bare-bones syntax, which is enough to scare lots of C-like coders, but this also gives flexibility that allows for easy prototyping and experimentation. Its versatility is illustrated by its use in artificial intelligence, theorem proving, and web development, among other areas.
+Lisps are known for their simple syntax and powerful macro system.
+
+Honestly, "simple syntax" may not convey the idea sufficiently.
+Lisp's monomorphism demands bare-bones syntax, which is enough to scare lots of C-like coders, but this also gives flexibility that allows for easy prototyping and experimentation. Its versatility was illustrated by its use in artificial intelligence (way before the advent of modern implementations of machine learning methods), theorem proving, and web development.
 
 Emacs, indeed, is an interpreter of the Lisp language, albeit a specific dialect known as Emacs Lisp.
+
+# Questa è una parafrasi del mio elisp-intro
+"Lisp" is a pretty talkative name, as there exist *a lot* of lists. Each list has brackets designating the initial element as the operator and the rest as subordinate data for its function.
+I leave below one of the simplest examples that can be conceived, just as an example.
+
+#+begin_src emacs-lisp
+(= 1 2)
+;; => nil
+#+end_src
+
+This function verifies the identity of the two parameters passed (=1= and =2=, respectively), therefore returning a boolean (=t= for "true", =nil= for "false").
+
 # Non voglio dilungarmi in questa sede nella descrizione del linguaggio.
 # Per un assaggio della sintassi e di qualche funzione base, piuttosto, rimando [[https://www.zwitterio.it/software/elisp-intro/][a questo post che ho scritto sul blog come breve introduzione]].
-# I don't want to go into detail about the language in this forum. For a taste of the syntax and some basic functions, instead, I refer you to [this post I wrote on the blog as a brief introduction]."# [[https://www.zwitterio.it/coding/2022/elisp-intro/][Ho scritto sul blog un'introduzione ad Emacs Lisp]], ma è in effetti più un mucchietto di appunti personali, un riassunto di funzioni utili.
-# Avendo iniziato solo da poco tempo a navigare nell'oceano di meraviglie e parentesi lispiane, non sono certo la fonte più autorevole per scendere più nel dettaglio.
+# Avoiding specifics here. To get a gist of syntax and fundamentals, check out [my post on the blog]. Note that it's more of an aggregation of handy pointers than a comprehensive guide.
+I'll avoid delving into the language particulars here. Rather, I lend some links:
+# - [[https://www.zwitterio.it/coding/2022/elisp-intro/][I drafted an introduction to Emacs Lisp on the blog]], though truly it amounts more to a jumbled conglomeration of personal notes, and a recapitulation of useful functions.
+- For a quick tour, I recommend taking a look at this [[https://github.com/chrisdone/elisp-guide][Elisp guide]].
+- For a less quick but more in-depth guide, refer to [[https://github.com/hypernumbers/learn_elisp_the_hard_way][Learn Elisp the hard way]].
 
-- For a quick guide to Emacs Lisp, I recommend taking a look at [[https://github.com/chrisdone/elisp-guide][this repo]].
-- For a less quick but more in-depth guide, refer to [[https://github.com/hypernumbers/learn_elisp_the_hard_way][Learn elisp the hard way]].
-# Per essere ancora più precisi, Emacs fa largo uso di CL e altro con adeguate interfacce
+Now that we have an idea of how Lisp is made, it's time to place it in the timeline.
 
-# TODO better quoting with org cite
-# Custom shortcode would be awesome
 #+begin_quote
 The first LispLanguage compiler was developed by JohnMcCarthy at Dartmouth College between 1955 and 1959. This makes it the second oldest programming language in common use today (only Fortran is older, developed between 1954 and 1957). Lisp went forth and grew many many dialects: the most notable of these are AutoLisp, EmacsLisp, Interlisp, MacLisp, Scheme and Common Lisp.
 [cite:@EmacsWikiCommonLisp]
@@ -97,12 +109,17 @@ The first LispLanguage compiler was developed by JohnMcCarthy at Dartmouth Colle
 
 Emacs provides an interface to other lisps through modes like Sly and Slime, and certain Common Lisp functions can be used in Emacs. This highlights the extensibility of Emacs, although this topic cannot be addressed here due to space constraints.
 
-* Literate programming
+{{{begforstars}}}
+
+#+print_bibliography:
+
+* Literate programming: the art of blending code and words
 CLOSED:
 :PROPERTIES:
 :EXPORT_HUGO_SECTION: software/literate-programming
 :EXPORT_FILE_NAME: index.en.md
 :EXPORT_DATE: [2023-04-10 lun]
+:EXPORT_COVER_IMAGE: "watercolor-literate-gicrisf.png"
 :END:
 
 What is /literate programming/? Is it not just another way of describing code?
@@ -125,9 +142,7 @@ This approach has numerous advantages, but I will mention just two of the most e
 To quote Donald Knuth, who was the first to conceive of this approach,
 
 #+begin_quote
-The WEB language allows a person to express programs in a "stream of consciousness" order. TANGLE is able to scramble everything up into the arrangement that a PASCAL compiler demands. This feature of WEB is perhaps its greatest asset; it makes a WEB-written program much more readable than the same program written purely in PASCAL, even if the latter program is well commented. And the fact that there's no need to be hung up on the question of top-down versus bottom-up, since a programmer can now view a large program as a web, to be explored in a psychologically correct order is perhaps the greatest lesson I have learned from my recent experiences.
-
-– Donald Knuth ([[https://academic.oup.com/comjnl/article/27/2/97/343244?login=false][Literate Programming, 1984]])
+The WEB language allows a person to express programs in a "stream of consciousness" order. TANGLE is able to scramble everything up into the arrangement that a PASCAL compiler demands. This feature of WEB is perhaps its greatest asset; it makes a WEB-written program much more readable than the same program written purely in PASCAL, even if the latter program is well commented. And the fact that there's no need to be hung up on the question of top-down versus bottom-up, since a programmer can now view a large program as a web, to be explored in a psychologically correct order is perhaps the greatest lesson I have learned from my recent experiences. [cite:@knuthLiterateProgramming1984]
 #+end_quote
 
 To generate the compilable, it is sufficient to call the blocks in the right order with very easy-to-create and easy-to-manage macros, all within the same file. After naming a block of code with its own name, for example =patate=, using the /noweb/ syntax it is sufficient to write =<<patate>>= in another block to see it reappear in the right place.
@@ -141,14 +156,16 @@ The tools of literate programming can be useful to any developer, but they can a
 #+begin_quote
 Let us change our traditional attitude to the construction of programs: Instead of imagining that our main task is to instruct a computer what to do, let us concentrate rather on explaining to human beings what we want a computer to do.
 
-*The practitioner of literate programming can be regarded as an essayist*, whose main concern is with exposition and excellence of style. Such an author, with thesaurus in hand, chooses the names of variables carefully and explains what each variable means. He or she strives for a program that is comprehensible because its concepts have been introduced in an order that is best for human understanding, using a mixture of formal and informal methods that reinforce each other.
-
-– Donald Knuth
+*The practitioner of literate programming can be regarded as an essayist*, whose main concern is with exposition and excellence of style. Such an author, with thesaurus in hand, chooses the names of variables carefully and explains what each variable means. He or she strives for a program that is comprehensible because its concepts have been introduced in an order that is best for human understanding, using a mixture of formal and informal methods that reinforce each other. [cite:@knuthLiterateProgramming1984]
 #+end_quote
 
 For those who seek a deeper dive, behold I leave some additional readings:
 - [[https://www.cs.upc.edu/~eipec/pdf/p583-van_wyk.pdf][Communication of the ACM, 1987]]
 - [[https://orgmode.org/worg/org-contrib/babel/intro.html#literate-programming][Literate programming in org-mode]]
+
+{{{begforstars}}}
+
+#+print_bibliography:
 
 * Doom literification
 # Qui spiego il metodo, poi passo all'azione
@@ -647,17 +664,12 @@ Comment says:
 - The user does not need to run any specific commands to update their configuration after making changes to this file. In a literate configuration perspective, this means you just have to tangle this file to see the changes in action.
 
 * Who am I?
-# *** Chi sono?
-
-# Hi there, I am Giovanni Crisalfi.
 Hi there, I go by the name of Giovanni Crisalfi.
 
+# Hi there, I am Giovanni Crisalfi.
 # Greetings, I'm Giovanni Crisalfi, aye.
 # Greetings, I, Giovanni Crisalfi, am present.
 # Greetings, Giovanni Crisalfi am I.
-# Greetings, I am Giovanni Crisalfi, the bearer of this missive.
-# Hark ye, I go by the name of Giovanni Crisalfi.
-# Hark! By name, Giovanni Crisalfi.
 # I'm Giovanni Crisalfi.
 # I am Giovanni Crisalfi.
 
@@ -670,7 +682,7 @@ Hi there, I go by the name of Giovanni Crisalfi.
 
 # TODO See more in CV section
 
-* Emacs as Daemon
+* Lightning Emacs: How the Daemon reduce startup times
 :PROPERTIES:
 :EXPORT_HUGO_SECTION: software/emacs-as-daemon
 :EXPORT_FILE_NAME: index.en.md
@@ -734,6 +746,8 @@ emacsclient --create-frame --alternate-editor=""
 
 # Chiaramente, scrivere di volta in volta questo comando è a dir poco noioso, quindi ci conviene aggiungere degli alias su =.bashrc= o lanciarlo con una scorciatoia da tastiera, a seconda del nostro ambiente.
 Writing this command everytime is boring, so it would be best to add some aliases to =.bashrc= or launch it with a keyboard shortcut, depending on our environment.
+
+{{{begforstars}}}
 
 * Environment variables on Emacs
 :PROPERTIES:
@@ -1136,6 +1150,7 @@ Well, we made it.
 
 To the next adventure!
 
+{{{begforstars}}}
 {{{prismcss}}}
 {{{prismjs}}}
 
@@ -1772,6 +1787,8 @@ Every time I have to take a note, a question keeps nagging me: where should I wr
 Org-roam frees information from hierarchies, hence freed me from the burden of confusion.
 
 {{{more}}}
+# Update with title
+{{{backlink(org-roam)}}}
 
 Until this very moment, my method involved ammassing notes in "notebooks", which meant I had a folder with a lot of org-mode files named with some kind of topic. For example, I had a file for Python, a file for Linux, a file for Organic chemistry and so on. But my files kept growing and the themes kept mixing: what if I want to take a note about writing organic molecule in emacs? Should I store it in the "Emacs notebook" or the "Organic chemistry notebook"? Every single time a similar but quite different dilemma. That's why I searched for a less structured approach and thus, the Zettelkasten method occurred to me.
 
@@ -1848,7 +1865,8 @@ This UI helps exploring the nodes and the backlinks.
 
 # In questo modo posso vedere i nodi in maniera molto piacevole all'interno del browser.
 
-** References
+** Citations
+# No "references" perché questo è riservato al paragrafo finale con le citazioni del post, se presente
 # Una delle cose per cui potrei usare lo zettelkasten è memorizzare tweet o toots. Questo sarebbe facilitato dalle API, ma per quanto riguarda Twitter è difficile capire se valga la pena spendere del tempo, visto che hanno già annunciato cambiamenti. I thread sono difficili da immagazzinare tweet per tweet, quindi non se ne parla.
 
 It's better to not mix your own written production with others' written productions. In other words, don't fill your notes with citations.
@@ -1857,7 +1875,11 @@ It's better to not mix your own written production with others' written producti
 How to reference others' work, then? I looked at [[https://jethrokuan.github.io/org-roam-guide/][the approach of Jehtro Kuan (org-roam author)]].
 # Per organizzare il roam, meglio seguire un approccio simile a [[https://jethrokuan.github.io/org-roam-guide/][quello descritto in questo post da Jehtro Kuan]] (autore di org-roam).
 
-{{{backlink}}}
+{{{begforstars}}}
+
+# Al momento commentato perché non ci sono citazioni da elencare
+# #+print_bibliography:
+
 {{{prismcss}}}
 {{{prismjs}}}
 
@@ -2023,17 +2045,22 @@ Basically, we make a new mode derived from =typescript-mode= and we assign it th
 For more details, refer to [[https://github.com/emacs-typescript/typescript.el/issues/4#issuecomment-849355222][this Github issue]].
 
 * Vala
-# Il supporto per Vala è largamente ereditato dalla mode per C#.
-The support for Vala is largely inherited from the C# mode.
+Vala is an object-oriented programming language designed to provide modern programming features while maintaining compatibility with the C programming language. It compiles to efficient, easily-readable C code, which can interface with existing C libraries. It is primarily used for developing desktop applications for the GNOME desktop environment on Linux.
+# (From my Roam)
+
+Since it is syntactically similar to C#, the Emacs support for Vala is largely inherited from the C# mode.
 
 #+begin_src emacs-lisp :tangle packages.el
 (package! vala-mode)
 #+end_src
 
 * Python
+Python is simple and readable, with a clean syntax that supports multiple programming paradigms. It's popular among web developers, data analysts, and scientists, thanks to its vast standard library and third-party contributors.
+
 ** Virtualenv
-# Supporto per virtualenv.
-Virtualenv support.
+Virtualenv allows you to make separate Python environments for different projects with their own dependencies and packages. It's fundamental to avoid problems with package dependencies and version conflicts between different projects. It also makes it easier to manage packages and share code with other developers.
+
+Pyvenv leverages virtualenv to create isolated Python environments from within Emacs. By invoking pyvenv within Emacs, you can activate a virtual environment and use its Python executable, as well as the libraries installed inside it.
 
 #+begin_src emacs-lisp :tangle packages.el
 (package! pyvenv)
@@ -2925,7 +2952,7 @@ There are plenty of ways, but this small package provide a simple one.
 #+end_src
 
 # If you speak italian, [[https://zwitterio.it/coding/2022/quote-tweets-properly-with-emacs-lisp/][at this link I narrate how it was written, commenting the code line-by-line from a perspective of a lisp beginner]];
-(Installed from the repo because is not on MELPA yet)
+# (Installed from the repo because is not on MELPA yet)
 
 * Mastodon
 Firstly, let's install =mastodon.el=:
