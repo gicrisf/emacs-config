@@ -2,14 +2,16 @@
 #+author: Giovanni Crisalfi
 #+STARTUP: overview
 
+# TODO export name of cover images
+# Manca solo questo e poi posso procedere con l'esportazione dei nuovi post
 # Export metadata
 # TODO elimina la possibilità di esportare il file integralmente
 # Solo i paragrafi saranno esportati
 # TODO decidere se sezione software o se farlo annualmente,
 # mantenendo l'anno d'esportazione
 #+hugo_base_dir: ~/zwitterio-it/
-#+hugo_tags: emacs org
-#+hugo_categories: software posts notes
+#+hugo_tags: emacs
+#+hugo_categories: software posts
 #+hugo_publishdate: 2022-08-10
 #+hugo_auto_set_lastmod: t
 #+hugo_date: [2023-04-09 dom]
@@ -61,29 +63,33 @@ Pre-configured Emacs distributions like Spacemacs, NANO Emacs, and Doom Emacs ca
 # La configurazione riportata in questo file può, potenzialmente, essere adattata anche ad altre distribuzioni Emacs, ma presa com'è funziona solo su Doom Emacs.
 The configuration reported in this file could potentially be adapted to other Emacs distributions, but as it is, it only works for Doom Emacs.
 
-* Lisp: the symbolic power Woven into Emacs' Fabric
+* Lisp: the symbolic power woven into Emacs' fabric
 CLOSED: [2023-04-29 sab 16:54]
 :PROPERTIES:
 :EXPORT_HUGO_SECTION: software/lisp
 :EXPORT_FILE_NAME: index.en.md
 :EXPORT_DATE: [2023-04-29]
+:EXPORT_HUGO_TAGS: emacs lisp
+:EXPORT_ZOLA_COVER_IMAGE: graph-gicrisf-08.png
 :END:
 
-In the realm of functional programming languages, there exists a family known as /Lisp/ (LISt Processor).
+In the realm of programming languages, there exists a family known as /Lisp/.
+# Dicevo "functional", ma in effetti c'è CLOS, che è object oriented
 
 {{{more}}}
 {{{backlink(lisp)}}}
 
-Lisps are known for their simple syntax and powerful macro system.
+Lisps are usually associated with the functional paradigm, but they are not confined to it. Some dialects of Lisp are object-oriented, and others have a more imperative style. It depends on the purpose for which they were designed. Generally speaking, they are known for their simple syntax and powerful macro system.
 
-Honestly, "simple syntax" may not convey the idea sufficiently.
-Lisp's monomorphism demands bare-bones syntax, which is enough to scare lots of C-like coders, but this also gives flexibility that allows for easy prototyping and experimentation. Its versatility was illustrated by its use in artificial intelligence (way before the advent of modern implementations of machine learning methods), theorem proving, and web development.
+Indeed, the word 'simple' may not be enough to convey what I'm trying to say. Lisp code is written as if it were made only of lists; in fact, the name itself original stood for "LISt Processor".
+Lisp's monomorphism (its being being represented only by lists) often scare C-like coders, but also gives flexibility that allows for easy prototyping and experimentation. Its versatility was illustrated by its uses in artificial intelligence (way before the advent of modern implementations of machine learning methods), theorem proving, web development and a lot of other fields.
 
-Emacs, indeed, is an interpreter of the Lisp language, albeit a specific dialect known as Emacs Lisp.
+Emacs, indeed, is an interpreter of the Lisp language, albeit a specific dialect known as *Emacs Lisp*.
 
 # Questa è una parafrasi del mio elisp-intro
-"Lisp" is a pretty talkative name, as there exist *a lot* of lists. Each list has brackets designating the initial element as the operator and the rest as subordinate data for its function.
-I leave below one of the simplest examples that can be conceived, just as an example.
+# "Lisp" is a pretty talkative name, as it comes with *a lot* of lists.
+In lisp, each list has brackets designating the initial element as the operator and the rest as subordinate data for its function.
+I leave below one of the simplest examples that can be conceived.
 
 #+begin_src emacs-lisp
 (= 1 2)
@@ -107,7 +113,7 @@ The first LispLanguage compiler was developed by JohnMcCarthy at Dartmouth Colle
 [cite:@EmacsWikiCommonLisp]
 #+end_quote
 
-Emacs provides an interface to other lisps through modes like Sly and Slime, and certain Common Lisp functions can be used in Emacs. This highlights the extensibility of Emacs, although this topic cannot be addressed here due to space constraints.
+Emacs provides an interface to other lisps through modes like Sly and Slime, and certain Common Lisp functions can be used by default in Emacs by writing =cl-= prefix in front of them. This highlights the extensibility of Emacs, although the details cannot be addressed here due to space constraints.
 
 {{{begforstars}}}
 
@@ -119,7 +125,7 @@ CLOSED:
 :EXPORT_HUGO_SECTION: software/literate-programming
 :EXPORT_FILE_NAME: index.en.md
 :EXPORT_DATE: [2023-04-10 lun]
-:EXPORT_COVER_IMAGE: "watercolor-literate-gicrisf.png"
+:EXPORT_ZOLA_COVER_IMAGE: watercolor-literate-gicrisf.png
 :END:
 
 What is /literate programming/? Is it not just another way of describing code?
@@ -437,7 +443,7 @@ magit             ; a git porcelain for Emacs
 ;;beancount         ; mind the GAAP
 ;;cc                ; C > C++ == 1
 ;;clojure           ; java with a lisp
-;;common-lisp       ; if you've seen one lisp, you've seen them all
+common-lisp       ; if you've seen one lisp, you've seen them all
 ;;coq               ; proofs-as-programs
 ;;crystal           ; ruby at the speed of c
 ;;csharp            ; unity, .NET, and mono shenanigans
@@ -687,6 +693,7 @@ Hi there, I go by the name of Giovanni Crisalfi.
 :EXPORT_HUGO_SECTION: software/emacs-as-daemon
 :EXPORT_FILE_NAME: index.en.md
 :EXPORT_DATE: [2023-04-05 mer]
+:EXPORT_ZOLA_COVER_IMAGE: lightning-gicrisf-00.png
 :END:
 
 Running Emacs as a daemon allows you to start Emacs once and then use it in multiple sessions or on different terminals without the overhead of starting up Emacs anew each time.
@@ -755,6 +762,7 @@ Writing this command everytime is boring, so it would be best to add some aliase
 :EXPORT_HUGO_BUNDLE: environment-variables-on-emacs
 :EXPORT_FILE_NAME: index.en.md
 :EXPORT_DATE: [2023-04-04 mar]
+:EXPORT_ZOLA_COVER_IMAGE: envvars-purple-gicrisf.png
 :END:
 
 An environment variable is a key-value pair that is declared and stored in the operating system. They can be referenced by different programs or scripts running on the same system.
@@ -1780,6 +1788,7 @@ Require it at startup:
 :EXPORT_HUGO_SECTION: software/org-roam
 :EXPORT_FILE_NAME: index.en.md
 :EXPORT_DATE: [2023-04-08 sab]
+:EXPORT_ZOLA_COVER_IMAGE: graph-gicrisf-11.png
 :END:
 
 # Ogni volta che devo prendere un appunto, una domanda torna a pungolarmi: dove scriverlo?
@@ -2255,7 +2264,7 @@ We have the blueprint, it's time to proceed in order, imagining a function.
 Firstly, we set the =epub-path=, the directory in which to search for the files we want to send to the Kindle.
 
 #+begin_src emacs-lisp :tangle config.el
-(setq tokindle-epub-path "~/Scaricati/epub")
+(setq tokindle-epub-path "~")
 #+end_src
 
 What will we do with the original files after conversion?
@@ -3629,7 +3638,11 @@ Concludiamo con la configurazione minima di =org-msg=.
 :EXPORT_HUGO_SECTION: software/get-started-with-chemfig-latex
 :EXPORT_FILE_NAME: index.en.md
 :EXPORT_DATE: [2023-04-29 sab 16:41]
+:EXPORT_HUGO_TAGS: latex
+:EXPORT_ZOLA_COVER_IMAGE: orgo-gicrisf-06.png
 :END:
+
+# TODO tag chemistry
 
 # TODO move below
 # https://www.zwitterio.it/2022/installare-chemfig-per-latex/

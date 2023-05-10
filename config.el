@@ -209,7 +209,7 @@ A nil value implies no custom theme should be enabled.")
 (after! lsp-rust
   (setq lsp-rust-server 'rust-analyzer))
 
-(setq tokindle-epub-path "~/Scaricati/epub")
+(setq tokindle-epub-path "~")
 
 (setq tokindle-epub-path-sent "~/Scaricati/epub_sent")
 
