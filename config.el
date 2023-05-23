@@ -191,6 +191,19 @@ A nil value implies no custom theme should be enabled.")
 
 (setq org-roam-directory "~/Dropbox/roam")
 
+(use-package! org-transclusion
+              :after org
+              :init
+              (map!
+               :map global-map "<f12>" #'org-transclusion-add
+               :leader
+               :prefix "n"
+               :desc "Org Transclusion Mode" "t" #'org-transclusion-mode))
+
+;; hack per risolvere il fatto che transclusion non trova i file, per qualche motivo
+;; https://github.com/nobiot/org-transclusion/issues/62
+(org-id-update-id-locations (directory-files org-roam-directory t "org$"))
+
 (require 'elfeed-goodies)
 (elfeed-goodies/setup)
 (setq elfeed-goodies/entry-pane-size 0.5)
@@ -457,3 +470,17 @@ by using nxml's indentation rules."
 
 (setq llamacs-model-path "~/ggml-alpaca-7b-q4.bin")
 (setq llamacs-repo-path "~/Projects/llamacs/")
+
+(defun +snippet--completing-read-uuid (prompt all-snippets &rest args)
+  (let* ((snippet-data (cl-loop for (_ . tpl) in (mapcan #'yas--table-templates (if all-snippets
+                                                                                    (hash-table-values yas--tables)
+                                                                                  (yas--get-snippet-tables)))
+
+                                for txt = (format "%-25s%-30s%s"
+                                                  (yas--template-key tpl)
+                                                  (yas--template-name tpl)
+                                                  (abbreviate-file-name (yas--template-load-file tpl)))
+                                collect
+                                `(,txt . ,(yas--template-uuid tpl))))
+         (selected-value (apply #'completing-read prompt snippet-data args)))
+    (alist-get selected-value snippet-data nil nil 'equal)))

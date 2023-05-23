@@ -82,7 +82,7 @@ In the realm of programming languages, there exists a family known as /Lisp/.
 Lisps are usually associated with the functional paradigm, but they are not confined to it. Some dialects of Lisp are object-oriented, and others have a more imperative style. It depends on the purpose for which they were designed. Generally speaking, they are known for their simple syntax and powerful macro system.
 
 Indeed, the word 'simple' may not be enough to convey what I'm trying to say. Lisp code is written as if it were made only of lists; in fact, the name itself original stood for "LISt Processor".
-Lisp's monomorphism (its being being represented only by lists) often scare C-like coders, but also gives flexibility that allows for easy prototyping and experimentation. Its versatility was illustrated by its uses in artificial intelligence (way before the advent of modern implementations of machine learning methods), theorem proving, web development and a lot of other fields.
+Lisp's monomorphism (its being being represented only by lists) often scare C-like programmers, but also gives flexibility that allows for easy prototyping and experimentation. Its versatility was illustrated by its uses in artificial intelligence (way before the advent of modern implementations of machine learning methods), theorem proving, web development and a lot of other fields.
 
 Emacs, indeed, is an interpreter of the Lisp language, albeit a specific dialect known as *Emacs Lisp*.
 
@@ -441,7 +441,7 @@ magit             ; a git porcelain for Emacs
 #+begin_src emacs-lisp
 ;;agda              ; types of types of types of types...
 ;;beancount         ; mind the GAAP
-;;cc                ; C > C++ == 1
+cc                ; C > C++ == 1
 ;;clojure           ; java with a lisp
 common-lisp       ; if you've seen one lisp, you've seen them all
 ;;coq               ; proofs-as-programs
@@ -1891,6 +1891,84 @@ How to reference others' work, then? I looked at [[https://jethrokuan.github.io/
 
 {{{prismcss}}}
 {{{prismjs}}}
+
+** Experimental
+*** Citations as nodes
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! citar-org-roam)
+#+end_src
+
+I take the suggestions from the [[https://github.com/emacs-citar/citar-org-roam][README]].
+
+#+begin_src emacs-lisp
+(use-package citar-org-roam
+  :after (citar org-roam)
+  :config (citar-org-roam-mode))
+
+(setq citar-org-roam-note-title-template "${title} - ${author}")
+
+(setq org-roam-capture-templates
+      '(("d" "default" plain
+         "%?"
+         :target
+         (file+head
+          "%<%Y%m%d%H%M%S>-${slug}.org"
+          "#+title: ${note-title}\n")
+         :unnarrowed t)
+        ("n" "literature note" plain
+         "%?"
+         :target
+         (file+head
+          "%(expand-file-name (or citar-org-roam-subdir \"\") org-roam-directory)/${citar-citekey}.org"
+          "#+title: ${citar-citekey} (${citar-date}). ${note-title}.\n#+created: %U\n#+last_modified: %U\n\n")
+         :unnarrowed t)))
+
+(setq citar-org-roam-capture-template-key "n")
+#+end_src
+
+Legacy:
+
+#+begin_src emacs-lisp
+;; slightly modified version of this:
+;; https://jethrokuan.github.io/org-roam-guide/
+(defun gicrisf/org-roam-node-from-cite (keys-entries)
+    (interactive (list (citar-select-refs)))
+    (let ((title (citar--format-entry-no-widths (cdr keys-entries)
+                                                "${author editor} :: ${title}")))
+      (org-roam-capture- :templates
+                         '(("r" "reference" plain "%?" :if-new
+                            (file+head "reference/${citekey}.org"
+                                       ":PROPERTIES:
+:ROAM_REFS: [cite:@${citekey}]
+:END:
+,#+title: ${title}\n")
+                            :immediate-finish t
+                            :unnarrowed t))
+                         :info (list :citekey (car keys-entries))
+                         :node (org-roam-node-create :title title)
+                         :props '(:finalize find-file))))
+#+end_src
+
+* Org Transclusion
+#+begin_src emacs-lisp :tangle packages.el
+(package! org-transclusion)
+#+end_src
+
+#+begin_src emacs-lisp :tangle config.el
+(use-package! org-transclusion
+              :after org
+              :init
+              (map!
+               :map global-map "<f12>" #'org-transclusion-add
+               :leader
+               :prefix "n"
+               :desc "Org Transclusion Mode" "t" #'org-transclusion-mode))
+
+;; hack per risolvere il fatto che transclusion non trova i file, per qualche motivo
+;; https://github.com/nobiot/org-transclusion/issues/62
+(org-id-update-id-locations (directory-files org-roam-directory t "org$"))
+#+end_src
 
 * Emacs Feed Configuration
 :PROPERTIES:
@@ -3403,6 +3481,14 @@ Let's leave it in sixth position.
 (setf (nth 6 +doom-dashboard-menu-sections) '<<open-doom-docs-menu-section>>)
 #+end_src
 
+** COMMENT PNG home banner
+I liked this pixelart.
+See [[https://www.hypertalking.com/2023/05/08/1-bit-pixel-art-of-hokusais-the-great-wave-off-kanagawa/][the blog post]] from its creator.
+
+#+begin_src emacs-lisp :tangle config.el :noweb no-export
+(setq fancy-splash-image "~/Fuji-01-desktop-ptn-640x480-1.png")
+#+end_src
+
 ** COMMENT Banner
 Experimental.
 Just trying stuff out, but I stick with the regular banner for the moment.
@@ -4119,6 +4205,32 @@ I write =llamacs= and [[https://github.com/gicrisf/llamacs][turn it into a packa
 #+begin_src emacs-lisp :tangle config.el
 (setq llamacs-model-path "~/ggml-alpaca-7b-q4.bin")
 (setq llamacs-repo-path "~/Projects/llamacs/")
+#+end_src
+
+* Snippets
+# Why yasnippet is so useful in the Emacsers' workflow?
+Reusing and adapting frequently used code saves precious time, while also minimizing mistakes.
+That's why templating libraries are born: to help people coding fast and safely.
+YASnippet is an Emacs library that allows for the creation and insertion of custom snippets, making easier to reuse code blocks.
+
+Helm and Vertico are both extensions for Emacs that help with navigating and selecting options.
+While YASnippet works perfectly fine with Helm, after switching to Vertico it stopped working on my system.
+The following function is a workaround proposed by [[https://github.com/doomemacs/doomemacs/issues/4127#issuecomment-1019731798][jgrey4296]].
+
+#+begin_src emacs-lisp :tangle config.el
+(defun +snippet--completing-read-uuid (prompt all-snippets &rest args)
+  (let* ((snippet-data (cl-loop for (_ . tpl) in (mapcan #'yas--table-templates (if all-snippets
+                                                                                    (hash-table-values yas--tables)
+                                                                                  (yas--get-snippet-tables)))
+
+                                for txt = (format "%-25s%-30s%s"
+                                                  (yas--template-key tpl)
+                                                  (yas--template-name tpl)
+                                                  (abbreviate-file-name (yas--template-load-file tpl)))
+                                collect
+                                `(,txt . ,(yas--template-uuid tpl))))
+         (selected-value (apply #'completing-read prompt snippet-data args)))
+    (alist-get selected-value snippet-data nil nil 'equal)))
 #+end_src
 
 * Conclusions

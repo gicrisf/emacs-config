@@ -80,6 +80,10 @@
 
 (package! org-roam-ui)
 
+(package! citar-org-roam)
+
+(package! org-transclusion)
+
 (package! elfeed-goodies)
 
 (package! elfeed-score)
