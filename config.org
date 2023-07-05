@@ -9,13 +9,13 @@
 # Solo i paragrafi saranno esportati
 # TODO decidere se sezione software o se farlo annualmente,
 # mantenendo l'anno d'esportazione
-#+hugo_base_dir: ~/zwitterio-it/
-#+hugo_tags: emacs
-#+hugo_categories: software posts
-#+hugo_publishdate: 2022-08-10
-#+hugo_auto_set_lastmod: t
-#+hugo_date: [2023-04-09 dom]
-#+hugo_section: software/emacs-config/index.en.md
+#+zola_base_dir: ~/zwitterio-it/
+#+zola_tags: emacs
+#+zola_categories: software posts
+#+zola_publishdate: 2022-08-10
+#+zola_auto_set_lastmod: t
+#+zola_date: [2023-04-09 dom]
+#+zola_section: software/emacs-config/index.en.md
 
 # Zola-specific divider
 #+MACRO: more @@html:<!-- more -->@@
@@ -66,10 +66,10 @@ The configuration reported in this file could potentially be adapted to other Em
 * Lisp: the symbolic power woven into Emacs' fabric
 CLOSED: [2023-04-29 sab 16:54]
 :PROPERTIES:
-:EXPORT_HUGO_SECTION: software/lisp
+:EXPORT_ZOLA_SECTION: software/lisp
 :EXPORT_FILE_NAME: index.en.md
 :EXPORT_DATE: [2023-04-29]
-:EXPORT_HUGO_TAGS: emacs lisp
+:EXPORT_ZOLA_TAGS: emacs lisp
 :EXPORT_ZOLA_COVER_IMAGE: graph-gicrisf-08.png
 :END:
 
@@ -77,7 +77,7 @@ In the realm of programming languages, there exists a family known as /Lisp/.
 # Dicevo "functional", ma in effetti c'è CLOS, che è object oriented
 
 {{{more}}}
-{{{backlink(lisp)}}}
+{{{backlink(lisp-the-symbolic-power-woven-into-emacs-fabric)}}}
 
 Lisps are usually associated with the functional paradigm, but they are not confined to it. Some dialects of Lisp are object-oriented, and others have a more imperative style. It depends on the purpose for which they were designed. Generally speaking, they are known for their simple syntax and powerful macro system.
 
@@ -122,7 +122,7 @@ Emacs provides an interface to other lisps through modes like Sly and Slime, and
 * Literate programming: the art of blending code and words
 CLOSED:
 :PROPERTIES:
-:EXPORT_HUGO_SECTION: software/literate-programming
+:EXPORT_ZOLA_SECTION: software/literate-programming
 :EXPORT_FILE_NAME: index.en.md
 :EXPORT_DATE: [2023-04-10 lun]
 :EXPORT_ZOLA_COVER_IMAGE: watercolor-literate-gicrisf.png
@@ -1332,6 +1332,12 @@ A nil value implies no custom theme should be enabled.")
 (map! :leader
       :desc "Quick toggle theme" "t t" #'toggle-theme)
 #+end_src
+** Layout
+*** COMMENT Resources
+Vorrei usare Perspective.
+Mi sembra tipo le sessioni in qutebrowser, molto comodo.
+Ci guarderò in un secondo momento, ora sto annegando per l'ansia.
+https://github.com/nex3/perspective-el
 
 * Org-mode
 [[https://orgmode.org/][Org-mode]] is a major mode for Emacs that provides a powerful system for organizing and managing information.
@@ -1421,7 +1427,10 @@ anki-editor – Emacs minor mode for making Anki cards with Org
 In order to make this work, you should install the =anki-connect= Anki plugin too.
 # Bisogna ricordare di installare il plugin Anki chiamato "anki-connect", altrimenti non funziona.
 
-** COMMENT Logseq?
+** COMMENT Logseq
+Qui per vedere come configurare.
+https://coredumped.dev/2021/05/26/taking-org-roam-everywhere-with-logseq/
+
 * Org Journal
 Install the package.
 
@@ -1466,7 +1475,8 @@ Configure the keybindings and some parameters.
 (setq org-journal-file-type 'monthly)
 #+end_src
 
-* Org Web Tools
+* Org on Web
+** Org Web Tools
 From [[https://github.com/alphapapa/org-web-tools][the README]]:
 
 #+begin_quote
@@ -1479,7 +1489,7 @@ To install the package:
 (package! org-web-tools)
 #+end_src
 
-* Org-capture
+** Org-capture
 # Org capture torna comodo per appuntarsi in org-mode frammenti di pagine web.
 Org capture is useful for taking notes in org-mode of fragments of web pages
 
@@ -1522,6 +1532,9 @@ At this point, on GNOME and other GTK-based desktop environments, it is sufficie
 #+begin_src bash
 $ update-desktop-database ~/.local/share/applications/
 #+end_src
+
+** COMMENT Resources
+- Verb: https://github.com/federicotdn/verb (Verb is a package for Emacs which allows you to organize and send HTTP requests)
 
 * Citations
 # :PROPERTIES:
@@ -1716,6 +1729,86 @@ In this way, we cultivate a tidy directory, and move closer to a tidy mind.
 
 #+begin_src emacs-lisp :tangle config.el
 (setq org-latex-logfiles-extensions (quote ("lof" "lot" "tex~" "aux" "idx" "log" "out" "toc" "nav" "snm" "vrb" "dvi" "fdb_latexmk" "blg" "brf" "fls" "entoc" "ps" "spl" "bbl" "xmpi" "run.xml" "bcf")))
+#+end_src
+* Spellchecking :it:
+Uso Jinx.
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! jinx)
+#+end_src
+
+Richiede:
+- =libenchant= (su AUR è =enchant=).
+
+Using vertico, abilitiamo una sua estensione, cioè =vertico-multiform=.
+fatto ciò, aggiungiamo un elemento alla lista di categorie di multiform.
+
+#+begin_src emacs-lisp :tangle config.el
+;; Enable vertico-multiform
+(vertico-multiform-mode)
+
+(add-to-list 'vertico-multiform-categories
+             '(jinx grid (vertico-grid-annotate . 20)))
+(vertico-multiform-mode 1)
+#+end_src
+
+Supporto in lingua inglese con Aspell o Hunspell.
+Io utilizzo i dizionari Hunspell.
+
+Ad esempio, su Debian derivate si possono installare così.
+
+# Vedi qua
+# https://200ok.ch/posts/2020-08-22_setting_up_spell_checking_with_multiple_dictionaries.html
+#+begin_src bash
+apt install hunspell \
+	    hunspell-de-de \
+	    hunspell-en-gb \
+	    hunspell-en-us \
+	    hunspell-de-ch-frami
+#+end_src
+
+Personalmente, li ho cercati ed installati da AUR.
+Lanciando =jinx-languages= in Emacs, è possibile verificare siano stati installati davvero.
+
+Ci servono più lingue.
+Io scrivo spesso inglese ed italiano mischiandoli tra loro.
+Quindi vorrei supporto per entrambe contemporaneamente.
+Servirebbe un dizionario combinato o più sorgenti contemporaneamente (scelta più pulita).
+
+Se ne parla qui:
+https://emacs.stackexchange.com/questions/21378/spell-check-with-multiple-dictionaries
+
+Vedi anche:
+https://200ok.ch/posts/2020-08-22_setting_up_spell_checking_with_multiple_dictionaries.html
+
+* Completion :it:
+** TODO Sorting and filtering
+
+Voglio usare Prescient.
+
+#+begin_quote
+prescient.el: simple but effective sorting and filtering for Emacs.
+#+end_quote
+
+Installiamo:
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! prescient)
+#+end_src
+
+Siccome uso vertico, allora:
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! vertico-prescient)
+#+end_src
+
+Queste sarebbero le altre possibilità, secondo [[https://github.com/radian-software/prescient.el][documentazione]]:
+
+#+begin_src emacs-lisp
+(straight-use-package 'corfu-prescient)
+(straight-use-package 'company-prescient)
+(straight-use-package 'ivy-prescient)
+(straight-use-package 'selectrum-prescient)
 #+end_src
 
 * Org D2 diagrams
@@ -1949,8 +2042,15 @@ Legacy:
                          :node (org-roam-node-create :title title)
                          :props '(:finalize find-file))))
 #+end_src
+** COMMENT Resources
+- [[https://blog.jethro.dev/posts/introducing_org_roam/][Introducing Org Roam]]
+- [[https://jethrokuan.github.io/org-roam-guide/][How I take notes with Org-roam]]
+- [[https://org-roam.discourse.group/t/is-there-a-solution-for-images-organization-in-org-roam/925][Images organization]]
+- [[https://takeonrules.com/2020/12/08/revisiting-hydra-menu-for-org-roam-lookup-in-emacs/][Revisiting Hydra Menu for Org Roam Lookup in Emacs]]
 
 * Org Transclusion
+Manual: https://nobiot.github.io/org-transclusion/
+
 #+begin_src emacs-lisp :tangle packages.el
 (package! org-transclusion)
 #+end_src
@@ -2856,6 +2956,10 @@ After setting =clip2org-clippings-file=...
 #+end_src
 
 ... launch =M-x clip2org=.
+** Reading
+Org noter per prendere appunti: https://github.com/weirdNox/org-noter
+Per leggere qui gli epub: https://github.com/wasamasa/nov.el
+Questo è lo stato dell'arte per i PDF: https://github.com/vedang/pdf-tools
 
 * Zola
 # Funzioni ausiliarie che ho scritto per facilitarmi il lavoro quando scrivevo in Markdown per Zola.
@@ -3021,6 +3125,8 @@ Inserita la possibilità di dichiarare shortcode dedicati, facciamolo.
 (setq ox-zola-special-block-type-properties '(("twitter" . (:trim-pre t :trim-post t))
                                               ("figure" . (:trim-pre t :trim-post t))))
 #+end_src
+** COMMENT Resources
+- [[https://scripter.co/sidenotes-using-ox-hugo/#opulate%20the%20Org%20source%20of%20this%20blog%20with%20Hugo-specific%20shortcodes%20when%20I%20am%20using%20ox-hugo%20%F0%9F%98%84.%20So%20instead,%20we%20just%20use%20the%20plain-old][Sidenote using ox-hugo]]
 
 * Twitter
 # Tradotto dall'articolo introduttivo
@@ -4231,6 +4337,18 @@ The following function is a workaround proposed by [[https://github.com/doomemac
                                 `(,txt . ,(yas--template-uuid tpl))))
          (selected-value (apply #'completing-read prompt snippet-data args)))
     (alist-get selected-value snippet-data nil nil 'equal)))
+#+end_src
+* Tangle and compile from path
+
+#+begin_src emacs-lisp :tangle config.el
+(defun gicrisf/emacs-lisp-byte-compile-and-load-from-path (path)
+  "Byte-compile the file in PATH (if it has changed), then load compiled code."
+  (interactive nil emacs-lisp-mode)
+  (emacs-lisp--before-compile-buffer)
+  (require 'bytecomp)
+  (let ((abspath (expand-file-name path)))
+    (byte-recompile-file abspath nil 0)
+    (load (byte-compile-dest-file abspath))))
 #+end_src
 
 * Conclusions

@@ -74,6 +74,12 @@
 
 (package! wikinforg)
 
+(package! jinx)
+
+(package! prescient)
+
+(package! vertico-prescient)
+
 (package! ob-d2 :recipe (:host github :repo "dmacvicar/ob-d2"))
 
 (package! ox-json)

@@ -181,6 +181,13 @@ A nil value implies no custom theme should be enabled.")
 
 (setq org-latex-logfiles-extensions (quote ("lof" "lot" "tex~" "aux" "idx" "log" "out" "toc" "nav" "snm" "vrb" "dvi" "fdb_latexmk" "blg" "brf" "fls" "entoc" "ps" "spl" "bbl" "xmpi" "run.xml" "bcf")))
 
+;; Enable vertico-multiform
+(vertico-multiform-mode)
+
+(add-to-list 'vertico-multiform-categories
+             '(jinx grid (vertico-grid-annotate . 20)))
+(vertico-multiform-mode 1)
+
 (org-babel-do-load-languages
     'org-babel-load-languages
     '((d2 . t)))
@@ -484,3 +491,12 @@ by using nxml's indentation rules."
                                 `(,txt . ,(yas--template-uuid tpl))))
          (selected-value (apply #'completing-read prompt snippet-data args)))
     (alist-get selected-value snippet-data nil nil 'equal)))
+
+(defun gicrisf/emacs-lisp-byte-compile-and-load-from-path (path)
+  "Byte-compile the file in PATH (if it has changed), then load compiled code."
+  (interactive nil emacs-lisp-mode)
+  (emacs-lisp--before-compile-buffer)
+  (require 'bytecomp)
+  (let ((abspath (expand-file-name path)))
+    (byte-recompile-file abspath nil 0)
+    (load (byte-compile-dest-file abspath))))
