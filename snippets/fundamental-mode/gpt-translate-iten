@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: GPT Prompt for Translating from IT to EN
+# key: gptiten
+# uuid: gptiten
+# condition: t
+# contributor: Giovanni Crisalfi
+# --
+
+Please, translate this text from Italian into English: `%`$0

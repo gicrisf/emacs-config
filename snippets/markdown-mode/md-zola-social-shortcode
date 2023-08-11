@@ -1,0 +1,16 @@
+# -*- mode: snippet -*-
+# name: Zola Social Shortcode
+# key: zolasocial
+# uuid: zolasocial
+# condition: t
+# contributor: Giovanni Crisalfi
+# --
+
+{% social(
+social="tw",
+url="",
+author="",
+date=""
+) %}
+`%`$0
+{% end %}

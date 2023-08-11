@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: GPT mary shelley
+# key: gptshelley
+# uuid: gptshelley
+# condition: t
+# contributor: Giovanni Crisalfi
+# --
+
+Write the following text with the style of Mary Shelley: `%`$0

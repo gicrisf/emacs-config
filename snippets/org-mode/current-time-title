@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: current time (org title)
+# key: titletime
+# uuid: titletime
+# --
+# * `(current-time-string)`

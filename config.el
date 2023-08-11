@@ -125,7 +125,7 @@ A nil value implies no custom theme should be enabled.")
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
-(setq org-directory "~/org/")
+(setq org-directory "~/Dropbox/roam/")
 
 (require 'org-download)
 (add-hook 'dired-mode-hook 'org-download-enable)
@@ -287,40 +287,6 @@ A nil value implies no custom theme should be enabled.")
 ;; try me!
 ;; (send-to-kindle)
 
-;; Generate TOML frontmatter
-(defun new-toml-frontmatter ()
-  "Insert a TOML frontmatter for Markdown files"
-  (interactive)
-  (insert "+++\n"
-          "title=\"\"\n"
-          "date=\n"
-          "\n"
-          "[taxonomies]\n"
-          "categories=[\"\"]\n"
-          "tags=[\"\"]\n"
-          "\n"
-          "[extra]\n"
-          "+++"))
-
-(add-hook 'markdown-mode-hook
-          (lambda ()
-            (if (= (buffer-size) 0)
-            (new-toml-frontmatter))
-            (message "markdown hook")))
-
-;; Generate Zola Shortcodes
-(defun new-social-shortcode ()
-  "Generate new twitter shortcode"
-  (interactive)
-  (insert "{% social\(\n"
-          "social=\"tw\",\n"
-          "url=\"\",\n"
-          "author=\"\",\n"
-          "date=\"\"\n"
-          "\) %}"
-          "\n"
-          "{% end %}"))
-
 ;; Generate ORG/Zola frontmatter
 ;; TODO Section management
 ;; Update the directory
@@ -341,34 +307,6 @@ A nil value implies no custom theme should be enabled.")
 
 (setq mastodon-instance-url "https://fosstodon.org"
       mastodon-active-user "gicrisf")
-
-;; Play Lo-Fi
-;; Implementation of the knuth shuffle
-;; TODO Start amberol or other music player
-(defun nshuffle (sequence)
-  (cl-loop for i from (length sequence) downto 2
-        do (cl-rotatef (elt sequence (random i))
-                    (elt sequence (1- i))))
-  sequence)
-
-(setq lofi-links '("https://www.youtube.com/watch?v=8nXqcugV2Y4" ;; 3:30 music session
-                   "https://www.youtube.com/watch?v=FVue6P2VoTc"
-                   "https://www.youtube.com/watch?v=NrJiXKwUjPI" ;; Music to put you in a better mood
-                   "https://www.youtube.com/watch?v=kgx4WGK0oNU"
-                   "https://www.youtube.com/watch?v=5qap5aO4i9A"))
-
-(setq vaporwave-links '("https://www.youtube.com/watch?v=nVCs83gSYD0"  ;; architecture in tokyo - Summer Paradise
-                        ))
-
-(defun play-lofi ()
-  "Play random lofi music on your browser"
-  (interactive)
-  (shell-command (concat "python -mwebbrowser " (car (nshuffle lofi-links)))))
-
-(defun play-vaporwave ()
-  "Play random lofi music on your browser"
-  (interactive)
-  (shell-command (concat "python -mwebbrowser " (car (nshuffle vaporwave-links)))))
 
 (defun bf-pretty-print-xml-region (begin end)
   "Pretty format XML markup in region. You need to have nxml-mode
@@ -459,21 +397,15 @@ by using nxml's indentation rules."
 (setq wttrin-default-cities '("Caltagirone" "Bologna" "Ferrara" "Catania"))
 (setq wttrin-default-accept-language '("Accept-Language" . "it-IT"))
 
-(defun mol2chemfig (mol)
-  "Generate chemfig code from mol or SMILES."
-  (interactive "sEnter molecule: ")
-  (insert (shell-command-to-string (concat "python -m mol2chemfigPy3 -w -i direct " mol))))
-
-(setq tochemfig-default-input "direct")
-(setq tochemfig-default-relative-angles t)
-(setq tochemfig-default-fancy-bonds t)
-(setq tochemfig-default-wrap-chemfig t)
-
 (setq openai-key (getenv "OPENAI_KEY"))
 
 (setq chatgpt-repo-path "~/Projects/ChatGPT.el/")
 
 (setq gptel-api-key (getenv "OPENAI_KEY"))
+
+(setq dall-e-n 1)
+(setq dall-e-spinner-type 'flipping-line)
+(setq dall-e-display-width 256)
 
 (setq llamacs-model-path "~/ggml-alpaca-7b-q4.bin")
 (setq llamacs-repo-path "~/Projects/llamacs/")

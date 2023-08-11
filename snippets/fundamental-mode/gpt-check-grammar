@@ -1,0 +1,9 @@
+# -*- mode: snippet -*-
+# name: GPT check English grammar
+# key: gptcheck
+# uuid: gptcheck
+# condition: t
+# contributor: Giovanni Crisalfi
+# --
+
+Is the following text correct in English? Would you recommend some edits? `%`$0

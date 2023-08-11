@@ -107,6 +107,8 @@
 
 (package! eltweet :recipe (:host github :repo "gicrisf/eltweet"))
 
+;; (package! mastodon :recipe (:host codeberg :repo "rougier/mastodon.el"))
+
 (package! info-colors)
 
 (package! malyon)
@@ -125,6 +127,12 @@
 
 (package! gptel :recipe (:host github :repo "karthink/gptel"))
 
+(package! dall-e :recipe (:host github :repo "emacs-openai/dall-e"))
+
 (package! deferred)
 
 (package! epc :recipe (:host github :repo "kiwanami/emacs-epc"))
+
+(package! kaomel :recipe (:host github :repo "gicrisf/kaomel"))
+
+(package! pcre2el :recipe (:host github :repo "joddie/pcre2el"))
