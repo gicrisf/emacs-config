@@ -100,6 +100,37 @@
 
 (package! racer :disable t)
 
+(package! cobol-mode)
+
+(defvar mk/hyperspec-dir-locations
+  '("~/Downloads/HyperSpec-7-0/HyperSpec/")
+  "List of possible locations where the local HyperSpec could reside.")
+
+(defun mk/find-dir (x)
+  "Recursively search for a valid directory from a list X of directories.
+Returns the first valid directory, or nil if none found."
+  (cond ((null x) nil)
+        ((file-directory-p (car x)) (car x))
+        (t (mk/find-dir (cdr x)))))
+
+(defun mk/hyperspec-dir ()
+  "Finds and returns the URI of the local HyperSpec directory.
+Uses `mk/hyperspec-dir-locations' to find the directory."
+  (let ((dir-prefix
+         (if (eq system-type 'windows-nt)
+             "file:///"
+           "file://"))
+        (dir (mk/find-dir mk/hyperspec-dir-locations)))
+    (if dir
+        (concat dir-prefix
+                (expand-file-name dir))
+      nil)))
+
+(setq common-lisp-hyperspec-root (let ((dir-found? (mk/hyperspec-dir)))
+                                   (if dir-found?
+                                       dir-found?
+                                     "http://www.lispworks.com/reference/HyperSpec/")))
+
 (package! clip2org :recipe (:host github :repo "Kungsgeten/clip2org"))
 
 ;; (package! ox-hugo :recipe (:host github :repo "gicrisf/ox-zola"))
@@ -115,7 +146,7 @@
 
 (package! wttrin :recipe (:host github :repo "gicrisf/emacs-wttrin"))
 
-(package! tochemfig :recipe (:host github :repo "gicrisf/tochemfig"))
+;; (package! tochemfig :recipe (:host github :repo "gicrisf/tochemfig"))
 
 (package! openai :recipe (:host github :repo "emacs-openai/openai"))
 (package! chatgpt :recipe (:host github :repo "emacs-openai/chatgpt"))

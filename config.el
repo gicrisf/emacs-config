@@ -125,7 +125,7 @@ A nil value implies no custom theme should be enabled.")
 
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
-(setq org-directory "~/Dropbox/roam/")
+(setq org-directory "~/Dropbox/org/")
 
 (require 'org-download)
 (add-hook 'dired-mode-hook 'org-download-enable)
@@ -325,34 +325,6 @@ by using nxml's indentation rules."
   (message "Ah, much better!"))
 
 (setq which-key-idle-delay 0.5) ;; I need the help, I really do
-
-(after! org
-  ;; Import ox-latex to get org-latex-classes and other funcitonality
-  ;; for exporting to LaTeX from org
-  (use-package! ox-latex
-    :init
-    ;; code here will run immediately
-    :config
-    ;; code here will run after the package is loaded
-    (setq org-latex-pdf-process
-          '("pdflatex -interaction nonstopmode -output-directory %o %f"
-            "bibtex %b"
-            "pdflatex -interaction nonstopmode -output-directory %o %f"
-            "pdflatex -interaction nonstopmode -output-directory %o %f"))
-    (setq org-latex-with-hyperref nil) ;; stop org adding hypersetup{author..} to latex export
-    ;; (setq org-latex-prefer-user-labels t)
-
-    ;; deleted unwanted file extensions after latexMK
-    ;; (setq org-latex-logfiles-extensions
-    ;;      (quote ("lof" "lot" "tex~" "aux" "idx" "log" "out" "toc" "nav" "snm" "vrb" "dvi" "fdb_latexmk" "blg" "brf" "fls" "entoc" "ps" "spl" "bbl" "xmpi" "run.xml" "bcf" "acn" "acr" "alg" "glg" "gls" "ist")))
-
-    (unless (boundp 'org-latex-classes)
-      (setq org-latex-classes nil))))
-
-(after! org
-  (use-package! ox-extra
-    :config
-    (ox-extras-activate '(latex-header-blocks ignore-headlines))))
 
 (add-hook 'Info-selection-hook 'info-colors-fontify-node)
 

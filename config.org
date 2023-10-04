@@ -393,7 +393,7 @@ vc                ; version-control and Emacs, sitting in a tree
 ;;eshell            ; the elisp shell that works everywhere
 ;;shell             ; simple shell REPL for Emacs
 ;;term              ; basic terminal emulator for Emacs
-vterm               ; the best terminal emulation in Emacs
+;; vterm               ; the best terminal emulation in Emacs
 #+end_src
 
 ** Checkers
@@ -417,7 +417,7 @@ biblio
 (eval +overlay)     ; run code, run (also, repls)
 ;;gist              ; interacting with github gists
 (lookup +dictionary +docsets)              ; navigate your code and its documentation
-lsp               ; M-x vscode
+;; lsp               ; M-x vscode
 magit             ; a git porcelain for Emacs
 ;;make              ; run make tasks from Emacs
 ;;pass              ; password manager for nerds
@@ -443,15 +443,15 @@ magit             ; a git porcelain for Emacs
 ;;agda              ; types of types of types of types...
 ;;beancount         ; mind the GAAP
 cc                ; C > C++ == 1
-clojure           ; java with a lisp
+(clojure +lsp)           ; java with a lisp
 common-lisp       ; if you've seen one lisp, you've seen them all
 ;;coq               ; proofs-as-programs
 ;;crystal           ; ruby at the speed of c
-;;csharp            ; unity, .NET, and mono shenanigans
+csharp            ; unity, .NET, and mono shenanigans
 ;;data              ; config/data formats
 ;;(dart +flutter)   ; paint ui and not much else
 ;;elixir            ; erlang done right
-elm               ; care for a cup of TEA?
+;;elm               ; care for a cup of TEA?
 emacs-lisp        ; drown in parentheses
 ;;erlang            ; an elegant language for a more civilized age
 ;;ess               ; emacs speaks statistics
@@ -472,10 +472,10 @@ javascript        ; all(hope(abandon(ye(who(enter(here))))))
 latex             ; writing papers in Emacs has never been so fun
 ;;lean              ; for folks with too much to prove
 ;;ledger            ; be audit you can be
-;;lua               ; one-based indices? one-based indices
+lua               ; one-based indices? one-based indices
 markdown          ; writing docs for people to ignore
 ;;nim               ; python + lisp at the speed of c
-;;nix               ; I hereby declare "nix geht mehr!"
+nix               ; I hereby declare "nix geht mehr!"
 ;;ocaml             ; an objective camel
 (org +roam2)               ; organize your plain life in plain text
 ;;php               ; perl's insecure younger brother
@@ -483,7 +483,7 @@ markdown          ; writing docs for people to ignore
 ;;purescript        ; javascript, but functional
 python            ; beautiful is better than ugly
 ;;qt                ; the 'cutest' gui framework ever
-;;racket            ; a DSL for DSLs
+racket            ; a DSL for DSLs
 ;;raku              ; the artist formerly known as perl6
 ;;rest              ; Emacs as a REST client
 ;;rst               ; ReST in peace
@@ -491,12 +491,12 @@ python            ; beautiful is better than ugly
 (rust +lsp)              ; Fe2O3.unwrap().unwrap().unwrap().unwrap()
 ;;scala             ; java, but good
 (scheme +guile)   ; a fully conniving family of lisps
-sh                  ; she sells {ba,z,fi}sh shells on the C xor
+;; sh                  ; she sells {ba,z,fi}sh shells on the C xor
 ;;sml
 ;;solidity          ; do you need a blockchain? No.
 ;;swift             ; who asked for emoji variables?
 ;;terra             ; Earth and Moon in alignment for performance.
-web               ; the tubes
+;; web               ; the tubes
 yaml              ; JSON, but readable
 ;;zig               ; C, but simpler
 #+end_src
@@ -1384,7 +1384,7 @@ Now we declare in which directory we want most org files to be placed, in such w
 #+begin_src emacs-lisp :tangle config.el
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
-(setq org-directory "~/Dropbox/roam/")
+(setq org-directory "~/Dropbox/org/")
 #+end_src
 
 Now we can start configuring Org-mode.
@@ -2154,7 +2154,7 @@ The rules for scoring are written down in the score file, a plain-text file cont
 
 By default, the configuration is written in a file named =elfeed.score= in the =.emacs.d= directory:
 
-#+begin_src emacs-lisp :tangle ~/.emacs.d/elfeed.score
+#+begin_src emacs-lisp :tangle ~/.config/doom/elfeed.score
 ;;; Elfeed score file                                     -*- lisp -*-
 (("title")
  ("content")
@@ -2414,6 +2414,108 @@ This should be sufficient, but to be absolutely sure:
 
 # Lanciamo =lsp= in un buffer con Rust ed assistiamo al compiersi della magia.
 We launch =lsp= in a buffer with Rust and witness the magic happen.
+* Cobol
+#+begin_src emacs-lisp :tangle packages.el
+(package! cobol-mode)
+#+end_src
+
+* Common Lisp
+Setting up a local version of the Common Lisp HyperSpec provides instant and offline access to Lisp documentation. This is especially useful when using Emacs with the SLIME package for Common Lisp development.
+
+** Setting up Local Common Lisp HyperSpec in Emacs with SLIME
+From my fediverse, a chatgpt generated by =@qhBidG3d@emacs.ch= (Marcus) using his code:
+https://emacs.ch/@qhBidG3d/111042058648335328
+
+*** Prerequisites
+- Emacs installed
+- SLIME package installed
+- Common Lisp implementation (like SBCL) installed
+
+I use SLY, but whatever.
+
+*** Downloading the HyperSpec
+Download the Common Lisp HyperSpec from [[http://www.lispworks.com/downloads/documentation.html][LispWorks Documentation]]. Unzip it into a folder of your choice. Remember this folder location.
+
+*** Emacs configuration
+We'll use Emacs-Lisp functions to find and set up the local HyperSpec automatically.
+
+#+BEGIN_SRC emacs-lisp :tangle packages.el
+(defvar mk/hyperspec-dir-locations
+  '("~/Downloads/HyperSpec-7-0/HyperSpec/")
+  "List of possible locations where the local HyperSpec could reside.")
+
+(defun mk/find-dir (x)
+  "Recursively search for a valid directory from a list X of directories.
+Returns the first valid directory, or nil if none found."
+  (cond ((null x) nil)
+        ((file-directory-p (car x)) (car x))
+        (t (mk/find-dir (cdr x)))))
+
+(defun mk/hyperspec-dir ()
+  "Finds and returns the URI of the local HyperSpec directory.
+Uses `mk/hyperspec-dir-locations' to find the directory."
+  (let ((dir-prefix
+         (if (eq system-type 'windows-nt)
+             "file:///"
+           "file://"))
+        (dir (mk/find-dir mk/hyperspec-dir-locations)))
+    (if dir
+        (concat dir-prefix
+                (expand-file-name dir))
+      nil)))
+#+END_SRC
+
+Setto così la directory:
+
+#+begin_src emacs-lisp :tangle packages.el
+(setq common-lisp-hyperspec-root (let ((dir-found? (mk/hyperspec-dir)))
+                                   (if dir-found?
+                                       dir-found?
+                                     "http://www.lispworks.com/reference/HyperSpec/")))
+#+end_src
+
+Non sono sicuro che io debba passargli il sito come alternativa.
+Mi sa che l'impostazione è solo per le cartelle in locale.
+Sennò dovrei passare nil.
+Si potrebbe riassumere con:
+
+#+begin_src emacs-lisp
+(setq common-lisp-hyperspec-root (mk/hyperspec-dir))
+#+end_src
+
+In caso di fallimento, la funzione dovrebbe restituire =NIL=.
+
+**** COMMENT SLIME
+Poi c'è questa parte, ma la tolgo perché io non ho SLIME, ma SLY (ed è già installato via doom).
+
+#+begin_src emacs-lisp
+(use-package slime
+  :defer t
+  :custom
+  (slime-autodoc-use-multiline-p 1)
+  :bind ("C-c C-q" . slime-close-all-parens-in-sexp)
+  :config
+  (slime-setup '(slime-autodoc
+                 slime-tramp
+                 slime-fancy
+                 slime-asdf
+                 slime-indentation
+                 slime-editing-commands
+                 slime-sbcl-exts))
+  (progn
+    (setq common-lisp-hyperspec-symbol-table
+          (concat common-lisp-hyperspec-root "Data/Map_Sym.txt"))
+    (setq common-lisp-hyperspec-issuex-table
+          (concat common-lisp-hyperspec-root "Data/Map_IssX.txt"))))
+#+end_src
+
+*** Verification
+  - Restart Emacs or evaluate the above configuration.
+  - Open a SLIME REPL by executing =M-x slime=.
+  - Press =C-c C-d h= to invoke HyperSpec lookup. You should now access the local copy.
+
+*** Conclusion
+  That's it! You have successfully configured a local Common Lisp HyperSpec with Emacs and SLIME. Now you can enjoy seamless and offline access to Lisp documentation.
 
 * Ebooks
 ** Send ebooks to Kindle with Emacs
@@ -3218,7 +3320,8 @@ Keep in mind this is a work in progress and the code can look kind of messy at t
 
 The next settings aren't essential, just potentially useful.
 
-#+begin_src emacs-lisp :tangle config.el
+# :tangle config.el
+#+begin_src emacs-lisp 
 (after! org
   ;; Import ox-latex to get org-latex-classes and other funcitonality
   ;; for exporting to LaTeX from org
@@ -3733,7 +3836,7 @@ Concludiamo con la configurazione minima di =org-msg=.
 # Come si installa fresnel
 
 #+begin_src emacs-lisp :tangle packages.el :noweb yes
-(package! tochemfig :recipe (:host github :repo "gicrisf/tochemfig"))
+;; (package! tochemfig :recipe (:host github :repo "gicrisf/tochemfig"))
 #+end_src
 
 * COMMENT Whisper (Speech to Text)
