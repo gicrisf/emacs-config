@@ -3102,6 +3102,10 @@ Then I install my package as an additional layer.
 (package! ox-zola :recipe (:host github :repo "gicrisf/ox-zola"))
 #+end_src
 
+#+begin_src emacs-lisp :tangle config.el
+(require 'ox-zola)
+#+end_src
+
 ** COMMENT Old approach
 {{{italian}}}
 
@@ -3699,6 +3703,10 @@ Here, I configure it according to my needs:
 (setq wttrin-default-accept-language '("Accept-Language" . "it-IT"))
 #+end_src
 
+#+begin_src emacs-lisp :tangle config.el
+(require 'wttrin)
+#+end_src
+
 * COMMENT Protonmail :it:
 Quando Protonmail ha rilasciato ProtonBridge mi sono chiesto se non valesse la pena di ritentare un approccio locale alle email.
 Le alternative apprezzabili per il momento mi sembrano due:
@@ -4137,6 +4145,13 @@ The following function is a workaround proposed by [[https://github.com/doomemac
 #+begin_src emacs-lisp :tangle packages.el
 (package! kaomel :recipe (:host github :repo "gicrisf/kaomel"))
 #+end_src
+
+#+begin_src emacs-lisp :tangle config.el
+(require 'kaomel)
+#+end_src
+
+#+RESULTS:
+: kaomel
 
 * COMMENT Docsets
 Dash docsets.

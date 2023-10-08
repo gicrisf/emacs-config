@@ -147,6 +147,8 @@ Uses `mk/hyperspec-dir-locations' to find the directory."
                                        dir-found?
                                      "http://www.lispworks.com/reference/HyperSpec/")))
 
+(require 'ox-zola)
+
 (defun bf-pretty-print-xml-region (begin end)
   "Pretty format XML markup in region. You need to have nxml-mode
 http://www.emacswiki.org/cgi-bin/wiki/NxmlMode installed to do
@@ -208,6 +210,8 @@ by using nxml's indentation rules."
 (setq wttrin-default-cities '("Caltagirone" "Bologna" "Ferrara" "Catania"))
 (setq wttrin-default-accept-language '("Accept-Language" . "it-IT"))
 
+(require 'wttrin)
+
 (setq openai-key (getenv "OPENAI_KEY"))
 
 (setq chatgpt-repo-path "~/Projects/ChatGPT.el/")
@@ -227,6 +231,8 @@ by using nxml's indentation rules."
                                 `(,txt . ,(yas--template-uuid tpl))))
          (selected-value (apply #'completing-read prompt snippet-data args)))
     (alist-get selected-value snippet-data nil nil 'equal)))
+
+(require 'kaomel)
 
 (defun gicrisf/emacs-lisp-byte-compile-and-load-from-path (path)
   "Byte-compile the file in PATH (if it has changed), then load compiled code."
