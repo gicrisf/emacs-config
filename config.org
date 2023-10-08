@@ -1,6 +1,7 @@
 #+title: Doom Emacs Configuration
 #+author: Giovanni Crisalfi
 #+STARTUP: overview
+#+PROPERTY: header-args :tangle no
 
 # TODO export name of cover images
 # Manca solo questo e poi posso procedere con l'esportazione dei nuovi post
@@ -91,7 +92,7 @@ Emacs, indeed, is an interpreter of the Lisp language, albeit a specific dialect
 In lisp, each list has brackets designating the initial element as the operator and the rest as subordinate data for its function.
 I leave below one of the simplest examples that can be conceived.
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (= 1 2)
 ;; => nil
 #+end_src
