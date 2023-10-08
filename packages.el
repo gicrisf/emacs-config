@@ -54,115 +54,43 @@
 ;; ...Or *all* packages (NOT RECOMMENDED; will likely break things)
 ;(unpin! t)
 
-(package! spacemacs-theme)
-
 (package! lambda-themes :recipe (:host github :repo "lambda-emacs/lambda-themes"))
 
 (package! catppuccin :recipe (:host github :repo "catppuccin/emacs"))
 
 (package! org-download)
 
-(package! org-drill)
-
-(package! anki-editor)
-
-(package! org-journal)
-
 (package! org-web-tools)
 
 (package! citeproc)
-
-(package! wikinforg)
-
-(package! jinx)
-
-(package! prescient)
-
-(package! vertico-prescient)
-
-(package! ob-d2 :recipe (:host github :repo "dmacvicar/ob-d2"))
-
-(package! ox-json)
 
 (package! org-roam-ui)
 
 (package! citar-org-roam)
 
-(package! org-transclusion)
-
 (package! elfeed-goodies)
-
-(package! elfeed-score)
-
-(package! vala-mode)
 
 (package! pyvenv)
 
-(package! racer :disable t)
+(package! epc)
 
-(package! cobol-mode)
-
-(defvar mk/hyperspec-dir-locations
-  '("~/Downloads/HyperSpec-7-0/HyperSpec/")
-  "List of possible locations where the local HyperSpec could reside.")
-
-(defun mk/find-dir (x)
-  "Recursively search for a valid directory from a list X of directories.
-Returns the first valid directory, or nil if none found."
-  (cond ((null x) nil)
-        ((file-directory-p (car x)) (car x))
-        (t (mk/find-dir (cdr x)))))
-
-(defun mk/hyperspec-dir ()
-  "Finds and returns the URI of the local HyperSpec directory.
-Uses `mk/hyperspec-dir-locations' to find the directory."
-  (let ((dir-prefix
-         (if (eq system-type 'windows-nt)
-             "file:///"
-           "file://"))
-        (dir (mk/find-dir mk/hyperspec-dir-locations)))
-    (if dir
-        (concat dir-prefix
-                (expand-file-name dir))
-      nil)))
-
-(setq common-lisp-hyperspec-root (let ((dir-found? (mk/hyperspec-dir)))
-                                   (if dir-found?
-                                       dir-found?
-                                     "http://www.lispworks.com/reference/HyperSpec/")))
-
-(package! clip2org :recipe (:host github :repo "Kungsgeten/clip2org"))
-
-;; (package! ox-hugo :recipe (:host github :repo "gicrisf/ox-zola"))
 (package! ox-hugo)
+
+(package! ox-zola :recipe (:host github :repo "gicrisf/ox-zola"))
 
 (package! eltweet :recipe (:host github :repo "gicrisf/eltweet"))
 
-;; (package! mastodon :recipe (:host codeberg :repo "rougier/mastodon.el"))
-
 (package! info-colors)
-
-(package! malyon)
 
 (package! wttrin :recipe (:host github :repo "gicrisf/emacs-wttrin"))
 
-;; (package! tochemfig :recipe (:host github :repo "gicrisf/tochemfig"))
-
 (package! openai :recipe (:host github :repo "emacs-openai/openai"))
+
 (package! chatgpt :recipe (:host github :repo "emacs-openai/chatgpt"))
 
-;; (setq chatgpt-spinner-type 'rotating-line)
 (setq chatgpt-spinner-type 'minibox)
 
-;; (package! chatgptel :recipe (:host github :repo "joshcho/ChatGPT.el"))
-
 (package! gptel :recipe (:host github :repo "karthink/gptel"))
-
-(package! dall-e :recipe (:host github :repo "emacs-openai/dall-e"))
-
-(package! deferred)
-
-(package! epc :recipe (:host github :repo "kiwanami/emacs-epc"))
 
 (package! kaomel :recipe (:host github :repo "gicrisf/kaomel"))
 

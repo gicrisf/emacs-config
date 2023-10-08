@@ -95,81 +95,12 @@
 ;; You can also try 'gd' (or 'C-c c d') to jump to their definition and see how
 ;; they are implemented.
 
-;; Theme switcher functions
-(defvar quick-switch-themes
-  (let ((themes-list (list 'lambda-dark
-                           'lambda-light)))
-    (nconc themes-list themes-list))
-  "A circular list of themes to keep switching between.
-Make sure that the currently enabled theme is at the head of this
-list always.
-
-A nil value implies no custom theme should be enabled.")
-
-;; Thanks to narendraj9, user of emacs.stackexchange.com
-;; https://emacs.stackexchange.com/questions/24088/make-a-function-to-toggle-themes
-;; I just tweaked his code.
-(defun toggle-theme ()
-  (interactive)
-  (if-let* ((next-theme (cadr quick-switch-themes)))
-      (progn (when-let* ((current-theme (car quick-switch-themes)))
-               (disable-theme (car quick-switch-themes)))
-             (load-theme next-theme t)
-             (message "Loaded theme: %s" next-theme))
-    ;; Always have the dark mode-line theme
-    (mapc #'disable-theme (delq 'smart-mode-line-dark custom-enabled-themes)))
-  (setq quick-switch-themes (cdr quick-switch-themes)))
-
-(map! :leader
-      :desc "Quick toggle theme" "t t" #'toggle-theme)
-
 ;; If you use `org' and don't want your org files in the default location below,
 ;; change `org-directory'. It must be set before org loads!
 (setq org-directory "~/Dropbox/org/")
 
 (require 'org-download)
 (add-hook 'dired-mode-hook 'org-download-enable)
-
-;; org journal
-;; in ~/.doom.d/+bindings.el
-;; From: https://www.rousette.org.uk/archives/doom-emacs-tweaks-org-journal-and-org-super-agenda/
-(map! :leader
-      (:prefix ("j" . "journal") ;; org-journal bindings
-        :desc "Create new journal entry" "j" #'org-journal-new-entry
-        :desc "Open previous entry" "p" #'org-journal-open-previous-entry
-        :desc "Open next entry" "n" #'org-journal-open-next-entry
-        :desc "Search journal" "s" #'org-journal-search-forever))
-
-;; The built-in calendar mode mappings for org-journal
-;; conflict with evil bindings
-(map!
- (:map calendar-mode-map
-   :n "o" #'org-journal-display-entry
-   :n "p" #'org-journal-previous-entry
-   :n "n" #'org-journal-next-entry
-   :n "O" #'org-journal-new-date-entry))
-
-;; Local leader (<SPC m>) bindings for org-journal in calendar-mode
-;; I was running out of bindings, and these are used less frequently
-;; so it is convenient to have them under the local leader prefix
-(map!
- :map (calendar-mode-map)
- :localleader
- "w" #'org-journal-search-calendar-week
- "m" #'org-journal-search-calendar-month
- "y" #'org-journal-search-calendar-year)
-
-(setq org-journal-dir "~/org/amalgam")
-(setq org-journal-file-format "%Y-%m.org")
-(setq org-journal-file-type 'monthly)
-
-;; org-capture
-(setq org-capture-templates `(
-	("p" "Protocol" entry (file+headline ,(concat org-directory "notes.org") "Inbox")
-        "* %^{Title}\nSource: %u, %c\n #+BEGIN_QUOTE\n%i\n#+END_QUOTE\n\n\n%?")
-	("L" "Protocol Link" entry (file+headline ,(concat org-directory "notes.org") "Inbox")
-        "* %? [[%:link][%:description]] \nCaptured On: %U")
-))
 
 (setq org-cite-global-bibliography '("~/Dropbox/references.bib"))
 
@@ -181,132 +112,40 @@ A nil value implies no custom theme should be enabled.")
 
 (setq org-latex-logfiles-extensions (quote ("lof" "lot" "tex~" "aux" "idx" "log" "out" "toc" "nav" "snm" "vrb" "dvi" "fdb_latexmk" "blg" "brf" "fls" "entoc" "ps" "spl" "bbl" "xmpi" "run.xml" "bcf")))
 
-;; Enable vertico-multiform
-(vertico-multiform-mode)
-
-(add-to-list 'vertico-multiform-categories
-             '(jinx grid (vertico-grid-annotate . 20)))
-(vertico-multiform-mode 1)
-
-(org-babel-do-load-languages
-    'org-babel-load-languages
-    '((d2 . t)))
-
-(add-to-list 'exec-path "~/.local/bin/")
-
-(require 'ox-json)
-
 (setq org-roam-directory "~/Dropbox/roam")
-
-(use-package! org-transclusion
-              :after org
-              :init
-              (map!
-               :map global-map "<f12>" #'org-transclusion-add
-               :leader
-               :prefix "n"
-               :desc "Org Transclusion Mode" "t" #'org-transclusion-mode))
-
-;; hack per risolvere il fatto che transclusion non trova i file, per qualche motivo
-;; https://github.com/nobiot/org-transclusion/issues/62
-(org-id-update-id-locations (directory-files org-roam-directory t "org$"))
 
 (require 'elfeed-goodies)
 (elfeed-goodies/setup)
 (setq elfeed-goodies/entry-pane-size 0.5)
 
-(require 'elfeed-score)
-(elfeed-score-enable)
-(define-key elfeed-search-mode-map "=" elfeed-score-map)
+(defvar mk/hyperspec-dir-locations
+  '("~/Downloads/HyperSpec-7-0/HyperSpec/")
+  "List of possible locations where the local HyperSpec could reside.")
 
-;; Support for React
-(add-to-list 'auto-mode-alist '("\\.tsx\\'" . typescript-mode))
+(defun mk/find-dir (x)
+  "Recursively search for a valid directory from a list X of directories.
+Returns the first valid directory, or nil if none found."
+  (cond ((null x) nil)
+        ((file-directory-p (car x)) (car x))
+        (t (mk/find-dir (cdr x)))))
 
-;; (setq racer-rust-src-path "~/.rustup/toolchains/stable-x86_64-unknown-linux-gnu/lib/rustlib/src/rust/library")
+(defun mk/hyperspec-dir ()
+  "Finds and returns the URI of the local HyperSpec directory.
+Uses `mk/hyperspec-dir-locations' to find the directory."
+  (let ((dir-prefix
+         (if (eq system-type 'windows-nt)
+             "file:///"
+           "file://"))
+        (dir (mk/find-dir mk/hyperspec-dir-locations)))
+    (if dir
+        (concat dir-prefix
+                (expand-file-name dir))
+      nil)))
 
-(setq rustic-lsp-server 'rust-analyzer)
-
-(after! lsp-rust
-  (setq lsp-rust-server 'rust-analyzer))
-
-(setq tokindle-epub-path "~")
-
-(setq tokindle-epub-path-sent "~/Scaricati/epub_sent")
-
-(setq tokindle-mobi-path-sent "~/Scaricati/mobi_sent")
-
-(defun ebook-convert-epub-to-mobi (file)
-  (format "ebook-convert \"%s\" \"%s\".mobi" file file))
-
-(defun tokindle-calibre-smtp-cmd (filename)
-  (concat "calibre-smtp "
-          ;; attachment
-          (format "-a \"%s.mobi\" " filename)
-          ;; subject
-          (format "-s \"%s\" " (file-name-nondirectory filename))
-          (format "-r \"%s\" " (getenv "TOKINDLE_SMTP"))
-          (format "--port \"%s\" " (getenv "TOKINDLE_PORT"))
-          (format "-u \"%s\" " (getenv "TOKINDLE_USERNAME"))
-          (format "-p \"%s\" " (getenv "TOKINDLE_PASSWORD"))
-          (format "\"%s\" " (getenv "TOKINDLE_MY_MAIL"))
-          (format "\"%s\" " (getenv "TOKINDLE_KINDLE_MAIL"))
-          ;; text
-          "\"\""))
-
-(defun send-to-kindle ()
-  (dolist (file (directory-files tokindle-epub-path 'full (rx ".epub" eos) 'nosort))
-    (let ((filename (file-name-sans-extension file))
-          (ext (file-name-extension file)))
-
-      ;; Manage conversion between formats
-      (if (not (file-exists-p (concat file ".mobi")))
-          (progn
-            (message (concat "Converting " file "to mobi..."))
-            (shell-command (ebook-convert-epub-to-mobi file))
-            (message "Converted.")))
-
-      ;; Send the mobi files with calibre
-      (if (file-exists-p (concat file ".mobi"))
-          (progn
-            (message (concat "Sending " (concat file ".mobi") "to your Kindle..."))
-            (shell-command (tokindle-calibre-smtp-cmd file))
-            (message "File sent.")))
-
-      ;; now you can move the ebook files into the proper directories
-      ;; archive the epub
-      (rename-file file (file-name-concat tokindle-epub-path-sent
-                                          (file-name-nondirectory file)))
-      ;; archive the mobi
-      (rename-file (concat file ".mobi")
-                   (file-name-concat tokindle-mobi-path-sent
-                                     (file-name-nondirectory (concat file ".mobi"))))
-      ))
-  ;; congratulations *clap clap*, the files were sent to your kindle
-  (message "All available ebooks are being sent to your Kindle."))
-
-;; try me!
-;; (send-to-kindle)
-
-;; Generate ORG/Zola frontmatter
-;; TODO Section management
-;; Update the directory
-;; MAYBE Add hook to org file IF hugo_base_dir or hugo_section is present at top
-(defun org-zola-frontmatter (slug)
-  "Insert org-mode properties under a paragraph to setup ox-hugo/zola exports"
-  (interactive "sEnter slug: ")
-  (insert ":PROPERTIES:\n"
-          (concat ":EXPORT_HUGO_SECTION: 2022/" slug "\n")
-          ":EXPORT_FILE_NAME: index\n"
-          ":END:\n"))
-
-;; add "CLOSED" when an item is set with DONE state
-(setq org-log-done 'time)
-
-(setq ox-zola-special-block-type-properties '(("twitter" . (:trim-pre t :trim-post t))
-                                              ("figure" . (:trim-pre t :trim-post t))))
-
-(setq mastodon-instance-url "https://fosstodon.org"
-      mastodon-active-user "gicrisf")
+(setq common-lisp-hyperspec-root (let ((dir-found? (mk/hyperspec-dir)))
+                                   (if dir-found?
+                                       dir-found?
+                                     "http://www.lispworks.com/reference/HyperSpec/")))
 
 (defun bf-pretty-print-xml-region (begin end)
   "Pretty format XML markup in region. You need to have nxml-mode
@@ -374,13 +213,6 @@ by using nxml's indentation rules."
 (setq chatgpt-repo-path "~/Projects/ChatGPT.el/")
 
 (setq gptel-api-key (getenv "OPENAI_KEY"))
-
-(setq dall-e-n 1)
-(setq dall-e-spinner-type 'flipping-line)
-(setq dall-e-display-width 256)
-
-(setq llamacs-model-path "~/ggml-alpaca-7b-q4.bin")
-(setq llamacs-repo-path "~/Projects/llamacs/")
 
 (defun +snippet--completing-read-uuid (prompt all-snippets &rest args)
   (let* ((snippet-data (cl-loop for (_ . tpl) in (mapcan #'yas--table-templates (if all-snippets

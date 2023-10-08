@@ -1166,6 +1166,8 @@ To the next adventure!
 
 * Emacs UI
 ** Line numbers
+We want absolute line numbers.
+
 #+begin_src emacs-lisp :tangle config.el
 ;; This determines the style of line numbers in effect. If set to `nil', line
 ;; numbers are disabled. For relative line numbers, set this to `relative'.
@@ -1266,7 +1268,7 @@ I leave those default comments here; they're pretty helpful and concise.
 ;; they are implemented.
 #+end_src
 
-** Spacemacs themes
+** COMMENT Spacemacs themes
 # Sono affezionato ai temi di spacemacs. Uso specialmente quello chiaro, se ho bisogno di sovrailluminare lo schermo.
 I'm emotionally attached to the Spacemacs' themes. Sometimes I make use of =spacemacs-light=, usually when the environment is brighter than usual (e.g. I'm trying to read outside on a sunny day).
 
@@ -1301,7 +1303,7 @@ Installing lambda themes:
 (package! catppuccin :recipe (:host github :repo "catppuccin/emacs"))
 #+end_src
 
-** Theme ciclator
+** COMMENT Theme ciclator
 # Some day I will write what this is about, but I hope the point is pretty easy to grasp for any lisp enthysiast like you probably are.
 This Emacs Lisp code defines a circular list of themes (=quick-switch-themes=) and a function (=toggle-theme=) to switch between these themes with a single command. The function will enable the next theme in the list or disable all themes if the end of the list is reached. It also includes a keybinding (=SPC t t=) to quickly toggle between themes. This code could be useful for anyone who frequently switches between different color themes in Emacs.
 
@@ -1334,8 +1336,8 @@ A nil value implies no custom theme should be enabled.")
 (map! :leader
       :desc "Quick toggle theme" "t t" #'toggle-theme)
 #+end_src
-** Layout
-*** COMMENT Resources
+** COMMENT Layout
+*** Resources
 Vorrei usare Perspective.
 Mi sembra tipo le sessioni in qutebrowser, molto comodo.
 Ci guarderò in un secondo momento, ora sto annegando per l'ansia.
@@ -1408,7 +1410,7 @@ Drag and drop to dired:
 (add-hook 'dired-mode-hook 'org-download-enable)
 #+end_src
 
-* Spaced repetition
+* COMMENT Spaced repetition
 ** Org drill
 # Una volta usavo Anki, ora mi sono chiesto perché usare una GUI quando posso semplicemente scrivere tutto il necessario.
 I occasionally use this package, but I prefer writing my text here, then exporting my cards in Anki, so I mostly do that now.
@@ -1433,7 +1435,7 @@ In order to make this work, you should install the =anki-connect= Anki plugin to
 Qui per vedere come configurare.
 https://coredumped.dev/2021/05/26/taking-org-roam-everywhere-with-logseq/
 
-* Org Journal
+* COMMENT Org Journal
 Install the package.
 
 #+begin_src emacs-lisp :tangle packages.el
@@ -1491,7 +1493,7 @@ To install the package:
 (package! org-web-tools)
 #+end_src
 
-** Org-capture
+** COMMENT Org-capture
 # Org capture torna comodo per appuntarsi in org-mode frammenti di pagine web.
 Org capture is useful for taking notes in org-mode of fragments of web pages
 
@@ -1617,7 +1619,7 @@ You must set the path variable for either doom-package:citar (if using doom-modu
 
 # Installing =citar= would be as easy as running a simple =package!= macro, but it's not needed, as the package is already within the =biblio= module.
 Here comes the second reason for choosing =vertico=: it is not only more minimalistic and lightweight, but it is also the system directly supported by =citar=.
-To install Citar, we should tangle this line to =package.el=:
+To install Citar, we should tangle this line to =packages.el=:
 
 #+begin_src emacs-lisp
 (package! citar)
@@ -1676,7 +1678,7 @@ Other sources:
 - [[https://github.com/doomemacs/doomemacs/tree/master/modules/tools/biblio][:tools biblio (Doom Emacs docs)]]
 - [[https://www.reddit.com/r/emacs/comments/cxu0qg/comment/eyqe4vq/][Reddit thread]]
 
-** Wikipedia
+** COMMENT Wikipedia
 Get Wikipedia data directly on org-mode.
 # Richiama informazioni da Wikipedia direttamente su org.
 
@@ -1733,7 +1735,7 @@ In this way, we cultivate a tidy directory, and move closer to a tidy mind.
 (setq org-latex-logfiles-extensions (quote ("lof" "lot" "tex~" "aux" "idx" "log" "out" "toc" "nav" "snm" "vrb" "dvi" "fdb_latexmk" "blg" "brf" "fls" "entoc" "ps" "spl" "bbl" "xmpi" "run.xml" "bcf")))
 #+end_src
 
-* Spellchecking :it:
+* COMMENT Spellchecking :it:
 Uso Jinx.
 
 #+begin_src emacs-lisp :tangle packages.el
@@ -1784,7 +1786,7 @@ https://emacs.stackexchange.com/questions/21378/spell-check-with-multiple-dictio
 Vedi anche:
 https://200ok.ch/posts/2020-08-22_setting_up_spell_checking_with_multiple_dictionaries.html
 
-* Completion :it:
+* COMMENT Completion :it:
 ** TODO Sorting and filtering
 
 Voglio usare Prescient.
@@ -1814,7 +1816,7 @@ Queste sarebbero le altre possibilità, secondo [[https://github.com/radian-soft
 (straight-use-package 'selectrum-prescient)
 #+end_src
 
-* Org D2 diagrams
+* COMMENT Org D2 diagrams
 I want to generate D2 diagrams without leaving my org-mode files.
 Apparently, that's why [[https://github.com/dmacvicar/ob-d2][ob-d2]] (an org-babel exporter for D2) was written.
 It's not on MELPA yet, so I'll get it from its GitHub repo.
@@ -1863,7 +1865,7 @@ defendants.mc -> hans: Lost then withdrew with accusations
 defendants.chesscom -> hans: 72 page report of cheating
 #+end_src
 
-* Org JSON export
+* COMMENT Org JSON export
 JSON is a lightweight data interchange format used to transmit and store data.
 It is often used in web applications to exchange data between the application and the server.
 
@@ -2051,7 +2053,7 @@ Legacy:
 - [[https://org-roam.discourse.group/t/is-there-a-solution-for-images-organization-in-org-roam/925][Images organization]]
 - [[https://takeonrules.com/2020/12/08/revisiting-hydra-menu-for-org-roam-lookup-in-emacs/][Revisiting Hydra Menu for Org Roam Lookup in Emacs]]
 
-* Org Transclusion
+* COMMENT Org Transclusion
 Manual: https://nobiot.github.io/org-transclusion/
 
 #+begin_src emacs-lisp :tangle packages.el
@@ -2074,6 +2076,7 @@ Manual: https://nobiot.github.io/org-transclusion/
 #+end_src
 
 * Emacs Feed Configuration
+** Elfeed
 :PROPERTIES:
 :EXPORT_HUGO_SECTION: software/emacs-config-feed
 :EXPORT_FILE_NAME: index.en.md
@@ -2098,9 +2101,8 @@ On Doom Emacs, Elfeed is already integrated as a module and can be enabled in th
 By default, Elfeed only needs you to set a simple list to work: as shown below, the list is called =elfeed-feeds= and can easily be typed in the =config.el= file.
 # Di default, basta aggiungere gli URL dei feed desiderati in questa lista per avere già Elfeed operativo.
 
-# Not tangling it anymore
 # :tangle config.el
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (setq elfeed-feeds (quote
                     (("https://www.zwitterio.it/rss.xml" stem)
                      ("https://materiaimpersonale.wordpress.com/feed/" lit))))
@@ -2109,6 +2111,7 @@ By default, Elfeed only needs you to set a simple list to work: as shown below, 
 I don't follow this method anymore, because I find more comfortable to keep my feeds in a specific org file.
 # Io non uso più questo metodo perché trovo più comodo tenere i miei feed in un file org-mode separato.
 
+** Goodies
 To make elfeed prettier, we can add =elfeed-goodies= to our packages in =packages.el=.
 # Per abbellire elfeed, aggiungiamo =elfeed-goodies=.
 Particularly, this package adds a cool powerline and changes the layout (panels are split vertically, not horizontally).
@@ -2129,6 +2132,7 @@ For example, here we edit the size of the popup entry pane.
 
 Refer to [[https://github.com/jeetelongname/elfeed-goodies][the package README]] for more.
 
+** COMMENT Scoring
 # Ora voglio assicurarmi che elfeed appaia sulla dashboard (vedi sezione dedicata alla dashboard).
 You can make a lot of different uses of elfeed: if you just follow some blogs, you probably have no problem with it. Let's say you follow 20, 30, or 50 blogs and you love them all. You want to see every news, but every blog post once a week if it is active. In this case, elfeed is already perfect. It shows you everything in chronological order. But what if you follow sources that publish a lot of content day by day?
 For example, let's say you follow the RSS feeds of government agencies or scientific publishers. In that case, you better filter the posts to list the most important things first. A lot of social media platforms do that: they let you see the posts of accounts you interact with the most before any other, then they proceed with others. It doesn't matter that the others are more recent: the point is to maximize the probability you see the stuff you're more interested in, to make you interact and stay on the platform as long as you can. Here we're facing a similar problem: since we all know you're never going to see every single post in your feed, it's fundamental to establish priorities. We will not implement a machine learning model to learn our preference like social media /algorithms/ do, but there's a package that keeps things simple, and let you score the posts by keywords: not surprisingly, it's called =elfeed-score=.
@@ -2203,7 +2207,7 @@ Finally, we activate =elfeed-score= by adding these lines in the init file (=con
 {{{prismcss}}}
 {{{prismjs}}}
 
-* Typescript
+* COMMENT Typescript
 # Innanzitutto, bisogna avere aggiunto alcuni moduli: =web= e =javascript=, in particolare.
 First of all, you need to have added some modules: =web= and =javascript=, in particular.
 This is done by uncommenting them in =.doom.d/init.el= (remove =;;= as shown in the "Doom modules" paragraph above).
@@ -2234,7 +2238,7 @@ If you are looking for a solution for Vanilla Emacs or Spacemacs, this other one
 Basically, we make a new mode derived from =typescript-mode= and we assign it the =.tsx= extension too.
 For more details, refer to [[https://github.com/emacs-typescript/typescript.el/issues/4#issuecomment-849355222][this Github issue]].
 
-* Vala
+* COMMENT Vala
 Vala is an object-oriented programming language designed to provide modern programming features while maintaining compatibility with the C programming language. It compiles to efficient, easily-readable C code, which can interface with existing C libraries. It is primarily used for developing desktop applications for the GNOME desktop environment on Linux.
 # (From my Roam)
 
@@ -2266,7 +2270,14 @@ LSP :: Server mspyls install process failed with the following error message: Ba
 Qua ulteriori informazioni, ma non molto utili:
 https://github.com/doomemacs/doomemacs/issues/2600
 
-* Rust
+** RPC stack for emacs lisp
+See: https://python-epc.readthedocs.io/en/latest/
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! epc)
+#+end_src
+
+* COMMENT Rust
 # Semantica analysis for Rust in Emacs
 # TODO scrivere un articolo riscrivendo il tutto
 # E facendo funzionare quanto scritto sotto
@@ -2415,7 +2426,7 @@ This should be sufficient, but to be absolutely sure:
 
 # Lanciamo =lsp= in un buffer con Rust ed assistiamo al compiersi della magia.
 We launch =lsp= in a buffer with Rust and witness the magic happen.
-* Cobol
+* COMMENT Cobol
 #+begin_src emacs-lisp :tangle packages.el
 (package! cobol-mode)
 #+end_src
@@ -2440,7 +2451,7 @@ Download the Common Lisp HyperSpec from [[http://www.lispworks.com/downloads/doc
 *** Emacs configuration
 We'll use Emacs-Lisp functions to find and set up the local HyperSpec automatically.
 
-#+BEGIN_SRC emacs-lisp :tangle packages.el
+#+BEGIN_SRC emacs-lisp :tangle config.el
 (defvar mk/hyperspec-dir-locations
   '("~/Downloads/HyperSpec-7-0/HyperSpec/")
   "List of possible locations where the local HyperSpec could reside.")
@@ -2468,7 +2479,7 @@ Uses `mk/hyperspec-dir-locations' to find the directory."
 
 Setto così la directory:
 
-#+begin_src emacs-lisp :tangle packages.el
+#+begin_src emacs-lisp :tangle config.el
 (setq common-lisp-hyperspec-root (let ((dir-found? (mk/hyperspec-dir)))
                                    (if dir-found?
                                        dir-found?
@@ -2480,7 +2491,7 @@ Mi sa che l'impostazione è solo per le cartelle in locale.
 Sennò dovrei passare nil.
 Si potrebbe riassumere con:
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (setq common-lisp-hyperspec-root (mk/hyperspec-dir))
 #+end_src
 
@@ -2518,7 +2529,7 @@ Poi c'è questa parte, ma la tolgo perché io non ho SLIME, ma SLY (ed è già i
 *** Conclusion
   That's it! You have successfully configured a local Common Lisp HyperSpec with Emacs and SLIME. Now you can enjoy seamless and offline access to Lisp documentation.
 
-* Ebooks
+* COMMENT Ebooks
 ** Send ebooks to Kindle with Emacs
 :PROPERTIES:
 :EXPORT_HUGO_SECTION: software/send-ebooks-to-kindle
@@ -3077,8 +3088,21 @@ Org noter per prendere appunti: https://github.com/weirdNox/org-noter
 Per leggere qui gli epub: https://github.com/wasamasa/nov.el
 Questo è lo stato dell'arte per i PDF: https://github.com/vedang/pdf-tools
 
-* Zola Org Exporter :it:
+* Zola Org Exporter
+** Ox-zola
+First, I want to use ox-hugo as a base.
 
+#+begin_src emacs-lisp :tangle packages.el
+(package! ox-hugo)
+#+end_src
+
+Then I install my package as an additional layer.
+
+#+begin_src emacs-lisp :tangle packages.el
+(package! ox-zola :recipe (:host github :repo "gicrisf/ox-zola"))
+#+end_src
+
+** COMMENT Old approach
 {{{italian}}}
 
 L'exporter per Zola è un pacchetto che sto mantenendo io, quindi capita spesso che io debba testare delle modifiche in locale. =package!= gestisce i download, quindi in teoria non dovrebbe essere impiegato per la gestione di file in locale, ma [[https://github.com/doomemacs/doomemacs/issues/3842#issuecomment-681039894][Henrik Lissner consiglia di usare comunque la macro perché è stata adattata anche a questo genere di situazioni]].
@@ -3091,7 +3115,7 @@ Note: with =:no-byte-compile t=, you don't have to run doom sync every time you 
 
 Così:
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (package! ox-hugo :recipe (:local-repo "lisp/ox-zola"))
 #+end_src
 
@@ -3164,7 +3188,7 @@ There are plenty of ways, but this small package provide a simple one.
 # If you speak italian, [[https://zwitterio.it/coding/2022/quote-tweets-properly-with-emacs-lisp/][at this link I narrate how it was written, commenting the code line-by-line from a perspective of a lisp beginner]];
 # (Installed from the repo because is not on MELPA yet)
 
-* Mastodon
+* COMMENT Mastodon
 Firstly, let's install =mastodon.el=:
 # Prima di tutto, installiamo mastodon.el:
 
@@ -3306,7 +3330,7 @@ From [[https://tecosaur.github.io/emacs-config/config.html#which-key][From tecos
 (setq which-key-idle-delay 0.5) ;; I need the help, I really do
 #+end_src
 
-* Curriculum Vitae
+* COMMENT Curriculum Vitae
 Finding myself forced, once again, to write a CV, I thought to myself, once again, how necessary it was to find a way for it to be the last one. Yet, no matter how much time is spent devising automatic procedures, a CV is something that is intrinsically in the process of being defined, and thus always subject to change. One can only keep revising it continually. The focus should then be on the path that guarantees the least amount of friction, in order to make the practice of updates not too detestable.
 
 The most important output of a CV today is still the printable format, which is a PDF. You can achieve a good PDF mainly through these methods:
@@ -3369,7 +3393,7 @@ The following package corrects this deficiency:
 (add-hook 'Info-selection-hook 'info-colors-fontify-node)
 #+end_src
 
-* Games
+* COMMENT Games
 ** Textual adventures
 # GPT
 # What is a text-based adventure game?
@@ -3821,7 +3845,7 @@ Concludiamo con la configurazione minima di =org-msg=.
 (org-msg-mode)
 #+end_src
 
-* Chemical structures
+* COMMENT Chemical structures
 # TODO ristrutturare questa parte
 # Prima spiego il problema della rappresentazione delle molecole
 # Spiego perché mi dà fastidio portarmi in giro le immagini
@@ -3837,7 +3861,7 @@ Concludiamo con la configurazione minima di =org-msg=.
 # Come si installa fresnel
 
 #+begin_src emacs-lisp :tangle packages.el :noweb yes
-;; (package! tochemfig :recipe (:host github :repo "gicrisf/tochemfig"))
+(package! tochemfig :recipe (:host github :repo "gicrisf/tochemfig"))
 #+end_src
 
 * COMMENT Whisper (Speech to Text)
@@ -3930,6 +3954,7 @@ OpenAI's packages:
 
 #+begin_src emacs-lisp :tangle packages.el
 (package! openai :recipe (:host github :repo "emacs-openai/openai"))
+
 (package! chatgpt :recipe (:host github :repo "emacs-openai/chatgpt"))
 #+end_src
 
@@ -3945,16 +3970,18 @@ Retrieving the API key from the env var:
 A cosmetic dependency of these packages is spinner.
 Let's select the preferred spinner.
 
+Instead of =rotating-line=, I pick:
+
 #+begin_src emacs-lisp :tangle packages.el
-;; (setq chatgpt-spinner-type 'rotating-line)
 (setq chatgpt-spinner-type 'minibox)
 #+end_src
 
 # Questo viene più comodo per selezionare del testo ed elaborarlo direttamente, ma non usa le API:
 This is more convenient for selecting text and processing it directly, but it does not use the APIs.
 
-#+begin_src emacs-lisp :tangle packages.el
-;; (package! chatgptel :recipe (:host github :repo "joshcho/ChatGPT.el"))
+# :tangle packages.el
+#+begin_src emacs-lisp :tangle no
+(package! chatgptel :recipe (:host github :repo "joshcho/ChatGPT.el"))
 #+end_src
 
 # Diamo il path della repo perché ha bisogno di richiamare un file Python che agisce da server:
@@ -4028,7 +4055,7 @@ Taiwan is an island located off the southeastern coast of China. It has rugged, 
 
 Looks fine.
 
-** DALL-E
+** COMMENT DALL-E
 #+begin_src emacs-lisp :tangle packages.el
 (package! dall-e :recipe (:host github :repo "emacs-openai/dall-e"))
 #+end_src
@@ -4039,7 +4066,7 @@ Looks fine.
 (setq dall-e-display-width 256)
 #+end_src
 
-** Llama
+** COMMENT Llama
 # Sfruttando la CLI fornita da [[https://github.com/rustformers/llama-rs][=llama-rs=/=llama-cli=]], è possibile passare un prompt da emacs e restituire i risultati direttamente nel browser.
 Using the CLI provided by [[https://github.com/rustformers/llama-rs][=llama-rs=/=llama-cli=]], it is possible to pass a prompt from Emacs and return the results directly in the browser.
 
